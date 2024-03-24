@@ -10,9 +10,13 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@auth/core": "^0.28.0",
+    "@auth/drizzle-adapter": "^0.8.0",
+    "@neondatabase/serverless": "^0.9.0",
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "drizzle-orm": "^0.30.4",
     "lucide-react": "^0.360.0",
     "next": "14.1.4",
     "next-auth": "5.0.0-beta.15",
@@ -28,6 +32,8 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "dotenv": "^16.4.5",
+    "drizzle-kit": "^0.20.14",
     "eslint": "^8",
     "eslint-config-next": "14.1.4",
     "eslint-plugin-prettier": "^5.1.3",
