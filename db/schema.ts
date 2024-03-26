@@ -11,6 +11,7 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
 
 export const users = pgTable('user', {
   id: text('id').notNull().primaryKey(),
@@ -105,6 +106,8 @@ export const organizations = pgTable(
     };
   },
 );
+
+export const insertOrganzationSchema = createInsertSchema(organizations);
 
 export const organizationsRelations = relations(
   organizations,
