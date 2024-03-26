@@ -1,11 +1,15 @@
 import type { AdapterAccount } from '@auth/core/adapters';
 import { relations } from 'drizzle-orm';
 import {
+  index,
   integer,
+  numeric,
   pgTable,
   primaryKey,
   text,
   timestamp,
+  uniqueIndex,
+  uuid,
 } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('user', {
@@ -19,6 +23,7 @@ export const users = pgTable('user', {
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
+  organizations: many(organizations),
 }));
 
 export const accounts = pgTable(
@@ -78,3 +83,69 @@ export const verificationTokens = pgTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   }),
 );
+
+export const organizations = pgTable(
+  'organization',
+  {
+    organizationId: uuid('organizationId')
+      .notNull()
+      .primaryKey()
+      .defaultRandom(),
+    createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+    name: text('name').notNull(),
+    userId: text('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+  },
+  (organizations) => {
+    return {
+      organizationsNameKey: uniqueIndex('organizationsNameKey').on(
+        organizations.name,
+      ),
+    };
+  },
+);
+
+export const organizationsRelations = relations(
+  organizations,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [organizations.userId],
+      references: [users.id],
+    }),
+    loans: many(loans),
+  }),
+);
+
+export const loans = pgTable(
+  'loan',
+  {
+    loanId: uuid('loanId').notNull().primaryKey().defaultRandom(),
+    createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+    organizationId: uuid('organizationId')
+      .notNull()
+      .references(() => organizations.organizationId, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      }),
+    name: text('name'),
+    interestRate: numeric('interestRate'),
+    duration: integer('duration'),
+    startingMonth: timestamp('startingMonth', { mode: 'date' }),
+    amount: numeric('amount'),
+  },
+  (loans) => {
+    return {
+      loansOrganizationIdIndex: index('loansOrganizationIdIndex').on(
+        loans.organizationId,
+      ),
+    };
+  },
+);
+
+export const loansRelations = relations(loans, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [loans.organizationId],
+    references: [organizations.organizationId],
+  }),
+}));
