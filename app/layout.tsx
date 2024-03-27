@@ -1,9 +1,17 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { IBM_Plex_Mono, Inter } from 'next/font/google';
+
+import { cn } from 'lib/utils';
 
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-plex-mono',
+});
 
 export const metadata: Metadata = {
   title: 'Planino - Planiranje poslovanja',
@@ -18,7 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={cn('font-sans', inter.variable, plexMono.variable)}>
+        {children}
+      </body>
     </html>
   );
 }
