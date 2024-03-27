@@ -53,6 +53,7 @@ export const getOrganization = async (name: string) => {
     ),
     columns: {
       name: true,
+      organizationId: true,
     },
   });
 

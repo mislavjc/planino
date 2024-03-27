@@ -1,15 +1,25 @@
+import { getLoans } from 'actions/loan';
 import { Metadata } from 'next';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
 import { TypographyH3, TypographyP } from 'ui/typography';
 
+import { AddRow } from 'components/@loans/add-row';
 import { Row } from 'components/@loans/row';
 
 export const metadata: Metadata = {
   title: 'Otplatni plan - Planino',
 };
 
-const PaymentPlanPage = () => {
+const PaymentPlanPage = async ({
+  params: { organization },
+}: {
+  params: {
+    organization: string;
+  };
+}) => {
+  const loans = await getLoans(organization);
+
   return (
     <div>
       <Card className="md:w-1/2">
@@ -25,14 +35,18 @@ const PaymentPlanPage = () => {
             <TypographyP className="text-right">Iznos</TypographyP>
           </div>
           <div>
-            <Row
-              name="Kredit"
-              interestRate={0.05}
-              duration={12}
-              startingMonth={1}
-              amount={1000}
-            />
+            {loans.map((loan) => (
+              <Row
+                key={loan.loanId}
+                name={loan.name}
+                interestRate={loan.interestRate}
+                duration={loan.duration}
+                startingMonth={loan.startingMonth}
+                amount={loan.amount}
+              />
+            ))}
           </div>
+          <AddRow organization={organization} />
         </CardContent>
       </Card>
     </div>

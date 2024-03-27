@@ -152,3 +152,5 @@ export const loansRelations = relations(loans, ({ one }) => ({
     references: [organizations.organizationId],
   }),
 }));
+
+export const insertLoanSchema = createInsertSchema(loans);

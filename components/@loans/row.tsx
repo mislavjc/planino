@@ -1,11 +1,11 @@
 import { Input } from 'ui/input';
 
 type RowProps = {
-  name: string;
-  interestRate: number;
-  duration: number;
-  startingMonth: number;
-  amount: number;
+  name: string | null;
+  interestRate: string | null;
+  duration: number | null;
+  startingMonth: Date | null;
+  amount: string | null;
 };
 
 export const Row = ({
@@ -17,23 +17,27 @@ export const Row = ({
 }: RowProps) => {
   return (
     <div className="grid grid-cols-6">
-      <Input className="col-span-2 border-r-0" value={name} />
+      <Input className="col-span-2 border-r-0" value={name ?? ''} />
       <Input
         type="number"
         className="border-r-0 text-right font-mono"
-        value={interestRate}
+        value={interestRate ?? ''}
       />
       <Input
         type="number"
         className="border-r-0 text-right font-mono"
-        value={duration}
+        value={duration ?? 0}
       />
       <Input
         type="number"
         className="border-r-0 text-right font-mono"
-        value={startingMonth}
+        value={startingMonth ? startingMonth.toISOString() : ''}
       />
-      <Input type="number" className="text-right font-mono" value={amount} />
+      <Input
+        type="number"
+        className="text-right font-mono"
+        value={amount ?? ''}
+      />
     </div>
   );
 };
