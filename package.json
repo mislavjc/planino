@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky install",
+    "db:generate": "drizzle-kit generate:pg",
     "db:migrate": "npx tsx db/migrate.ts",
     "db:studio": "drizzle-kit studio"
   },
