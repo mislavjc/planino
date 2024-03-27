@@ -42,6 +42,7 @@ export const DatePicker = ({
           selected={date}
           onSelect={setDate}
           initialFocus
+          locale={hr}
         />
       </PopoverContent>
     </Popover>
