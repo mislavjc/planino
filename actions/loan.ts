@@ -2,7 +2,7 @@
 
 import { db } from 'db/drizzle';
 import { insertLoanSchema, loans } from 'db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq, isNotNull, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -69,4 +69,37 @@ export const updateLoan = async (data: Partial<LoanInsertInput>) => {
   }
 
   revalidatePath('/[organization]/otplatni-plan', 'page');
+};
+
+export const getLoansForCalulation = async (organization: string) => {
+  const foundOrganization = await getOrganization(organization);
+
+  if (!foundOrganization) {
+    return [];
+  }
+
+  const dbLoans = await db
+    .select({
+      loanId: loans.loanId,
+      name: loans.name,
+      interestRate: loans.interestRate,
+      duration: loans.duration,
+      startingYear: sql`DATE_PART('year', ${loans.startingMonth})`,
+      endingYear: sql`DATE_PART('year', ${loans.startingMonth}) + ${loans.duration} - 1`,
+      amount: loans.amount,
+    })
+    .from(loans)
+    .where(
+      and(
+        eq(loans.organizationId, foundOrganization.organizationId),
+        isNotNull(loans.name),
+        isNotNull(loans.interestRate),
+        isNotNull(loans.duration),
+        isNotNull(loans.startingMonth),
+        isNotNull(loans.amount),
+      ),
+    )
+    .orderBy(loans.createdAt);
+
+  return dbLoans;
 };

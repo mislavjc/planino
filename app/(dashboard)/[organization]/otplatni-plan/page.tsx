@@ -1,4 +1,4 @@
-import { getLoans } from 'actions/loan';
+import { getLoans, getLoansForCalulation } from 'actions/loan';
 import { Metadata } from 'next';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
@@ -20,6 +20,8 @@ const PaymentPlanPage = async ({
   };
 }) => {
   const loans = await getLoans(organization);
+
+  const loansForCalculation = await getLoansForCalulation(organization);
 
   return (
     <div>
