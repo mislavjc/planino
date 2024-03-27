@@ -83,7 +83,7 @@ export const Row = ({
       <Input
         type="number"
         className="border-r-0 text-right font-mono"
-        value={loan.duration ?? 0}
+        value={loan.duration ?? ''}
         onChange={(e) => {
           setLoan({ ...loan, duration: parseInt(e.target.value) });
           debounceLoanChange('duration', parseInt(e.target.value));
