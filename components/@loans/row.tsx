@@ -6,6 +6,8 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { Input } from 'ui/input';
 
+import { DatePicker } from 'components/date-picker';
+
 type RowProps = {
   loanId: string;
   name: string | null;
@@ -51,7 +53,7 @@ export const Row = ({
   );
 
   return (
-    <div className="grid grid-cols-6">
+    <div className="grid grid-cols-7">
       <Input
         className="col-span-2 border-r-0"
         value={loan.name ?? ''}
@@ -71,6 +73,15 @@ export const Row = ({
       />
       <Input
         type="number"
+        className="text-right font-mono"
+        value={loan.amount ?? ''}
+        onChange={(e) => {
+          setLoan({ ...loan, amount: e.target.value });
+          debounceLoanChange('amount', e.target.value);
+        }}
+      />
+      <Input
+        type="number"
         className="border-r-0 text-right font-mono"
         value={loan.duration ?? 0}
         onChange={(e) => {
@@ -78,23 +89,15 @@ export const Row = ({
           debounceLoanChange('duration', parseInt(e.target.value));
         }}
       />
-      <Input
-        type="number"
-        className="border-r-0 text-right font-mono"
-        value={loan.startingMonth ? loan.startingMonth.toISOString() : ''}
-        onChange={(e) => {
-          setLoan({ ...loan, startingMonth: new Date(e.target.value) });
-          debounceLoanChange('startingMonth', new Date(e.target.value));
+      <DatePicker
+        date={loan.startingMonth ?? undefined}
+        setDate={(date) => {
+          if (!date) return;
+
+          setLoan({ ...loan, startingMonth: date });
+          debounceLoanChange('startingMonth', date);
         }}
-      />
-      <Input
-        type="number"
-        className="text-right font-mono"
-        value={loan.amount ?? ''}
-        onChange={(e) => {
-          setLoan({ ...loan, amount: e.target.value });
-          debounceLoanChange('amount', e.target.value);
-        }}
+        className="col-span-2"
       />
     </div>
   );

@@ -27,12 +27,14 @@ const PaymentPlanPage = async ({
           <TypographyH3>Otplatni plan</TypographyH3>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-6 text-sm">
+          <div className="grid grid-cols-7 text-sm">
             <TypographyP className="col-span-2">Naziv</TypographyP>
             <TypographyP className="text-right">Kamata</TypographyP>
             <TypographyP className="text-right">Broj rata</TypographyP>
-            <TypographyP className="text-right">Prvi mjesec</TypographyP>
             <TypographyP className="text-right">Iznos</TypographyP>
+            <TypographyP className="col-span-2 text-right">
+              Prvi mjesec
+            </TypographyP>
           </div>
           <div>
             {loans.map((loan) => (
