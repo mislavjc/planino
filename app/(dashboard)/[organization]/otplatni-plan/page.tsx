@@ -36,14 +36,7 @@ const PaymentPlanPage = async ({
           </div>
           <div>
             {loans.map((loan) => (
-              <Row
-                key={loan.loanId}
-                name={loan.name}
-                interestRate={loan.interestRate}
-                duration={loan.duration}
-                startingMonth={loan.startingMonth}
-                amount={loan.amount}
-              />
+              <Row key={loan.loanId} {...loan} />
             ))}
           </div>
           <AddRow organization={organization} />

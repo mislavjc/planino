@@ -23,7 +23,7 @@ export const createLoan = async (organization: string) => {
 
   if (!loan.length) {
     return {
-      error: 'Loan already exists.',
+      error: 'Kredit već postoji.',
     };
   }
 
@@ -47,4 +47,26 @@ export const getLoans = async (organization: string) => {
     .where(eq(loans.organizationId, foundOrganization.organizationId));
 
   return dbLoans;
+};
+
+export const updateLoan = async (data: Partial<LoanInsertInput>) => {
+  if (!data.loanId) {
+    return {
+      error: 'ID Kredita je potreban.',
+    };
+  }
+
+  const loan = await db
+    .update(loans)
+    .set(data)
+    .where(eq(loans.loanId, data.loanId))
+    .returning();
+
+  if (!loan.length) {
+    return {
+      error: 'Kredit nije pronađen.',
+    };
+  }
+
+  revalidatePath('/[organization]/otplatni-plan', 'page');
 };
