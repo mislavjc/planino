@@ -84,8 +84,8 @@ export const getLoansForCalulation = async (organization: string) => {
       name: loans.name,
       interestRate: loans.interestRate,
       duration: loans.duration,
-      startingYear: sql`DATE_PART('year', ${loans.startingMonth})`,
-      endingYear: sql`DATE_PART('year', ${loans.startingMonth}) + ${loans.duration} - 1`,
+      startingYear: sql<number>`DATE_PART('year', ${loans.startingMonth})`,
+      endingYear: sql<number>`DATE_PART('year', ${loans.startingMonth}) + ${loans.duration} - 1`,
       amount: loans.amount,
     })
     .from(loans)
