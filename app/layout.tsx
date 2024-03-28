@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { IBM_Plex_Mono, Inter } from 'next/font/google';
+import PlausibleProvider from 'next-plausible';
 
+import { DOMAIN } from 'lib/constants';
 import { cn } from 'lib/utils';
 
 import './globals.css';
@@ -26,6 +28,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <PlausibleProvider domain={DOMAIN} />
+      </head>
       <body className={cn('font-sans', inter.variable, plexMono.variable)}>
         {children}
       </body>
