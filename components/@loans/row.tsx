@@ -73,20 +73,20 @@ export const Row = ({
       />
       <Input
         type="number"
-        className="text-right font-mono"
-        value={loan.amount ?? ''}
-        onChange={(e) => {
-          setLoan({ ...loan, amount: e.target.value });
-          debounceLoanChange('amount', e.target.value);
-        }}
-      />
-      <Input
-        type="number"
         className="border-r-0 text-right font-mono"
         value={loan.duration ?? ''}
         onChange={(e) => {
           setLoan({ ...loan, duration: parseInt(e.target.value) });
           debounceLoanChange('duration', parseInt(e.target.value));
+        }}
+      />
+      <Input
+        type="number"
+        className="text-right font-mono"
+        value={loan.amount ?? ''}
+        onChange={(e) => {
+          setLoan({ ...loan, amount: e.target.value });
+          debounceLoanChange('amount', e.target.value);
         }}
       />
       <DatePicker
