@@ -1,4 +1,5 @@
-import { getLoans, getLoansForCalulation } from 'actions/loan';
+import React, { Suspense } from 'react';
+import { getLoans } from 'actions/loan';
 import { Metadata } from 'next';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
@@ -6,6 +7,7 @@ import { ScrollArea, ScrollBar } from 'ui/scroll-area';
 import { TypographyH3, TypographyP } from 'ui/typography';
 
 import { AddRow } from 'components/@loans/add-row';
+import { Overview } from 'components/@loans/overview';
 import { Row } from 'components/@loans/row';
 
 export const metadata: Metadata = {
@@ -21,10 +23,8 @@ const PaymentPlanPage = async ({
 }) => {
   const loans = await getLoans(organization);
 
-  const loansForCalculation = await getLoansForCalulation(organization);
-
   return (
-    <div>
+    <div className="flex flex-col gap-2 md:flex-row">
       <Card className="w-full md:w-1/2">
         <CardHeader>
           <TypographyH3>Otplatni plan</TypographyH3>
@@ -48,6 +48,19 @@ const PaymentPlanPage = async ({
               </div>
               <AddRow organization={organization} />
             </div>
+            <ScrollBar />
+          </ScrollArea>
+        </CardContent>
+      </Card>
+      <Card className="w-full md:w-1/2">
+        <CardHeader>
+          <TypographyH3>Izračun</TypographyH3>
+        </CardHeader>
+        <CardContent className="overflow-x-auto">
+          <ScrollArea className="min-w-[40rem]">
+            <Suspense fallback={null}>
+              <Overview organization={organization} />
+            </Suspense>
             <ScrollBar />
           </ScrollArea>
         </CardContent>

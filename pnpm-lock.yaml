@@ -47,6 +47,9 @@ dependencies:
   drizzle-zod:
     specifier: ^0.5.1
     version: 0.5.1(drizzle-orm@0.30.4)(zod@3.22.4)
+  financial:
+    specifier: ^0.2.2
+    version: 0.2.2
   lucide-react:
     specifier: ^0.360.0
     version: 0.360.0(react@18.2.0)
@@ -137,7 +140,7 @@ devDependencies:
     specifier: ^3.3.0
     version: 3.4.1
   typescript:
-    specifier: ^5
+    specifier: 5.4.3
     version: 5.4.3
 
 packages:
@@ -3115,6 +3118,11 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       to-regex-range: 5.0.1
+
+  /financial@0.2.2:
+    resolution: {integrity: sha512-FwIww7h8kiB5CqXzkVGFLufPLL/RdUN3B8toLzMorvMASKHcUYhN8uRlBH5nMXfU7N8e7awm0vgy0nV7KlDm8g==}
+    engines: {node: '>=18'}
+    dev: false
 
   /find-up@5.0.0:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
