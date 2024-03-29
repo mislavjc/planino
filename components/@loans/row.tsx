@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { updateLoan } from 'actions/loan';
+import { Euro, Percent } from 'lucide-react';
 import { useDebouncedCallback } from 'use-debounce';
 
 import { Input } from 'ui/input';
 
 import { DatePicker } from 'components/date-picker';
+import { InputWithIcon } from 'components/input-with-icon';
 
 type RowProps = {
   loanId: string;
@@ -62,7 +64,7 @@ export const Row = ({
           debounceLoanChange('name', e.target.value);
         }}
       />
-      <Input
+      <InputWithIcon
         type="number"
         className="border-r-0 text-right font-mono"
         value={loan.interestRate ?? ''}
@@ -70,6 +72,7 @@ export const Row = ({
           setLoan({ ...loan, interestRate: e.target.value });
           debounceLoanChange('interestRate', e.target.value);
         }}
+        icon={Percent}
       />
       <Input
         type="number"
@@ -80,7 +83,7 @@ export const Row = ({
           debounceLoanChange('duration', parseInt(e.target.value));
         }}
       />
-      <Input
+      <InputWithIcon
         type="number"
         className="text-right font-mono"
         value={loan.amount ?? ''}
@@ -88,6 +91,7 @@ export const Row = ({
           setLoan({ ...loan, amount: e.target.value });
           debounceLoanChange('amount', e.target.value);
         }}
+        icon={Euro}
       />
       <DatePicker
         date={loan.startingMonth ?? undefined}
