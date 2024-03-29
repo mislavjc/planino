@@ -31,7 +31,7 @@ const OrganizationLayout = async ({
                 <span className="">{organization.name}</span>
               </Link>
             </div>
-            <div className="flex-1">
+            <div className="flex-1 md:px-2">
               <Navigation />
             </div>
           </div>
@@ -54,7 +54,7 @@ const OrganizationLayout = async ({
               </SheetContent>
             </Sheet>
           </header>
-          <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
+          <main className="flex max-w-[100vw] flex-1 flex-col gap-4 p-4 md:max-w-[calc(100vw-224px)] lg:gap-6 lg:p-6">
             {children}
           </main>
         </div>
