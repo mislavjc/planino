@@ -18,99 +18,114 @@ export const Overview = async ({ organization }: { organization: string }) => {
   );
 
   return (
-    <div className="grid grid-cols-1 gap-4">
-      {loansForCalculation.map((loan) => {
-        if (
-          !loan.startingYear ||
-          !loan.endingYear ||
-          !loan.amount ||
-          !loan.interestRate ||
-          !loan.duration
-        ) {
-          return null;
-        }
+    <div>
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr>
+            <th>Year</th>
+            {years.map((year) => (
+              <th key={year}>{year}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 bg-white">
+          {loansForCalculation.map((loan) => {
+            if (
+              !loan.startingYear ||
+              !loan.endingYear ||
+              !loan.amount ||
+              !loan.interestRate ||
+              !loan.duration
+            ) {
+              return null;
+            }
 
-        const loanDurationMonths = loan.duration * 12;
-        const loanInterestRateMonthly =
-          parseFloat(loan.interestRate) / 100 / 12;
-        const loanAmount = loan.amount;
+            const loanDurationMonths = loan.duration * 12;
+            const loanInterestRateMonthly =
+              parseFloat(loan.interestRate) / 100 / 12;
+            const loanAmount = loan.amount;
 
-        const monthlyPMT = pmt(
-          loanInterestRateMonthly,
-          loanDurationMonths,
-          -loanAmount,
-        );
+            const monthlyPMT = pmt(
+              loanInterestRateMonthly,
+              loanDurationMonths,
+              -loanAmount,
+            );
+            const yearlyPMT = monthlyPMT * 12;
 
-        const yearlyPMT = monthlyPMT * 12;
-
-        return (
-          <React.Fragment key={loan.loanId}>
-            <div className="grid grid-cols-4 gap-2">
-              <div className="col-span-1">{loan.name}</div>
-              <div className="col-span-3 grid grid-cols-3 gap-2">
-                <div className="text-sm">
-                  <div className="font-bold">PMT:</div>
-                </div>
-                <div className="text-sm">
-                  <div className="font-bold">PPMT:</div>
-                </div>
-                <div className="text-sm">
-                  <div className="font-bold">IPMT:</div>
-                </div>
-                {years.map((year) => {
-                  if (year < loan.startingYear || year > loan.endingYear) {
-                    return <div key={year} />;
-                  }
-
-                  let yearlyPPMT = 0;
-                  let yearlyIPMT = 0;
-
-                  for (let month = 1; month <= 12; month++) {
-                    const period = (year - loan.startingYear) * 12 + month;
-                    if (period <= loanDurationMonths) {
-                      yearlyPPMT += ppmt(
-                        loanInterestRateMonthly,
-                        period,
-                        loanDurationMonths,
-                        -loanAmount,
-                      );
-                      yearlyIPMT += ipmt(
-                        loanInterestRateMonthly,
-                        period,
-                        loanDurationMonths,
-                        -loanAmount,
+            return (
+              <React.Fragment key={loan.loanId}>
+                <tr>
+                  <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900">
+                    {loan.name}
+                  </td>
+                  {years.map((year) => {
+                    if (year < loan.startingYear || year > loan.endingYear) {
+                      return (
+                        <td
+                          key={year}
+                          className="whitespace-nowrap px-6 py-4 text-sm text-gray-500"
+                        >
+                          -
+                        </td>
                       );
                     }
-                  }
 
-                  return (
-                    <div key={year} className="grid grid-cols-3 gap-2">
-                      <div className="text-sm">
-                        {yearlyPMT.toLocaleString('hr-HR', {
-                          style: 'currency',
-                          currency: 'EUR',
-                        })}
-                      </div>
-                      <div className="text-sm">
-                        {yearlyPPMT.toLocaleString('hr-HR', {
-                          style: 'currency',
-                          currency: 'EUR',
-                        })}
-                      </div>
-                      <div className="text-sm">
-                        {yearlyIPMT.toLocaleString('hr-HR', {
-                          style: 'currency',
-                          currency: 'EUR',
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </React.Fragment>
-        );
-      })}
+                    let yearlyPPMT = 0;
+                    let yearlyIPMT = 0;
+
+                    for (let month = 1; month <= 12; month++) {
+                      const period = (year - loan.startingYear) * 12 + month;
+                      if (period <= loanDurationMonths) {
+                        yearlyPPMT += ppmt(
+                          loanInterestRateMonthly,
+                          period,
+                          loanDurationMonths,
+                          -loanAmount,
+                        );
+                        yearlyIPMT += ipmt(
+                          loanInterestRateMonthly,
+                          period,
+                          loanDurationMonths,
+                          -loanAmount,
+                        );
+                      }
+                    }
+
+                    return (
+                      <td
+                        key={year}
+                        className="whitespace-nowrap px-6 py-4 text-sm text-gray-500"
+                      >
+                        <div>
+                          PMT:{' '}
+                          {yearlyPMT.toLocaleString('hr-HR', {
+                            style: 'currency',
+                            currency: 'EUR',
+                          })}
+                        </div>
+                        <div>
+                          PPMT:{' '}
+                          {yearlyPPMT.toLocaleString('hr-HR', {
+                            style: 'currency',
+                            currency: 'EUR',
+                          })}
+                        </div>
+                        <div>
+                          IPMT:{' '}
+                          {yearlyIPMT.toLocaleString('hr-HR', {
+                            style: 'currency',
+                            currency: 'EUR',
+                          })}
+                        </div>
+                      </td>
+                    );
+                  })}
+                </tr>
+              </React.Fragment>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };
