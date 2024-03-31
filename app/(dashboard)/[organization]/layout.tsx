@@ -54,7 +54,7 @@ const OrganizationLayout = async ({
               </SheetContent>
             </Sheet>
           </header>
-          <main className="flex max-w-[100vw] flex-1 flex-col gap-4 p-4 md:max-w-[calc(100vw-224px)] lg:gap-6 lg:p-6">
+          <main className="flex max-w-[100vw] flex-1 flex-col gap-4 p-4 md:max-w-[calc(100vw-224px)] lg:max-w-[calc(100vw-284px)] lg:gap-6 lg:p-6">
             {children}
           </main>
         </div>
