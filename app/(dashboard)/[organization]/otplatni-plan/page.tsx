@@ -57,7 +57,7 @@ const PaymentPlanPage = async ({
           <TypographyH3>Izračun</TypographyH3>
         </CardHeader>
         <CardContent className="overflow-x-auto">
-          <ScrollArea className="min-w-[40rem]">
+          <ScrollArea className="w-max">
             <Suspense fallback={null}>
               <Overview organization={organization} />
             </Suspense>
