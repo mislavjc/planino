@@ -15,6 +15,13 @@
       "when": 1711485512681,
       "tag": "0001_yellow_wild_pack",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1711900632090,
+      "tag": "0002_peaceful_spencer_smythe",
+      "breakpoints": true
     }
   ]
 }
