@@ -22,7 +22,7 @@ export const Overview = async ({ organization }: { organization: string }) => {
       <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
-            <th>Year</th>
+            <th>Godina</th>
             {years.map((year) => (
               <th key={year}>{year}</th>
             ))}
