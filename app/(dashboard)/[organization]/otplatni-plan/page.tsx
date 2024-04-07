@@ -24,8 +24,8 @@ const PaymentPlanPage = async ({
   const loans = await getLoans(organization);
 
   return (
-    <div className="flex flex-col gap-2 md:flex-row">
-      <Card className="w-full md:w-1/2">
+    <div className="flex flex-col gap-2">
+      <Card className="max-w-screen-xl">
         <CardHeader>
           <TypographyH3>Otplatni plan</TypographyH3>
         </CardHeader>
@@ -52,7 +52,7 @@ const PaymentPlanPage = async ({
           </ScrollArea>
         </CardContent>
       </Card>
-      <Card className="w-full md:w-1/2">
+      <Card className="max-w-screen-xl">
         <CardHeader>
           <TypographyH3>Izračun</TypographyH3>
         </CardHeader>
