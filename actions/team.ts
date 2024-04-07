@@ -34,7 +34,7 @@ export const createTeam = async (organization: string, name: string) => {
     };
   }
 
-  revalidatePath('/[organization]/odjeli');
+  revalidatePath('/[organization]/odjeli', 'page');
 
   return {
     team: team[0],
