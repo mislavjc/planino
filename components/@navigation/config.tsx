@@ -6,6 +6,7 @@ import {
   GanttChartSquare,
   PiggyBank,
   Receipt,
+  Users,
   Wallet,
   Warehouse,
 } from 'lucide-react';
@@ -43,6 +44,11 @@ export const templateConfig: TemplateConfig = {
       label: 'Otplatni plan',
       href: '/otplatni-plan',
       icon: <GanttChartSquare width={16} className="text-neutral-600" />,
+    },
+    {
+      label: 'Odjeli',
+      href: '/odjeli',
+      icon: <Users width={16} className="text-neutral-600" />,
     },
   ],
   output: [
