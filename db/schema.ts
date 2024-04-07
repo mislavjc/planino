@@ -200,7 +200,7 @@ export const expenseFrequencies = pgTable('expenseFrequency', {
     .primaryKey()
     .defaultRandom(),
   createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
-  name: text('name').notNull(),
+  name: text('name'),
 });
 
 export const expenseFrequenciesRelations = relations(
@@ -213,7 +213,7 @@ export const expenseFrequenciesRelations = relations(
 export const expenseTypes = pgTable('expenseType', {
   expenseTypeId: uuid('expenseTypeId').notNull().primaryKey().defaultRandom(),
   createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
-  name: text('name').notNull(),
+  name: text('name'),
 });
 
 export const expenseTypesRelations = relations(expenseTypes, ({ many }) => ({
