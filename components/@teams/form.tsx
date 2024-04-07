@@ -2,7 +2,9 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { createTeam } from 'actions/team';
 import { Plus } from 'lucide-react';
+import { useParams } from 'next/navigation';
 import { z } from 'zod';
 
 import { Button } from 'ui/button';
@@ -17,12 +19,21 @@ const formSchema = z.object({
 });
 
 export const TeamsForm = () => {
+  const { organization } = useParams();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+    const result = await createTeam(organization as string, data.name);
+
+    if (result.error) {
+      form.setError('name', {
+        type: 'manual',
+        message: result.error,
+      });
+    }
   };
 
   return (
