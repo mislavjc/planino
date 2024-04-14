@@ -173,6 +173,7 @@ export const teamsRelations = relations(teams, ({ one, many }) => ({
     references: [organizations.organizationId],
   }),
   expenses: many(expenses),
+  inventoryItems: many(inventoryItems),
 }));
 
 export const financialAttributes = pgTable('financialAttribute', {
@@ -288,6 +289,31 @@ export const expensesRelations = relations(expenses, ({ one }) => ({
   }),
   team: one(teams, {
     fields: [expenses.teamId],
+    references: [teams.teamId],
+  }),
+}));
+
+export const inventoryItems = pgTable('inventoryItem', {
+  inventoryItemId: uuid('inventoryItemId')
+    .notNull()
+    .primaryKey()
+    .defaultRandom(),
+  createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+  name: text('name'),
+  value: numeric('value'),
+  startingMonth: timestamp('startingMonth', { mode: 'date' }),
+  amortizationLength: integer('amortizationLength'),
+  teamId: uuid('teamId')
+    .notNull()
+    .references(() => teams.teamId, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+});
+
+export const inventoryItemsRelations = relations(inventoryItems, ({ one }) => ({
+  team: one(teams, {
+    fields: [inventoryItems.teamId],
     references: [teams.teamId],
   }),
 }));
