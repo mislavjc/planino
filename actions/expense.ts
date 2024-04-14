@@ -30,10 +30,10 @@ export const getOperationalExpenses = async (organization: string) => {
           expenseFrequency: true,
           expenseType: true,
         },
-        orderBy: (expenses, { desc }) => [desc(expenses.createdAt)],
+        orderBy: (expenses, { asc }) => [asc(expenses.createdAt)],
       },
     },
-    orderBy: (expenses, { desc }) => [desc(expenses.createdAt)],
+    orderBy: (expenses, { asc }) => [asc(expenses.createdAt)],
   });
 
   return foundExpenses;
