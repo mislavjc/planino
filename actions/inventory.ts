@@ -1,9 +1,12 @@
 'use server';
 
 import { db } from 'db/drizzle';
-import { inventoryItems, teams } from 'db/schema';
+import { insertInventoryItemSchema, inventoryItems, teams } from 'db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
+
+import { toUpdateSchema } from 'lib/zod';
 
 import { getOrganization } from './organization';
 
@@ -43,4 +46,21 @@ export const createInventoryItem = async ({
   revalidatePath('/[organization]/imovina-i-oprema', 'page');
 
   return newInventoryItem[0];
+};
+
+const updateInventoryItemSchema = toUpdateSchema(insertInventoryItemSchema);
+
+type UpdateInventoryItem = z.infer<typeof updateInventoryItemSchema>;
+
+export const updateInventoryItem = async (payload: UpdateInventoryItem) => {
+  const parsedPayload = updateInventoryItemSchema.parse(payload);
+
+  if (!parsedPayload.inventoryItemId) {
+    throw new Error('Nedostaje identifikator inventurne stavke.');
+  }
+
+  await db
+    .update(inventoryItems)
+    .set(parsedPayload)
+    .where(eq(inventoryItems.inventoryItemId, parsedPayload.inventoryItemId));
 };

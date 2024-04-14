@@ -311,6 +311,9 @@ export const inventoryItems = pgTable('inventoryItem', {
     }),
 });
 
+export const selectInventoryItemSchema = createSelectSchema(inventoryItems);
+export const insertInventoryItemSchema = createInsertSchema(inventoryItems);
+
 export const inventoryItemsRelations = relations(inventoryItems, ({ one }) => ({
   team: one(teams, {
     fields: [inventoryItems.teamId],
