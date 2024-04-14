@@ -1,14 +1,14 @@
 import React, { Suspense } from 'react';
-import { getLoans } from 'actions/loan';
+import { createLoan, getLoans } from 'actions/loan';
 import { Metadata } from 'next';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
 import { ScrollArea, ScrollBar } from 'ui/scroll-area';
 import { TypographyH3, TypographyP } from 'ui/typography';
 
-import { AddRow } from 'components/@loans/add-row';
 import { Overview } from 'components/@loans/overview';
 import { Row } from 'components/@loans/row';
+import { AddRow } from 'components/add-row';
 
 export const metadata: Metadata = {
   title: 'Otplatni plan - Planino',
@@ -46,7 +46,13 @@ const PaymentPlanPage = async ({
                   <Row key={loan.loanId} {...loan} />
                 ))}
               </div>
-              <AddRow organization={organization} />
+              <AddRow
+                action={async () => {
+                  'use server';
+
+                  await createLoan(organization);
+                }}
+              />
             </div>
             <ScrollBar />
           </ScrollArea>

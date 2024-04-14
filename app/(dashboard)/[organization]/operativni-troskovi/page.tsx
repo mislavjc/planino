@@ -1,7 +1,7 @@
-import { getOperationalExpenses } from 'actions/expense';
+import { createExpense, getOperationalExpenses } from 'actions/expense';
 
-import { AddRow } from 'components/@expenses/add-row';
 import { Row } from 'components/@expenses/row';
+import { AddRow } from 'components/add-row';
 import { Card, CardContent, CardHeader } from 'components/ui/card';
 import { ScrollArea, ScrollBar } from 'components/ui/scroll-area';
 import { TypographyH3, TypographyP } from 'components/ui/typography';
@@ -44,7 +44,16 @@ const OperationalExpensesPage = async ({
                         <Row expense={expense} />
                       </div>
                     ))}
-                    <AddRow organization={organization} teamId={team.teamId} />
+                    <AddRow
+                      action={async () => {
+                        'use server';
+
+                        await createExpense({
+                          organization,
+                          teamId: team.teamId,
+                        });
+                      }}
+                    />
                   </div>
                 ))}
               </div>

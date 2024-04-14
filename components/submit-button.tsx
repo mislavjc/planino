@@ -1,24 +1,11 @@
 'use client';
 
 import { useFormStatus } from 'react-dom';
-import { createLoan } from 'actions/loan';
 import { Loader2, Plus } from 'lucide-react';
 
-import { Button } from 'ui/button';
+import { Button } from './ui/button';
 
-export const AddRow = ({ organization }: { organization: string }) => {
-  return (
-    <form
-      action={async () => {
-        createLoan(organization);
-      }}
-    >
-      <SubmitButton />
-    </form>
-  );
-};
-
-const SubmitButton = () => {
+export const SubmitButton = () => {
   const status = useFormStatus();
 
   return (
