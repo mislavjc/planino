@@ -1,6 +1,6 @@
 import { createInventoryItem, getInventoryItems } from 'actions/inventory';
 
-import { AddRow } from 'components/@inventory/add-row';
+import { AddRow } from 'components/add-row';
 
 const InventroyAndEquipmentPage = async ({
   params,
@@ -24,7 +24,16 @@ const InventroyAndEquipmentPage = async ({
                   {inventoryItem.name} item
                 </li>
               ))}
-              <AddRow organization={params.organization} teamId={team.teamId} />
+              <AddRow
+                action={async () => {
+                  'use server';
+
+                  await createInventoryItem({
+                    organization: params.organization,
+                    teamId: team.teamId,
+                  });
+                }}
+              />
             </ul>
           </div>
         ))}
