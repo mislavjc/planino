@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { updateExpense } from 'actions/expense';
 import { selectExpenseSchema, selectFinancialAttributeSchema } from 'db/schema';
 import { Euro, Percent } from 'lucide-react';
+import { toast } from 'sonner';
 import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 
@@ -59,7 +60,7 @@ export const Row = ({
             },
           });
         } catch (error) {
-          console.error(error);
+          toast.error('Neuspješno ažuriranje naziva troška.');
         }
 
         return;
@@ -75,7 +76,7 @@ export const Row = ({
           financialAttribute: updateData,
         });
       } catch (error) {
-        console.error(error);
+        toast.error('Neuspješno ažuriranje troška.');
       }
     },
     1_000,

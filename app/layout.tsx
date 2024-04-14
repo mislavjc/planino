@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { IBM_Plex_Mono, Inter } from 'next/font/google';
 import PlausibleProvider from 'next-plausible';
 
+import { Toaster } from 'ui/sonner';
+
 import { DOMAIN } from 'lib/constants';
 import { cn } from 'lib/utils';
 
@@ -33,6 +35,7 @@ export default function RootLayout({
       </head>
       <body className={cn('font-sans', inter.variable, plexMono.variable)}>
         {children}
+        <Toaster richColors />
       </body>
     </html>
   );
