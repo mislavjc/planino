@@ -6,10 +6,13 @@ import {
   expenses,
   expenseTypes,
   financialAttributes,
+  insertExpenseSchema,
+  insertFinancialAttributeSchema,
   teams,
 } from 'db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 
 import { getOrganization } from './organization';
 
@@ -25,8 +28,10 @@ export const getOperationalExpenses = async (organization: string) => {
           expenseFrequency: true,
           expenseType: true,
         },
+        orderBy: (expenses, { desc }) => [desc(expenses.createdAt)],
       },
     },
+    orderBy: (expenses, { desc }) => [desc(expenses.createdAt)],
   });
 
   return foundExpenses;
@@ -70,4 +75,73 @@ export const createExpense = async ({
   revalidatePath('/[organization]/operativni-troskovi', 'page');
 
   return newExpense[0];
+};
+
+type InsertExpense = z.infer<typeof insertExpenseSchema>;
+
+type InsertFinancialAttribute = z.infer<typeof insertFinancialAttributeSchema>;
+
+type UpdateExpense = {
+  expense?: Partial<InsertExpense>;
+  financialAttribute?: Partial<InsertFinancialAttribute>;
+};
+
+export const updateExpense = async (payload: UpdateExpense) => {
+  if (!payload.expense && !payload.financialAttribute) {
+    throw new Error('Nedostaju podaci za ažuriranje troška.');
+  }
+
+  if (payload.expense && !payload.expense.expenseId) {
+    throw new Error('Nedostaje identifikator troška.');
+  }
+
+  if (payload.expense) {
+    const parsedExpense = insertExpenseSchema.parse(payload.expense);
+
+    if (!parsedExpense.expenseId) {
+      throw new Error('Nedostaje identifikator troška.');
+    }
+
+    const updatedExpense = await db
+      .update(expenses)
+      .set(parsedExpense)
+      .where(eq(expenses.expenseId, parsedExpense.expenseId))
+      .returning();
+
+    if (!updatedExpense.length) {
+      throw new Error('Neuspjelo ažuriranje troška.');
+    }
+  }
+
+  if (
+    payload.financialAttribute &&
+    !payload.financialAttribute.financialAttributeId
+  ) {
+    throw new Error('Nedostaje identifikator financijskog atributa.');
+  }
+
+  if (payload.financialAttribute) {
+    const parsedFinancialAttribute = insertFinancialAttributeSchema.parse(
+      payload.financialAttribute,
+    );
+
+    if (!parsedFinancialAttribute.financialAttributeId) {
+      throw new Error('Nedostaje identifikator financijskog atributa.');
+    }
+
+    const updatedFinancialAttribute = await db
+      .update(financialAttributes)
+      .set(parsedFinancialAttribute)
+      .where(
+        eq(
+          financialAttributes.financialAttributeId,
+          parsedFinancialAttribute.financialAttributeId,
+        ),
+      )
+      .returning();
+
+    if (!updatedFinancialAttribute.length) {
+      throw new Error('Neuspjelo ažuriranje financijskog atributa.');
+    }
+  }
 };

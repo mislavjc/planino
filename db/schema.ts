@@ -11,7 +11,7 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
-import { createInsertSchema } from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 export const users = pgTable('user', {
   id: text('id').notNull().primaryKey(),
@@ -187,6 +187,11 @@ export const financialAttributes = pgTable('financialAttribute', {
   endingMonth: timestamp('endingMonth', { mode: 'date' }),
 });
 
+export const insertFinancialAttributeSchema =
+  createInsertSchema(financialAttributes);
+export const selectFinancialAttributeSchema =
+  createSelectSchema(financialAttributes);
+
 export const financialAttributesRelations = relations(
   financialAttributes,
   ({ one }) => ({
@@ -203,6 +208,9 @@ export const expenseFrequencies = pgTable('expenseFrequency', {
   name: text('name'),
 });
 
+export const insertExpenseFrequencySchema =
+  createInsertSchema(expenseFrequencies);
+
 export const expenseFrequenciesRelations = relations(
   expenseFrequencies,
   ({ one }) => ({
@@ -215,6 +223,8 @@ export const expenseTypes = pgTable('expenseType', {
   createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
   name: text('name'),
 });
+
+export const insertExpenseTypeSchema = createInsertSchema(expenseTypes);
 
 export const expenseTypesRelations = relations(expenseTypes, ({ many }) => ({
   expenses: many(expenses),
@@ -259,6 +269,9 @@ export const expenses = pgTable(
     };
   },
 );
+
+export const insertExpenseSchema = createInsertSchema(expenses);
+export const selectExpenseSchema = createSelectSchema(expenses);
 
 export const expensesRelations = relations(expenses, ({ one }) => ({
   financialAttribute: one(financialAttributes, {
