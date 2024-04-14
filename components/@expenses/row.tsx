@@ -65,6 +65,12 @@ export const Row = ({
         return;
       }
 
+      if (field === 'amount' && (formattedValue as number) < 0) {
+        toast.error('Iznos troška ne može biti negativan.');
+
+        return;
+      }
+
       if (field === 'name') {
         try {
           await updateExpense({
