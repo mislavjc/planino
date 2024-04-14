@@ -14,6 +14,8 @@ import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
+import { toUpdateSchema } from 'lib/zod';
+
 import { getOrganization } from './organization';
 
 export const getOperationalExpenses = async (organization: string) => {
@@ -77,16 +79,20 @@ export const createExpense = async ({
   return newExpense[0];
 };
 
-type InsertExpense = z.infer<typeof insertExpenseSchema>;
+const updateExpenseSchema = toUpdateSchema(insertExpenseSchema);
+type UpdateExpense = z.infer<typeof updateExpenseSchema>;
 
-type InsertFinancialAttribute = z.infer<typeof insertFinancialAttributeSchema>;
+const updatedFinancialAttributeSchema = toUpdateSchema(
+  insertFinancialAttributeSchema,
+);
+type UpdateFinancialAttribute = z.infer<typeof updatedFinancialAttributeSchema>;
 
-type UpdateExpense = {
-  expense?: Partial<InsertExpense>;
-  financialAttribute?: Partial<InsertFinancialAttribute>;
+type UpdateExpenseProps = {
+  expense?: UpdateExpense;
+  financialAttribute?: UpdateFinancialAttribute;
 };
 
-export const updateExpense = async (payload: UpdateExpense) => {
+export const updateExpense = async (payload: UpdateExpenseProps) => {
   if (!payload.expense && !payload.financialAttribute) {
     throw new Error('Nedostaju podaci za ažuriranje troška.');
   }
@@ -96,7 +102,7 @@ export const updateExpense = async (payload: UpdateExpense) => {
   }
 
   if (payload.expense) {
-    const parsedExpense = insertExpenseSchema.parse(payload.expense);
+    const parsedExpense = updateExpenseSchema.parse(payload.expense);
 
     if (!parsedExpense.expenseId) {
       throw new Error('Nedostaje identifikator troška.');
@@ -121,7 +127,7 @@ export const updateExpense = async (payload: UpdateExpense) => {
   }
 
   if (payload.financialAttribute) {
-    const parsedFinancialAttribute = insertFinancialAttributeSchema.parse(
+    const parsedFinancialAttribute = updatedFinancialAttributeSchema.parse(
       payload.financialAttribute,
     );
 
