@@ -71,6 +71,10 @@ export const Row = ({
         return;
       }
 
+      if (field === 'amount' || (field === 'raisePercentage' && value === '')) {
+        formattedValue = '0';
+      }
+
       if (field === 'name') {
         try {
           await updateExpense({
