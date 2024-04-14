@@ -51,14 +51,22 @@ export const Row = ({
         );
       }
 
-      if (field === 'startingMonth' && formattedValue > expense.endingMonth) {
+      if (
+        expense.endingMonth &&
+        field === 'startingMonth' &&
+        formattedValue > expense.endingMonth
+      ) {
         toast.error(
           'Mjesec početka obračuna ne može biti nakon mjeseca kraja obračuna.',
         );
         return;
       }
 
-      if (field === 'endingMonth' && formattedValue < expense.startingMonth) {
+      if (
+        expense.startingMonth &&
+        field === 'endingMonth' &&
+        formattedValue < expense.startingMonth
+      ) {
         toast.error(
           'Mjesec kraja obračuna ne može biti prije mjeseca početka obračuna.',
         );
