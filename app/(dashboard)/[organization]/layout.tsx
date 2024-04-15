@@ -5,6 +5,7 @@ import { Button } from 'ui/button';
 import { Sheet, SheetContent, SheetTrigger } from 'ui/sheet';
 
 import { Navigation } from 'components/@navigation/dashboard';
+import { Organization } from 'components/@navigation/organization';
 import { User } from 'components/@navigation/user';
 
 export const runtime = 'edge';
@@ -29,6 +30,11 @@ const OrganizationLayout = ({
                   <User />
                 </Suspense>
               }
+              org={
+                <Suspense>
+                  <Organization org={params.organization} />
+                </Suspense>
+              }
             />
           </div>
         </div>
@@ -46,7 +52,10 @@ const OrganizationLayout = ({
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="flex flex-col">
-                <Navigation user={<User />} />
+                <Navigation
+                  user={<User />}
+                  org={<Organization org={params.organization} />}
+                />
               </SheetContent>
             </Sheet>
           </header>

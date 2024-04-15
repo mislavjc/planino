@@ -45,7 +45,13 @@ const generateConfig = (name: string, config: TemplateConfig) => {
   };
 };
 
-export const Navigation = ({ user }: { user: React.ReactNode }) => {
+export const Navigation = ({
+  user,
+  org,
+}: {
+  user: React.ReactNode;
+  org: React.ReactNode;
+}) => {
   const pathname = usePathname();
   const { organization } = useParams();
 
@@ -61,6 +67,7 @@ export const Navigation = ({ user }: { user: React.ReactNode }) => {
 
   return (
     <nav className="relative grid gap-2 py-4 text-lg font-medium md:fixed md:w-[220px] md:gap-3 md:text-sm lg:w-[280px] lg:px-4">
+      <div className="mb-4">{org}</div>
       <TypographyP className="text-xs uppercase text-muted-foreground">
         Ulazni podatci
       </TypographyP>
