@@ -85,7 +85,7 @@ export const Row = ({
       />
       <InputWithIcon
         type="number"
-        className="text-right font-mono"
+        className="border-r-0 text-right font-mono"
         value={loan.amount ?? ''}
         onChange={(e) => {
           setLoan({ ...loan, amount: e.target.value });

@@ -76,10 +76,11 @@ export const Row = ({
           setInventoryItem({ ...inventoryItem, startingMonth: date });
           debounceExpenseChange('startingMonth', date);
         }}
+        className="border-r-0"
       />
       <InputWithIcon
         type="number"
-        className="text-right font-mono"
+        className="border-r-0 text-right font-mono"
         value={inventoryItem.amortizationLength ?? ''}
         onChange={(e) => {
           setInventoryItem({
@@ -92,7 +93,7 @@ export const Row = ({
       />
       <InputWithIcon
         type="number"
-        className="border-r-0 text-right font-mono"
+        className="text-right font-mono"
         value={inventoryItem.value ?? ''}
         onChange={(e) => {
           setInventoryItem({ ...inventoryItem, value: e.target.value });

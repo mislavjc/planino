@@ -132,6 +132,7 @@ export const Row = ({
           setExpense({ ...expense, startingMonth: date });
           debounceExpenseChange('startingMonth', date);
         }}
+        className="border-r-0"
       />
       <DatePicker
         date={expense.endingMonth ?? undefined}
@@ -141,10 +142,11 @@ export const Row = ({
           setExpense({ ...expense, endingMonth: date });
           debounceExpenseChange('endingMonth', date);
         }}
+        className="border-r-0"
       />
       <InputWithIcon
         type="number"
-        className="text-right font-mono"
+        className="border-r-0 text-right font-mono"
         value={expense.amount ?? ''}
         onChange={(e) => {
           setExpense({ ...expense, amount: e.target.value });
@@ -154,7 +156,7 @@ export const Row = ({
       />
       <InputWithIcon
         type="number"
-        className="border-r-0 text-right font-mono"
+        className="text-right font-mono"
         value={expense.raisePercentage ?? ''}
         onChange={(e) => {
           setExpense({ ...expense, raisePercentage: e.target.value });
