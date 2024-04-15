@@ -20,9 +20,9 @@ const NavItem = ({ href, icon, children, active = false }: NavItemProps) => (
   <Link
     href={href}
     className={cn(
-      'flex items-center gap-3 rounded-lg px-3 py-2 transition-all md:gap-4',
+      'flex items-center gap-3 rounded-lg px-3 py-2 transition-all md:gap-4 w-full border border-transparent',
       {
-        'bg-muted px-3 py-2 text-primary': active,
+        'bg-white border border-border px-3 py-2 text-primary': active,
         'text-muted-foreground hover:text-primary': !active,
       },
     )}
@@ -45,7 +45,7 @@ const generateConfig = (name: string, config: TemplateConfig) => {
   };
 };
 
-export const Navigation = () => {
+export const Navigation = ({ user }: { user: React.ReactNode }) => {
   const pathname = usePathname();
   const { organization } = useParams();
 
@@ -60,7 +60,7 @@ export const Navigation = () => {
   }
 
   return (
-    <nav className="grid gap-2 text-lg font-medium md:gap-3 md:text-sm lg:px-4">
+    <nav className="relative grid gap-2 py-4 text-lg font-medium md:fixed md:w-[220px] md:gap-3 md:text-sm lg:w-[280px] lg:px-4">
       <TypographyP className="text-xs uppercase text-muted-foreground">
         Ulazni podatci
       </TypographyP>
@@ -87,6 +87,7 @@ export const Navigation = () => {
           {item.label}
         </NavItem>
       ))}
+      <div className="fixed bottom-4 md:w-[220px] lg:w-[280px]">{user}</div>
     </nav>
   );
 };
