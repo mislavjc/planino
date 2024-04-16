@@ -88,19 +88,19 @@ export const verificationTokens = pgTable(
 export const organizations = pgTable(
   'organization',
   {
-    organizationId: uuid('organizationId')
+    organizationId: uuid('organization_id')
       .notNull()
       .primaryKey()
       .defaultRandom(),
-    createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+    createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
     name: text('name').notNull(),
-    userId: text('userId')
+    userId: text('user_id')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
   },
   (organizations) => {
     return {
-      organizationsNameKey: uniqueIndex('organizationsNameKey').on(
+      organizationsNameKey: uniqueIndex('organizations_name_key').on(
         organizations.name,
       ),
     };
@@ -123,23 +123,23 @@ export const organizationsRelations = relations(
 export const loans = pgTable(
   'loan',
   {
-    loanId: uuid('loanId').notNull().primaryKey().defaultRandom(),
-    createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
-    organizationId: uuid('organizationId')
+    loanId: uuid('loan_id').notNull().primaryKey().defaultRandom(),
+    createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+    organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.organizationId, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
     name: text('name'),
-    interestRate: numeric('interestRate'),
+    interestRate: numeric('interest_rate'),
     duration: integer('duration'),
-    startingMonth: timestamp('startingMonth', { mode: 'date' }),
+    startingMonth: timestamp('starting_month', { mode: 'date' }),
     amount: numeric('amount'),
   },
   (loans) => {
     return {
-      loansOrganizationIdIndex: index('loansOrganizationIdIndex').on(
+      loansOrganizationIdIndex: index('loans_organization_id_index').on(
         loans.organizationId,
       ),
     };
@@ -156,10 +156,10 @@ export const loansRelations = relations(loans, ({ one }) => ({
 export const insertLoanSchema = createInsertSchema(loans);
 
 export const teams = pgTable('team', {
-  teamId: uuid('teamId').notNull().primaryKey().defaultRandom(),
-  createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+  teamId: uuid('team_id').notNull().primaryKey().defaultRandom(),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
   name: text('name').notNull(),
-  organizationId: uuid('organizationId')
+  organizationId: uuid('organization_id')
     .notNull()
     .references(() => organizations.organizationId, {
       onDelete: 'cascade',
@@ -176,16 +176,16 @@ export const teamsRelations = relations(teams, ({ one, many }) => ({
   inventoryItems: many(inventoryItems),
 }));
 
-export const financialAttributes = pgTable('financialAttribute', {
-  financialAttributeId: uuid('financialAttributeId')
+export const financialAttributes = pgTable('financial_attribute', {
+  financialAttributeId: uuid('financial_attribute_id')
     .notNull()
     .primaryKey()
     .defaultRandom(),
-  createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
-  startingMonth: timestamp('startingMonth', { mode: 'date' }),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  startingMonth: timestamp('starting_month', { mode: 'date' }),
   amount: numeric('amount'),
-  raisePercentage: numeric('raisePercentage'),
-  endingMonth: timestamp('endingMonth', { mode: 'date' }),
+  raisePercentage: numeric('raise_percentage'),
+  endingMonth: timestamp('ending_month', { mode: 'date' }),
 });
 
 export const insertFinancialAttributeSchema =
@@ -200,12 +200,12 @@ export const financialAttributesRelations = relations(
   }),
 );
 
-export const expenseFrequencies = pgTable('expenseFrequency', {
-  expenseFrequencyId: uuid('expenseFrequencyId')
+export const expenseFrequencies = pgTable('expense_frequency', {
+  expenseFrequencyId: uuid('expense_frequency_id')
     .notNull()
     .primaryKey()
     .defaultRandom(),
-  createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
   name: text('name'),
 });
 
@@ -219,9 +219,9 @@ export const expenseFrequenciesRelations = relations(
   }),
 );
 
-export const expenseTypes = pgTable('expenseType', {
-  expenseTypeId: uuid('expenseTypeId').notNull().primaryKey().defaultRandom(),
-  createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+export const expenseTypes = pgTable('expense_type', {
+  expenseTypeId: uuid('expense_type_id').notNull().primaryKey().defaultRandom(),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
   name: text('name'),
 });
 
@@ -234,28 +234,28 @@ export const expenseTypesRelations = relations(expenseTypes, ({ many }) => ({
 export const expenses = pgTable(
   'expense',
   {
-    expenseId: uuid('expenseId').notNull().primaryKey().defaultRandom(),
-    createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+    expenseId: uuid('expense_id').notNull().primaryKey().defaultRandom(),
+    createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
     name: text('name'),
-    financialAttributeId: uuid('financialAttributeId')
+    financialAttributeId: uuid('financial_attribute_id')
       .notNull()
       .references(() => financialAttributes.financialAttributeId, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    expenseFrequencyId: uuid('expenseFrequencyId')
+    expenseFrequencyId: uuid('expense_frequency_id')
       .notNull()
       .references(() => expenseFrequencies.expenseFrequencyId, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    expenseTypeId: uuid('expenseTypeId')
+    expenseTypeId: uuid('expense_type_id')
       .notNull()
       .references(() => expenseTypes.expenseTypeId, {
         onDelete: 'cascade',
         onUpdate: 'cascade',
       }),
-    teamId: uuid('teamId')
+    teamId: uuid('team_id')
       .notNull()
       .references(() => teams.teamId, {
         onDelete: 'cascade',
@@ -265,7 +265,7 @@ export const expenses = pgTable(
   (expense) => {
     return {
       expensesFinancialAttributeIdKey: uniqueIndex(
-        'expensesFinancialAttributeIdKey',
+        'expenses_financial_attribute_id_key',
       ).on(expense.financialAttributeId),
     };
   },
@@ -293,17 +293,17 @@ export const expensesRelations = relations(expenses, ({ one }) => ({
   }),
 }));
 
-export const inventoryItems = pgTable('inventoryItem', {
-  inventoryItemId: uuid('inventoryItemId')
+export const inventoryItems = pgTable('inventory_item', {
+  inventoryItemId: uuid('inventory_item_id')
     .notNull()
     .primaryKey()
     .defaultRandom(),
-  createdAt: timestamp('createdAt', { mode: 'date' }).notNull().defaultNow(),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
   name: text('name'),
   value: numeric('value'),
-  startingMonth: timestamp('startingMonth', { mode: 'date' }),
-  amortizationLength: integer('amortizationLength'),
-  teamId: uuid('teamId')
+  startingMonth: timestamp('starting_month', { mode: 'date' }),
+  amortizationLength: integer('amortization_length'),
+  teamId: uuid('team_id')
     .notNull()
     .references(() => teams.teamId, {
       onDelete: 'cascade',

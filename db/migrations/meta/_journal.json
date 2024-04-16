@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1711304070761,
-      "tag": "0000_youthful_triton",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1711485512681,
-      "tag": "0001_yellow_wild_pack",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1711900632090,
-      "tag": "0002_peaceful_spencer_smythe",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1712519918555,
-      "tag": "0003_oval_lester",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1713113908585,
-      "tag": "0004_thick_carlie_cooper",
+      "when": 1713207453850,
+      "tag": "0000_certain_lady_ursula",
       "breakpoints": true
     }
   ]
