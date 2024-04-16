@@ -1,6 +1,6 @@
 import { getYearlyExpenseAggregation } from 'actions/expense';
 
-import { TypographyH4, TypographyP } from 'ui/typography';
+import { TypographyP } from 'ui/typography';
 
 export const Overview = async ({ organization }: { organization: string }) => {
   const aggregation = await getYearlyExpenseAggregation(organization);
