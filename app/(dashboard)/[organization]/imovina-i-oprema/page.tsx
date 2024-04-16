@@ -1,9 +1,11 @@
+import { Suspense } from 'react';
 import { createInventoryItem, getInventoryItems } from 'actions/inventory';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
 import { ScrollArea } from 'ui/scroll-area';
 import { TypographyH3, TypographyP } from 'ui/typography';
 
+import { Overview } from 'components/@inventory/overview';
 import { Row } from 'components/@inventory/row';
 import { AddRow } from 'components/add-row';
 
@@ -17,7 +19,7 @@ const InventroyAndEquipmentPage = async ({
   const teamsWithInventoryItems = await getInventoryItems(params.organization);
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <Card className="max-w-screen-xl">
         <CardHeader>
           <TypographyH3>Imovina i oprema</TypographyH3>
@@ -58,6 +60,18 @@ const InventroyAndEquipmentPage = async ({
                 ))}
               </div>
             </div>
+          </ScrollArea>
+        </CardContent>
+      </Card>
+      <Card className="max-w-screen-xl">
+        <CardHeader>
+          <TypographyH3>Godišnje vrijednosti</TypographyH3>
+        </CardHeader>
+        <CardContent className="overflow-x-auto">
+          <ScrollArea className="w-max">
+            <Suspense fallback={null}>
+              <Overview organization={params.organization} />
+            </Suspense>
           </ScrollArea>
         </CardContent>
       </Card>

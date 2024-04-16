@@ -76,3 +76,55 @@ FROM
 ORDER BY
     created_at;
 `;
+
+export const INVENTORY_VALUES = sql`
+WITH YearValues AS (
+    SELECT 
+        i.inventory_item_id,
+        i.name AS item_name,
+        i.value / i.amortization_length AS yearly_amortization,
+        EXTRACT(YEAR FROM i.starting_month) AS start_year,
+        i.amortization_length,
+        i.team_id
+    FROM 
+        inventory_item i
+),
+MinMaxYears AS (
+    SELECT 
+        MIN(EXTRACT(YEAR FROM starting_month)) AS min_year,
+        MAX(EXTRACT(YEAR FROM starting_month) + amortization_length - 1) AS max_year
+    FROM 
+        inventory_item
+),
+TeamItems AS (
+    SELECT
+        t.name AS team_name,
+        y.item_name,
+        y.yearly_amortization,
+        y.start_year,
+        y.amortization_length,
+        y.team_id,
+        m.min_year,
+        m.max_year
+    FROM
+        team t
+        JOIN YearValues y ON t.team_id = y.team_id
+        CROSS JOIN MinMaxYears m
+)
+SELECT
+    t.team_name,
+    t.item_name,
+    ARRAY_AGG(
+        CASE 
+            WHEN t.start_year <= y AND t.start_year + t.amortization_length - 1 >= y THEN t.yearly_amortization
+            ELSE NULL
+        END ORDER BY y
+    ) FILTER (WHERE y BETWEEN t.min_year AND t.max_year) AS yearly_values
+FROM
+    TeamItems t,
+    generate_series(t.min_year, t.max_year) AS y
+GROUP BY
+    t.team_name, t.item_name
+ORDER BY
+    t.team_name, t.item_name;
+`;
