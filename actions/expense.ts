@@ -1,6 +1,7 @@
 'use server';
 
 import { db } from 'db/drizzle';
+import { YEARLY_EXPENSE_AGREGATION } from 'db/queries';
 import {
   expenseFrequencies,
   expenses,
@@ -150,4 +151,58 @@ export const updateExpense = async (payload: UpdateExpenseProps) => {
       throw new Error('Neuspjelo ažuriranje financijskog atributa.');
     }
   }
+
+  revalidatePath('/[organization]/operativni-troskovi', 'page');
+};
+
+const yearlyExpenseAggregationSchema = z.array(
+  z.object({
+    team_id: z.string(),
+    expense_id: z.string(),
+    expense_name: z.string(),
+    team_name: z.string(),
+    financial_year: z.coerce.number(),
+    total_amount: z.string(),
+  }),
+);
+
+export const getYearlyExpenseAggregation = async (organization: string) => {
+  const result = (await db.execute(YEARLY_EXPENSE_AGREGATION)).rows;
+
+  const parsedResult = yearlyExpenseAggregationSchema.parse(result);
+
+  const organizedExpenses = organizeExpenses(parsedResult);
+
+  return organizedExpenses;
+};
+
+type ExpenseAggregation = z.infer<typeof yearlyExpenseAggregationSchema>;
+
+const organizeExpenses = (expenseSums: ExpenseAggregation) => {
+  if (!expenseSums) {
+    return [];
+  }
+
+  const yearlyMap = new Map<number, Map<string, ExpenseAggregation>>();
+
+  expenseSums.forEach((expense) => {
+    if (!yearlyMap.has(expense.financial_year)) {
+      yearlyMap.set(expense.financial_year, new Map());
+    }
+    const groupMap = yearlyMap.get(expense.financial_year);
+    if (!groupMap?.has(expense.team_name)) {
+      groupMap?.set(expense.team_name, []);
+    }
+    groupMap?.get(expense.team_name)?.push(expense);
+  });
+
+  return Array.from(yearlyMap)
+    .sort(([yearA], [yearB]) => yearA - yearB)
+    .map(([year, groupMap]) => ({
+      year,
+      groups: Array.from(groupMap).map(([TeamExpenseId, expenses]) => ({
+        grouped_expense_id: TeamExpenseId,
+        expenses,
+      })),
+    }));
 };

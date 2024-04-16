@@ -1,5 +1,6 @@
 import { createExpense, getOperationalExpenses } from 'actions/expense';
 
+import { Overview } from 'components/@expenses/overview';
 import { Row } from 'components/@expenses/row';
 import { AddRow } from 'components/add-row';
 import { Card, CardContent, CardHeader } from 'components/ui/card';
@@ -14,7 +15,7 @@ const OperationalExpensesPage = async ({
   const operationalExpenses = await getOperationalExpenses(organization);
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <Card className="max-w-screen-xl">
         <CardHeader>
           <TypographyH3>Operativni troškovi</TypographyH3>
@@ -61,6 +62,9 @@ const OperationalExpensesPage = async ({
             <ScrollBar />
           </ScrollArea>
         </CardContent>
+      </Card>
+      <Card className="max-w-md">
+        <Overview organization={organization} />
       </Card>
     </div>
   );
