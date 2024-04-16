@@ -6,9 +6,9 @@ import { and, eq, isNotNull, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
-import { getOrganization } from './organization';
+import { toUpdateSchema } from 'lib/zod';
 
-type LoanInsertInput = z.infer<typeof insertLoanSchema>;
+import { getOrganization } from './organization';
 
 export const createLoan = async (organization: string) => {
   const foundOrganization = await getOrganization(organization);
@@ -49,8 +49,14 @@ export const getLoans = async (organization: string) => {
   return dbLoans;
 };
 
-export const updateLoan = async (data: Partial<LoanInsertInput>) => {
-  if (!data.loanId) {
+const updateLoanSchema = toUpdateSchema(insertLoanSchema);
+
+type UpdateLoan = z.infer<typeof updateLoanSchema>;
+
+export const updateLoan = async (payload: UpdateLoan) => {
+  const parsedPayload = updateLoanSchema.parse(payload);
+
+  if (!parsedPayload.loanId) {
     return {
       error: 'ID Kredita je potreban.',
     };
@@ -58,8 +64,8 @@ export const updateLoan = async (data: Partial<LoanInsertInput>) => {
 
   const loan = await db
     .update(loans)
-    .set(data)
-    .where(eq(loans.loanId, data.loanId))
+    .set(parsedPayload)
+    .where(eq(loans.loanId, parsedPayload.loanId))
     .returning();
 
   if (!loan.length) {
