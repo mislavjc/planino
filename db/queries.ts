@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 
-export const YEARLY_EXPENSE_AGREGATION = sql`
+export const YEARLY_EXPENSE_AGREGATION = (organzation_id: string) => sql`
 WITH ExpenseData AS (
     SELECT
         t.team_id,
@@ -17,6 +17,8 @@ WITH ExpenseData AS (
         team t
         INNER JOIN expense e ON t.team_id = e.team_id
         INNER JOIN financial_attribute fa ON fa.financial_attribute_id = e.financial_attribute_id
+    WHERE
+        t.organization_id = ${organzation_id}
 ),
 MinYear AS (
     SELECT

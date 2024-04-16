@@ -167,7 +167,13 @@ const yearlyExpenseAggregationSchema = z.array(
 );
 
 export const getYearlyExpenseAggregation = async (organization: string) => {
-  const result = (await db.execute(YEARLY_EXPENSE_AGREGATION)).rows;
+  const foundOrganization = await getOrganization(organization);
+
+  const result = (
+    await db.execute(
+      YEARLY_EXPENSE_AGREGATION(foundOrganization.organizationId),
+    )
+  ).rows;
 
   const parsedResult = yearlyExpenseAggregationSchema.parse(result);
 
