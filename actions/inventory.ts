@@ -79,13 +79,17 @@ const inventoryValuesSchema = z.array(
 export const getInventoryValues = async (organization: string) => {
   const foundOrganization = await getOrganization(organization);
 
-  const result = (await db.execute(INVENTORY_VALUES)).rows;
+  const result = (
+    await db.execute(INVENTORY_VALUES(foundOrganization.organizationId))
+  ).rows;
 
   const startYear = await db
     .select({
       startYear: sql<string>`EXTRACT(YEAR FROM starting_month)`,
     })
     .from(inventoryItems)
+    .innerJoin(teams, eq(inventoryItems.teamId, teams.teamId))
+    .where(eq(teams.organizationId, foundOrganization.organizationId))
     .orderBy(inventoryItems.startingMonth)
     .limit(1);
 

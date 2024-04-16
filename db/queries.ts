@@ -77,7 +77,7 @@ ORDER BY
     created_at;
 `;
 
-export const INVENTORY_VALUES = sql`
+export const INVENTORY_VALUES = (organzation_id: string) => sql`
 WITH YearValues AS (
     SELECT 
         i.inventory_item_id,
@@ -88,6 +88,9 @@ WITH YearValues AS (
         i.team_id
     FROM 
         inventory_item i
+        JOIN team t ON i.team_id = t.team_id
+    WHERE
+        t.organization_id = ${organzation_id}
 ),
 MinMaxYears AS (
     SELECT 
@@ -110,6 +113,8 @@ TeamItems AS (
         team t
         JOIN YearValues y ON t.team_id = y.team_id
         CROSS JOIN MinMaxYears m
+        WHERE
+            t.organization_id = ${organzation_id}
 )
 SELECT
     t.team_name,
