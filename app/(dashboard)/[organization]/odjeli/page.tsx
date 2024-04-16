@@ -11,9 +11,13 @@ const TeamsPage = async ({
 
   return (
     <div>
-      {teams.map((team) => (
-        <div key={team.teamId}>{team.name}</div>
-      ))}
+      <div className="max-w-lg">
+        {teams.map((team) => (
+          <div key={team.teamId} className="border p-4">
+            {team.name}
+          </div>
+        ))}
+      </div>
       <TeamsForm />
     </div>
   );
