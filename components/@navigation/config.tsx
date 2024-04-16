@@ -11,7 +11,7 @@ import {
   Warehouse,
 } from 'lucide-react';
 
-export type ConfigItem = {
+type ConfigItem = {
   icon: React.ReactNode;
   label: string;
   href: string;
