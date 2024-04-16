@@ -2,9 +2,10 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createOrganization } from 'actions/organization';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
+
+import { createOrganization } from 'actions/organization';
 
 import { APP_URL } from 'lib/constants';
 import { slugify } from 'lib/utils';

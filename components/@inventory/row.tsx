@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { updateInventoryItem } from 'actions/inventory';
-import { selectInventoryItemSchema } from 'db/schema';
 import { Euro, Timer } from 'lucide-react';
 import { toast } from 'sonner';
 import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
+
+import { selectInventoryItemSchema } from 'db/schema';
+
+import { updateInventoryItem } from 'actions/inventory';
 
 import { Input } from 'ui/input';
 

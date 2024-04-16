@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { updateLoan } from 'actions/loan';
 import { Euro, Percent } from 'lucide-react';
 import { useDebouncedCallback } from 'use-debounce';
+
+import { updateLoan } from 'actions/loan';
 
 import { Input } from 'ui/input';
 

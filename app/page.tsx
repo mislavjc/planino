@@ -1,4 +1,5 @@
 import { auth } from 'auth';
+
 import { db } from 'db/drizzle';
 
 const HomePage = async () => {

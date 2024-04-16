@@ -1,6 +1,7 @@
 import React from 'react';
-import { getLoansForCalulation } from 'actions/loan';
 import { ipmt, pmt, ppmt } from 'financial';
+
+import { getLoansForCalulation } from 'actions/loan';
 
 export const Overview = async ({ organization }: { organization: string }) => {
   const loansForCalculation = await getLoansForCalulation(organization);

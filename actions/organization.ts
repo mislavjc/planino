@@ -1,11 +1,12 @@
 'use server';
 
 import { auth } from 'auth';
-import { db } from 'db/drizzle';
-import { insertOrganzationSchema, organizations } from 'db/schema';
 import { and, eq } from 'drizzle-orm';
 import { notFound, redirect } from 'next/navigation';
 import { z } from 'zod';
+
+import { db } from 'db/drizzle';
+import { insertOrganzationSchema, organizations } from 'db/schema';
 
 type OrganizationInsertInput = Omit<
   z.infer<typeof insertOrganzationSchema>,

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { getInventoryValues } from 'actions/inventory';
 
 export const Overview = async ({ organization }: { organization: string }) => {

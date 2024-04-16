@@ -16,6 +16,10 @@
             "groups": [
               // Packages `react` related packages come first.
               ["^react", "^@?\\w"],
+              // Database
+              ["^(|db)(/.*|$)"],
+              // Server actions
+              ["^(|actions)(/.*|$)"],
               // UI components
               ["^(|ui)(/.*|$)"],
               // Internal packages.

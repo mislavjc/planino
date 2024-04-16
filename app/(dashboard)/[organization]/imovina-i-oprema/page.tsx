@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+
 import { createInventoryItem, getInventoryItems } from 'actions/inventory';
 
 import { Card, CardContent, CardHeader } from 'ui/card';

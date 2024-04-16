@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
-import { createLoan, getLoans } from 'actions/loan';
 import { Metadata } from 'next';
+
+import { createLoan, getLoans } from 'actions/loan';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
 import { ScrollArea, ScrollBar } from 'ui/scroll-area';
