@@ -79,7 +79,10 @@ export const Row = ({
         return;
       }
 
-      if (field === 'amount' || (field === 'raisePercentage' && value === '')) {
+      if (
+        (field === 'amount' && value === '') ||
+        (field === 'raisePercentage' && value === '')
+      ) {
         formattedValue = '0';
       }
 
