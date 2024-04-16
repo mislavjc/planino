@@ -17,8 +17,13 @@ export const getInventoryItems = async (organization: string) => {
   const teamsWithInventoryItems = await db.query.teams.findMany({
     where: eq(teams.organizationId, foundOrganization.organizationId),
     with: {
-      inventoryItems: true,
+      inventoryItems: {
+        orderBy: (inventoryItems, { asc }) => [
+          asc(inventoryItems.startingMonth),
+        ],
+      },
     },
+    orderBy: (teams, { asc }) => [asc(teams.createdAt)],
   });
 
   return teamsWithInventoryItems;
