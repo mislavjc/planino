@@ -10,10 +10,8 @@ import { selectInventoryItemSchema } from 'db/schema';
 
 import { updateInventoryItem } from 'actions/inventory';
 
-import { Input } from 'ui/input';
-
 import { DatePicker } from 'components/date-picker';
-import { InputWithIcon } from 'components/input-with-icon';
+import { TableInput } from 'components/table/input';
 
 type InventoryItemSelect = z.infer<typeof selectInventoryItemSchema>;
 
@@ -62,8 +60,8 @@ export const Row = ({
 
   return (
     <div className="grid grid-cols-5">
-      <Input
-        className="col-span-2 border-r-0"
+      <TableInput
+        className="col-span-2"
         value={inventoryItem.name ?? ''}
         onChange={(e) => {
           setInventoryItem({ ...inventoryItem, name: e.target.value });
@@ -78,11 +76,9 @@ export const Row = ({
           setInventoryItem({ ...inventoryItem, startingMonth: date });
           debounceExpenseChange('startingMonth', date);
         }}
-        className="border-r-0"
       />
-      <InputWithIcon
+      <TableInput
         type="number"
-        className="border-r-0 text-right font-mono"
         value={inventoryItem.amortizationLength ?? ''}
         onChange={(e) => {
           setInventoryItem({
@@ -93,9 +89,8 @@ export const Row = ({
         }}
         icon={Timer}
       />
-      <InputWithIcon
+      <TableInput
         type="number"
-        className="text-right font-mono"
         value={inventoryItem.value ?? ''}
         onChange={(e) => {
           setInventoryItem({ ...inventoryItem, value: e.target.value });

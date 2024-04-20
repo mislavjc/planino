@@ -10,10 +10,8 @@ import { selectExpenseSchema, selectFinancialAttributeSchema } from 'db/schema';
 
 import { updateExpense } from 'actions/expense';
 
-import { Input } from 'ui/input';
-
 import { DatePicker } from 'components/date-picker';
-import { InputWithIcon } from 'components/input-with-icon';
+import { TableInput } from 'components/table/input';
 
 type ExpenseSelect = z.infer<typeof selectExpenseSchema>;
 
@@ -121,8 +119,8 @@ export const Row = ({
 
   return (
     <div className="grid grid-cols-6">
-      <Input
-        className="col-span-2 border-r-0"
+      <TableInput
+        className="col-span-2"
         value={expense.name ?? ''}
         onChange={(e) => {
           setExpense({ ...expense, name: e.target.value });
@@ -137,7 +135,6 @@ export const Row = ({
           setExpense({ ...expense, startingMonth: date });
           debounceExpenseChange('startingMonth', date);
         }}
-        className="border-r-0"
       />
       <DatePicker
         date={expense.endingMonth ?? undefined}
@@ -147,11 +144,9 @@ export const Row = ({
           setExpense({ ...expense, endingMonth: date });
           debounceExpenseChange('endingMonth', date);
         }}
-        className="border-r-0"
       />
-      <InputWithIcon
+      <TableInput
         type="number"
-        className="border-r-0 text-right font-mono"
         value={expense.amount ?? ''}
         onChange={(e) => {
           setExpense({ ...expense, amount: e.target.value });
@@ -159,9 +154,8 @@ export const Row = ({
         }}
         icon={Euro}
       />
-      <InputWithIcon
+      <TableInput
         type="number"
-        className="text-right font-mono"
         value={expense.raisePercentage ?? ''}
         onChange={(e) => {
           setExpense({ ...expense, raisePercentage: e.target.value });

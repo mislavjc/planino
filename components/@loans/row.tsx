@@ -6,10 +6,8 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { updateLoan } from 'actions/loan';
 
-import { Input } from 'ui/input';
-
 import { DatePicker } from 'components/date-picker';
-import { InputWithIcon } from 'components/input-with-icon';
+import { TableInput } from 'components/table/input';
 
 type RowProps = {
   loanId: string;
@@ -57,17 +55,16 @@ export const Row = ({
 
   return (
     <div className="grid grid-cols-7">
-      <Input
-        className="col-span-2 border-r-0"
+      <TableInput
+        className="col-span-2"
         value={loan.name ?? ''}
         onChange={(e) => {
           setLoan({ ...loan, name: e.target.value });
           debounceLoanChange('name', e.target.value);
         }}
       />
-      <InputWithIcon
+      <TableInput
         type="number"
-        className="border-r-0 text-right font-mono"
         value={loan.interestRate ?? ''}
         onChange={(e) => {
           setLoan({ ...loan, interestRate: e.target.value });
@@ -75,18 +72,16 @@ export const Row = ({
         }}
         icon={Percent}
       />
-      <Input
+      <TableInput
         type="number"
-        className="border-r-0 text-right font-mono"
         value={loan.duration ?? ''}
         onChange={(e) => {
           setLoan({ ...loan, duration: parseInt(e.target.value) });
           debounceLoanChange('duration', parseInt(e.target.value));
         }}
       />
-      <InputWithIcon
+      <TableInput
         type="number"
-        className="border-r-0 text-right font-mono"
         value={loan.amount ?? ''}
         onChange={(e) => {
           setLoan({ ...loan, amount: e.target.value });
