@@ -7,7 +7,7 @@ export const Overview = async ({ organization }: { organization: string }) => {
     await getInventoryValues(organization);
 
   return (
-    <div className="grid grid-cols-1 divide-y divide-gray-200">
+    <div className="grid grid-cols-1 divide-y divide-gray-200 border">
       <div
         className="grid bg-gray-100 p-2"
         style={{
