@@ -4,11 +4,12 @@ import { createInventoryItem, getInventoryItems } from 'actions/inventory';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
 import { ScrollArea } from 'ui/scroll-area';
-import { TypographyH3, TypographyP } from 'ui/typography';
+import { TypographyH3 } from 'ui/typography';
 
 import { Overview } from 'components/@inventory/overview';
 import { Row } from 'components/@inventory/row';
 import { AddRow } from 'components/add-row';
+import { TeamInputTable } from 'components/table/team-input-table';
 
 const InventroyAndEquipmentPage = async ({
   params,
@@ -27,26 +28,24 @@ const InventroyAndEquipmentPage = async ({
         </CardHeader>
         <CardContent>
           <ScrollArea className="min-w-[40rem]">
-            <div>
-              <div className="grid grid-cols-5 text-sm">
-                <TypographyP className="col-span-2">Naziv</TypographyP>
-                <TypographyP>Mjesec početka</TypographyP>
-                <TypographyP className="text-right">
-                  Rok amortizacije
-                </TypographyP>
-                <TypographyP className="text-right">Iznos</TypographyP>
-              </div>
-              <div className="flex flex-col gap-4">
-                {teamsWithInventoryItems.map((team) => (
-                  <div key={team.teamId}>
-                    <div className="bg-muted px-4 py-2 font-mono text-sm uppercase">
-                      {team.name}
-                    </div>
-                    {team.inventoryItems.map((inventoryItem) => (
-                      <div key={inventoryItem.inventoryItemId}>
-                        <Row inventoryItem={inventoryItem} />
-                      </div>
-                    ))}
+            <TeamInputTable
+              header={[
+                { title: 'Naziv', width: 2 },
+                { title: 'Mjesec početka' },
+                { title: 'Rok amortizacije', align: 'right' },
+                { title: 'Iznos', align: 'right' },
+              ]}
+              teams={teamsWithInventoryItems.map((team) => {
+                return {
+                  teamId: team.teamId,
+                  name: team.name,
+                  items: team.inventoryItems.map((inventoryItem) => (
+                    <Row
+                      key={inventoryItem.inventoryItemId}
+                      inventoryItem={inventoryItem}
+                    />
+                  )),
+                  add: (
                     <AddRow
                       action={async () => {
                         'use server';
@@ -57,10 +56,10 @@ const InventroyAndEquipmentPage = async ({
                         });
                       }}
                     />
-                  </div>
-                ))}
-              </div>
-            </div>
+                  ),
+                };
+              })}
+            />
           </ScrollArea>
         </CardContent>
       </Card>
