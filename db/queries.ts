@@ -48,9 +48,9 @@ MonthlySums AS (
         ed.raise_percentage,
         gs.year,
         CASE
-            WHEN gs.year = ed.start_year AND gs.year = EXTRACT(YEAR FROM COALESCE(ed.ending_month, CURRENT_DATE)) THEN EXTRACT(MONTH FROM COALESCE(ed.ending_month, CURRENT_DATE)) - ed.start_month + 1
+            WHEN gs.year = ed.start_year AND gs.year = EXTRACT(YEAR FROM COALESCE(ed.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) THEN EXTRACT(MONTH FROM COALESCE(ed.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) - ed.start_month + 1
             WHEN gs.year = ed.start_year THEN 12 - ed.start_month + 1
-            WHEN gs.year = EXTRACT(YEAR FROM COALESCE(ed.ending_month, CURRENT_DATE)) THEN EXTRACT(MONTH FROM COALESCE(ed.ending_month, CURRENT_DATE))
+            WHEN gs.year = EXTRACT(YEAR FROM COALESCE(ed.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) THEN EXTRACT(MONTH FROM COALESCE(ed.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day'))
             ELSE 12
         END as months_in_year
     FROM
