@@ -87,8 +87,7 @@ FROM
 GROUP BY
     ed.team_id, ed.expense_id, ed.team_name, ed.expense_name, ed.created_at
 ORDER BY
-    ed.created_at;
-
+    ed.team_name, ed.expense_name, ed.created_at;
 `;
 
 export const INVENTORY_VALUES = (organzation_id: string) => sql`
