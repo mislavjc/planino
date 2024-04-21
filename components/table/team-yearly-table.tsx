@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { TeamTotalsRow } from './team-totals-row';
+
 type TeamYearlyTableProps = {
   values: Array<{
     team_name: string;
@@ -15,6 +17,22 @@ export const TeamYearlyTable = ({
   years,
   numberOfYears,
 }: TeamYearlyTableProps) => {
+  const calculateTotals = (teamName: string) => {
+    const totals = new Array(numberOfYears).fill(0);
+
+    values.forEach((item) => {
+      if (item.team_name === teamName) {
+        item.yearly_values.forEach((value, index) => {
+          if (value !== null) {
+            totals[index] += value;
+          }
+        });
+      }
+    });
+
+    return totals;
+  };
+
   return (
     <div className="grid grid-cols-1 divide-y divide-gray-200 border">
       <div
@@ -33,14 +51,23 @@ export const TeamYearlyTable = ({
       {values.map((item, index) => (
         <React.Fragment key={index}>
           {(index === 0 || values[index - 1].team_name !== item.team_name) && (
-            <div
-              className="bg-muted/40 p-2 font-mono uppercase"
-              style={{
-                gridRow: `span ${numberOfYears + 1} / span ${numberOfYears + 1}`,
-              }}
-            >
-              {item.team_name}
-            </div>
+            <>
+              {index > 0 && (
+                <TeamTotalsRow
+                  teamName={values[index - 1].team_name}
+                  numberOfYears={numberOfYears}
+                  calculateTotals={calculateTotals}
+                />
+              )}
+              <div
+                className="bg-muted/40 p-2 font-mono uppercase"
+                style={{
+                  gridRow: `span ${numberOfYears + 1} / span ${numberOfYears + 1}`,
+                }}
+              >
+                {item.team_name}
+              </div>
+            </>
           )}
           <div
             className="grid items-end"
@@ -67,6 +94,11 @@ export const TeamYearlyTable = ({
           </div>
         </React.Fragment>
       ))}
+      <TeamTotalsRow
+        teamName={values[values.length - 1].team_name}
+        numberOfYears={numberOfYears}
+        calculateTotals={calculateTotals}
+      />
     </div>
   );
 };
