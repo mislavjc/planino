@@ -15,7 +15,7 @@ export const DatePicker = ({
   className,
 }: {
   date: Date | undefined;
-  setDate: (date: Date | undefined) => void;
+  setDate: (_date: Date | undefined) => void;
   className?: string;
 }) => {
   return (

@@ -3,7 +3,7 @@ import { Sigma } from 'lucide-react';
 type TeamTotalsRowProps = {
   teamName: string;
   numberOfYears: number;
-  calculateTotals: (teamName: string) => number[];
+  calculateTotals: (_teamName: string) => number[];
 };
 
 export const TeamTotalsRow = ({
