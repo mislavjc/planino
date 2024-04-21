@@ -7,6 +7,8 @@ import { Popover, PopoverContent, PopoverTrigger } from 'ui/popover';
 
 import { cn } from 'lib/utils';
 
+import { FocusBorder } from './focus-border';
+
 export const DatePicker = ({
   date,
   setDate,
@@ -22,10 +24,11 @@ export const DatePicker = ({
         <Button
           variant={'outline'}
           className={cn(
-            'justify-start text-left font-normal',
+            'justify-start text-left font-normal relative group',
             !date && 'text-muted-foreground',
             className,
           )}
+          ring={false}
         >
           {date ? (
             format(date, 'PPP', {
@@ -34,6 +37,7 @@ export const DatePicker = ({
           ) : (
             <span>Odaberi datum</span>
           )}
+          <FocusBorder />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">

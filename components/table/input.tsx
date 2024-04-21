@@ -3,6 +3,8 @@ import { LucideIcon } from 'lucide-react';
 
 import { cn } from 'lib/utils';
 
+import { FocusBorder } from './focus-border';
+
 export interface TableInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   inputClassName?: string;
@@ -31,7 +33,7 @@ const TableInput = React.forwardRef<HTMLInputElement, TableInputProps>(
           ref={ref}
           {...props}
         />
-        <div className="pointer-events-none absolute inset-0 group-focus-within:border-[3px] group-focus-within:border-blue-500" />
+        <FocusBorder />
       </div>
     );
   },

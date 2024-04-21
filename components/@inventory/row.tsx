@@ -10,7 +10,7 @@ import { selectInventoryItemSchema } from 'db/schema';
 
 import { updateInventoryItem } from 'actions/inventory';
 
-import { DatePicker } from 'components/date-picker';
+import { DatePicker } from 'components/table/date-picker';
 import { TableInput } from 'components/table/input';
 
 type InventoryItemSelect = z.infer<typeof selectInventoryItemSchema>;

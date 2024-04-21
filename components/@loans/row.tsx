@@ -6,7 +6,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { updateLoan } from 'actions/loan';
 
-import { DatePicker } from 'components/date-picker';
+import { DatePicker } from 'components/table/date-picker';
 import { TableInput } from 'components/table/input';
 
 type RowProps = {

@@ -10,7 +10,7 @@ import { selectExpenseSchema, selectFinancialAttributeSchema } from 'db/schema';
 
 import { updateExpense } from 'actions/expense';
 
-import { DatePicker } from 'components/date-picker';
+import { DatePicker } from 'components/table/date-picker';
 import { TableInput } from 'components/table/input';
 
 type ExpenseSelect = z.infer<typeof selectExpenseSchema>;
