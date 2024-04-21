@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 
-export const YEARLY_EXPENSE_AGREGATION = (organzation_id: string) => sql`
+export const YEARLY_EXPENSE_AGREGATION = (organization_id: string) => sql`
 WITH ExpenseData AS (
     SELECT
         t.team_id,
@@ -18,7 +18,9 @@ WITH ExpenseData AS (
         INNER JOIN expense e ON t.team_id = e.team_id
         INNER JOIN financial_attribute fa ON fa.financial_attribute_id = e.financial_attribute_id
     WHERE
-        t.organization_id = ${organzation_id}
+        t.organization_id = ${organization_id} AND
+        e.name IS NOT NULL AND
+        e.name <> ''
 ),
 MinYear AS (
     SELECT
@@ -26,57 +28,67 @@ MinYear AS (
     FROM
         ExpenseData
 ),
+MaxYear AS (
+    SELECT
+        MAX(COALESCE(EXTRACT(YEAR FROM ending_month), EXTRACT(YEAR FROM CURRENT_DATE))) AS max_year
+    FROM
+        ExpenseData
+),
 MonthlySums AS (
     SELECT
-        team_id,
-        expense_id,
-        expense_name,
-        team_name,
-        created_at,
-        start_year,
-        start_month,
-        ending_month,
-        amount,
-        raise_percentage,
-        year,
+        ed.team_id,
+        ed.expense_id,
+        ed.expense_name,
+        ed.team_name,
+        ed.created_at,
+        ed.start_year,
+        ed.start_month,
+        ed.ending_month,
+        ed.amount,
+        ed.raise_percentage,
+        gs.year,
         CASE
-            WHEN year = start_year AND year = EXTRACT(YEAR FROM COALESCE(ending_month, CURRENT_DATE)) THEN EXTRACT(MONTH FROM COALESCE(ending_month, CURRENT_DATE)) - start_month + 1
-            WHEN year = start_year THEN 12 - start_month + 1
-            WHEN year = EXTRACT(YEAR FROM COALESCE(ending_month, CURRENT_DATE)) THEN EXTRACT(MONTH FROM COALESCE(ending_month, CURRENT_DATE))
+            WHEN gs.year = ed.start_year AND gs.year = EXTRACT(YEAR FROM COALESCE(ed.ending_month, CURRENT_DATE)) THEN EXTRACT(MONTH FROM COALESCE(ed.ending_month, CURRENT_DATE)) - ed.start_month + 1
+            WHEN gs.year = ed.start_year THEN 12 - ed.start_month + 1
+            WHEN gs.year = EXTRACT(YEAR FROM COALESCE(ed.ending_month, CURRENT_DATE)) THEN EXTRACT(MONTH FROM COALESCE(ed.ending_month, CURRENT_DATE))
             ELSE 12
         END as months_in_year
     FROM
-        ExpenseData,
-        generate_series((SELECT min_year FROM MinYear), (SELECT min_year FROM MinYear) + 4) as year
+        ExpenseData ed,
+        generate_series((SELECT min_year FROM MinYear), (SELECT max_year FROM MaxYear)) as gs(year)
     WHERE
-        year >= start_year AND 
-        (ending_month IS NULL OR year <= EXTRACT(YEAR FROM ending_month))
+        gs.year >= ed.start_year AND 
+        (ed.ending_month IS NULL OR gs.year <= EXTRACT(YEAR FROM ed.ending_month))
 ),
 AdjustedAmounts AS (
     SELECT
-        team_id,
-        expense_id,
-        expense_name,
-        team_name,
-        year,
-        created_at,
-        SUM(amount * months_in_year * POWER(1 + COALESCE(raise_percentage, 0) / 100, year - start_year)) AS total_amount
+        ms.team_id,
+        ms.expense_id,
+        ms.expense_name,
+        ms.team_name,
+        ms.year,
+        ms.created_at,
+        ms.amount * ms.months_in_year * POWER(1 + COALESCE(ms.raise_percentage, 0) / 100, ms.year - ms.start_year) AS year_amount
     FROM
-        MonthlySums
-    GROUP BY
-        team_id, expense_id, expense_name, team_name, year, created_at
+        MonthlySums ms
 )
 SELECT
-    team_id,
-    expense_id,
-    expense_name,
-    team_name,
-    year AS financial_year,
-    total_amount
+    ed.team_name,
+    ed.expense_name AS item_name,
+    ARRAY(
+        SELECT COALESCE(aa.year_amount, NULL)
+        FROM generate_series((SELECT min_year FROM MinYear), (SELECT max_year FROM MaxYear)) AS gs(year)
+        LEFT JOIN AdjustedAmounts aa ON aa.year = gs.year AND aa.expense_id = ed.expense_id
+        ORDER BY gs.year
+    ) AS yearly_values,
+    ed.created_at
 FROM
-    AdjustedAmounts
+    ExpenseData ed
+GROUP BY
+    ed.team_id, ed.expense_id, ed.team_name, ed.expense_name, ed.created_at
 ORDER BY
-    created_at;
+    ed.created_at;
+
 `;
 
 export const INVENTORY_VALUES = (organzation_id: string) => sql`

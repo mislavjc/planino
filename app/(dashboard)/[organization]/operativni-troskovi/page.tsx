@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { createExpense, getOperationalExpenses } from 'actions/expense';
 
 import { Overview } from 'components/@expenses/overview';
@@ -63,8 +65,17 @@ const OperationalExpensesPage = async ({
           </ScrollArea>
         </CardContent>
       </Card>
-      <Card className="max-w-md">
-        <Overview organization={organization} />
+      <Card className="max-w-screen-xl">
+        <CardHeader>
+          <TypographyH3>Pregled</TypographyH3>
+        </CardHeader>
+        <CardContent className="overflow-x-auto">
+          <ScrollArea className="w-max">
+            <Suspense>
+              <Overview organization={organization} />
+            </Suspense>
+          </ScrollArea>
+        </CardContent>
       </Card>
     </div>
   );

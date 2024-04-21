@@ -1,6 +1,6 @@
 'use server';
 
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -158,12 +158,9 @@ export const updateExpense = async (payload: UpdateExpenseProps) => {
 
 const yearlyExpenseAggregationSchema = z.array(
   z.object({
-    team_id: z.string(),
-    expense_id: z.string(),
-    expense_name: z.string(),
     team_name: z.string(),
-    financial_year: z.coerce.number(),
-    total_amount: z.string(),
+    item_name: z.string(),
+    yearly_values: z.array(z.number().nullable()),
   }),
 );
 
@@ -176,40 +173,34 @@ export const getYearlyExpenseAggregation = async (organization: string) => {
     )
   ).rows;
 
+  const startYear = await db
+    .select({
+      startYear: sql<string>`EXTRACT(YEAR FROM financial_attribute.starting_month)`,
+    })
+    .from(expenses)
+    .innerJoin(
+      financialAttributes,
+      eq(
+        expenses.financialAttributeId,
+        financialAttributes.financialAttributeId,
+      ),
+    )
+    .innerJoin(teams, eq(expenses.teamId, teams.teamId))
+    .where(eq(teams.organizationId, foundOrganization.organizationId))
+    .orderBy(financialAttributes.startingMonth)
+    .limit(1);
+
   const parsedResult = yearlyExpenseAggregationSchema.parse(result);
 
-  const organizedExpenses = organizeExpenses(parsedResult);
+  const numberOfYears = parsedResult[0].yearly_values.length;
 
-  return organizedExpenses;
-};
-
-type ExpenseAggregation = z.infer<typeof yearlyExpenseAggregationSchema>;
-
-const organizeExpenses = (expenseSums: ExpenseAggregation) => {
-  if (!expenseSums) {
-    return [];
-  }
-
-  const yearlyMap = new Map<number, Map<string, ExpenseAggregation>>();
-
-  expenseSums.forEach((expense) => {
-    if (!yearlyMap.has(expense.financial_year)) {
-      yearlyMap.set(expense.financial_year, new Map());
-    }
-    const groupMap = yearlyMap.get(expense.financial_year);
-    if (!groupMap?.has(expense.team_name)) {
-      groupMap?.set(expense.team_name, []);
-    }
-    groupMap?.get(expense.team_name)?.push(expense);
+  const years = Array.from({ length: numberOfYears }, (_, i) => {
+    return String(Number(startYear[0].startYear) + i);
   });
 
-  return Array.from(yearlyMap)
-    .sort(([yearA], [yearB]) => yearA - yearB)
-    .map(([year, groupMap]) => ({
-      year,
-      groups: Array.from(groupMap).map(([TeamExpenseId, expenses]) => ({
-        grouped_expense_id: TeamExpenseId,
-        expenses,
-      })),
-    }));
+  return {
+    values: parsedResult,
+    years,
+    numberOfYears,
+  };
 };

@@ -1,35 +1,18 @@
+import React from 'react';
+
 import { getYearlyExpenseAggregation } from 'actions/expense';
 
-import { TypographyP } from 'ui/typography';
+import { TeamYearlyTable } from 'components/table/team-yearly-table';
 
 export const Overview = async ({ organization }: { organization: string }) => {
-  const aggregation = await getYearlyExpenseAggregation(organization);
+  const { values, years, numberOfYears } =
+    await getYearlyExpenseAggregation(organization);
 
   return (
-    <div className="p-4">
-      {aggregation.map(({ year, groups }) => (
-        <div key={year}>
-          <TypographyP className="bg-muted px-2 py-1 text-center font-mono">
-            {year}
-          </TypographyP>
-          {groups.map(({ grouped_expense_id, expenses }) => (
-            <div key={grouped_expense_id}>
-              <TypographyP>{grouped_expense_id}</TypographyP>
-              {expenses.map((expense) => (
-                <div key={expense.expense_id} className="flex justify-between">
-                  <TypographyP>{expense.expense_name}</TypographyP>
-                  <TypographyP className="font-mono">
-                    {Intl.NumberFormat('hr-HR', {
-                      style: 'currency',
-                      currency: 'eur',
-                    }).format(Number(expense.total_amount))}
-                  </TypographyP>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
+    <TeamYearlyTable
+      values={values}
+      years={years}
+      numberOfYears={numberOfYears}
+    />
   );
 };
