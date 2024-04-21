@@ -79,7 +79,7 @@ export const TeamYearlyTable = ({
             {item.yearly_values.map((value, valueIndex) => (
               <div
                 key={valueIndex}
-                className="border border-b-0 p-2 text-end font-mono"
+                className="min-w-48 border border-b-0 p-2 text-end font-mono"
               >
                 {value ? (
                   Intl.NumberFormat('hr-HR', {
