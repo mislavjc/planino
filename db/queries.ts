@@ -105,6 +105,7 @@ WITH YearValues AS (
         JOIN team t ON i.team_id = t.team_id
     WHERE
         t.organization_id = ${organzation_id}
+    AND i.name <> ''
 ),
 MinMaxYears AS (
     SELECT 
