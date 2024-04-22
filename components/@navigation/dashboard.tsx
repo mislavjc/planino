@@ -66,7 +66,7 @@ export const Navigation = ({
   }
 
   return (
-    <nav className="relative grid gap-2 py-4 text-lg font-medium md:fixed md:w-[220px] md:gap-3 md:text-sm lg:w-[280px] lg:px-4">
+    <nav className="relative grid gap-2 py-4 text-lg font-medium lg:fixed lg:w-[280px] lg:gap-3 lg:px-4 lg:text-sm">
       <div className="mb-4">{org}</div>
       <TypographyP className="text-xs uppercase text-muted-foreground">
         Ulazni podatci
@@ -94,7 +94,7 @@ export const Navigation = ({
           {item.label}
         </NavItem>
       ))}
-      <div className="fixed bottom-4 md:w-[220px] lg:w-[280px]">{user}</div>
+      <div className="fixed bottom-4 lg:w-[280px]">{user}</div>
     </nav>
   );
 };
