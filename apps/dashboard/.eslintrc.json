@@ -1,4 +1,4 @@
 {
   "root": true,
-  "extends": ["custom/next"]
+  "extends": ["custom/next", "custom/import-sort", "custom/base"]
 }
