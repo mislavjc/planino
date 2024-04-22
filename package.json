@@ -8,7 +8,10 @@
     "build": "turbo build",
     "lint": "turbo lint",
     "deploy:importer": "turbo run deploy --filter=importer",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:generate": "turbo db:generate --filter=dashboard",
+    "db:migrate": "turbo db:migrate --filter=dashboard",
+    "db:studio": "turbo db:studio --filter=dashboard"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.2.2",

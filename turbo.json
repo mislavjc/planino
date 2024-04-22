@@ -8,6 +8,15 @@
     "dev": {},
     "deploy": {
       "outputs": []
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:migrate": {
+      "cache": false
+    },
+    "db:studio": {
+      "cache": false
     }
   }
 }
