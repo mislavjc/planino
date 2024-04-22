@@ -5,6 +5,9 @@
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {},
-    "dev": {}
+    "dev": {},
+    "deploy": {
+      "outputs": []
+    }
   }
 }

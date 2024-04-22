@@ -1,0 +1,19 @@
+{
+  "name": "importer",
+  "scripts": {
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "hono": "^4.2.6"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240403.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "eslint": "^8.57.0",
+    "eslint-config-custom": "workspace:*",
+    "wrangler": "^3.47.0"
+  }
+}
