@@ -35,3 +35,30 @@ export const TeamTotalsRow = ({
     </div>
   );
 };
+
+export const TotalsRow = ({
+  numberOfYears,
+  calculateYearlyTotals,
+}: {
+  numberOfYears: number;
+  calculateYearlyTotals: () => number[];
+}) => {
+  return (
+    <div
+      className="grid font-mono uppercase"
+      style={{
+        gridTemplateColumns: `repeat(${numberOfYears + 1}, minmax(0, 1fr))`,
+      }}
+    >
+      <div className="p-2">Ukupno</div>
+      {calculateYearlyTotals().map((total, index) => (
+        <div key={index} className="p-2 text-end">
+          {Intl.NumberFormat('hr-HR', {
+            style: 'currency',
+            currency: 'eur',
+          }).format(total)}
+        </div>
+      ))}
+    </div>
+  );
+};

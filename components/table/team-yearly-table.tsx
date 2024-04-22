@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TeamTotalsRow } from './team-totals-row';
+import { TeamTotalsRow, TotalsRow } from './totals-row';
 
 type TeamYearlyTableProps = {
   values: Array<{
@@ -19,7 +19,6 @@ export const TeamYearlyTable = ({
 }: TeamYearlyTableProps) => {
   const calculateTotals = (teamName: string) => {
     const totals = new Array(numberOfYears).fill(0);
-
     values.forEach((item) => {
       if (item.team_name === teamName) {
         item.yearly_values.forEach((value, index) => {
@@ -29,21 +28,32 @@ export const TeamYearlyTable = ({
         });
       }
     });
-
     return totals;
+  };
+
+  const calculateYearlyTotals = () => {
+    const yearlyTotals = new Array(numberOfYears).fill(0);
+    values.forEach((item) => {
+      item.yearly_values.forEach((value, index) => {
+        if (value !== null) {
+          yearlyTotals[index] += value;
+        }
+      });
+    });
+    return yearlyTotals;
   };
 
   return (
     <div className="grid grid-cols-1 divide-y divide-gray-200 border">
       <div
-        className="grid bg-gray-100 p-2"
+        className="grid bg-gray-100"
         style={{
           gridTemplateColumns: `repeat(${numberOfYears + 1}, minmax(0, 1fr))`,
         }}
       >
         <div />
         {years.map((year) => (
-          <div key={year} className="text-end font-mono">
+          <div key={year} className="p-2 text-end font-mono">
             {year}
           </div>
         ))}
@@ -94,11 +104,19 @@ export const TeamYearlyTable = ({
           </div>
         </React.Fragment>
       ))}
-      <TeamTotalsRow
-        teamName={values[values.length - 1].team_name}
-        numberOfYears={numberOfYears}
-        calculateTotals={calculateTotals}
-      />
+      {values.length > 0 && (
+        <>
+          <TeamTotalsRow
+            teamName={values[values.length - 1].team_name}
+            numberOfYears={numberOfYears}
+            calculateTotals={calculateTotals}
+          />
+          <TotalsRow
+            numberOfYears={numberOfYears}
+            calculateYearlyTotals={calculateYearlyTotals}
+          />
+        </>
+      )}
     </div>
   );
 };
