@@ -6,7 +6,12 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "hono": "^4.2.6"
+    "@neondatabase/serverless": "^0.9.0",
+    "@planino/database": "workspace:*",
+    "drizzle-orm": "^0.30.9",
+    "drizzle-zod": "^0.5.1",
+    "hono": "^4.2.6",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240403.0",
