@@ -6,8 +6,8 @@ dotenv.config({
 });
 
 export default {
-  schema: './db/schema.ts',
-  out: './db/migrations',
+  schema: './src/schema/index.ts',
+  out: './src/migrations',
   driver: 'pg',
   dbCredentials: {
     connectionString: process.env.DATABASE_URL!,

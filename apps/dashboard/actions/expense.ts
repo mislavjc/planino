@@ -1,11 +1,5 @@
 'use server';
 
-import { eq, sql } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
-
-import { db } from 'db/drizzle';
-import { YEARLY_EXPENSE_AGREGATION } from 'db/queries';
 import {
   expenseFrequencies,
   expenses,
@@ -14,7 +8,13 @@ import {
   insertExpenseSchema,
   insertFinancialAttributeSchema,
   teams,
-} from 'db/schema';
+} from '@planino/database/schema';
+import { eq, sql } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
+
+import { db } from 'db/drizzle';
+import { YEARLY_EXPENSE_AGREGATION } from 'db/queries';
 
 import { toUpdateSchema } from 'lib/zod';
 

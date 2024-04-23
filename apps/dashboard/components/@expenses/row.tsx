@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import {
+  selectExpenseSchema,
+  selectFinancialAttributeSchema,
+} from '@planino/database/schema';
 import { Euro, Percent } from 'lucide-react';
 import { toast } from 'sonner';
 import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
-
-import { selectExpenseSchema, selectFinancialAttributeSchema } from 'db/schema';
 
 import { updateExpense } from 'actions/expense';
 

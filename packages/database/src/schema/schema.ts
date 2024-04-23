@@ -1,4 +1,3 @@
-import type { AdapterAccount } from '@auth/core/adapters';
 import { relations } from 'drizzle-orm';
 import {
   index,
@@ -33,7 +32,7 @@ export const accounts = pgTable(
     userId: text('userId')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
-    type: text('type').$type<AdapterAccount['type']>().notNull(),
+    type: text('type').notNull(),
     provider: text('provider').notNull(),
     providerAccountId: text('providerAccountId').notNull(),
     refresh_token: text('refresh_token'),
