@@ -26,6 +26,8 @@ module.exports = {
               ['^(|hooks)(/.*|$)'],
               // Lib
               ['^(|lib)(/.*|$)'],
+              // Utils
+              ['^(|utils)(/.*|$)'],
               // Types
               ['^(|types)(/.*|$)'],
               // Public files
