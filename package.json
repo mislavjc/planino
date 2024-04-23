@@ -2,7 +2,7 @@
   "name": "planino",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@9.0.4",
+  "packageManager": "pnpm@8.15.7",
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
