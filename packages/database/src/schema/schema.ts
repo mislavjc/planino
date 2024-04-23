@@ -10,6 +10,7 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
+import { z } from 'zod';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 export const users = pgTable('user', {
@@ -18,6 +19,10 @@ export const users = pgTable('user', {
   email: text('email').notNull(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
+});
+
+export const selectUserSchema = createSelectSchema(users, {
+  emailVerified: z.coerce.string(),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
