@@ -1,0 +1,24 @@
+{
+  "name": "importer",
+  "scripts": {
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy --minify src/index.ts",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.9.0",
+    "@planino/database": "workspace:*",
+    "drizzle-orm": "^0.30.9",
+    "drizzle-zod": "^0.5.1",
+    "hono": "^4.2.6",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240403.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
+    "eslint": "^8.57.0",
+    "eslint-config-custom": "workspace:*",
+    "wrangler": "^3.47.0"
+  }
+}

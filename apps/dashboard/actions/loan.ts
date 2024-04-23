@@ -1,11 +1,11 @@
 'use server';
 
+import { insertLoanSchema, loans } from '@planino/database/schema';
 import { and, eq, isNotNull, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 import { db } from 'db/drizzle';
-import { insertLoanSchema, loans } from 'db/schema';
 
 import { toUpdateSchema } from 'lib/zod';
 

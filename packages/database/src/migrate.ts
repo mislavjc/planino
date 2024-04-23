@@ -13,7 +13,7 @@ const db = drizzle(sql);
 
 const runMigration = async () => {
   await migrate(db, {
-    migrationsFolder: './db/migrations',
+    migrationsFolder: './src/migrations',
   });
 };
 

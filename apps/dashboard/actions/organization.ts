@@ -1,12 +1,15 @@
 'use server';
 
+import {
+  insertOrganzationSchema,
+  organizations,
+} from '@planino/database/schema';
 import { auth } from 'auth';
 import { and, eq } from 'drizzle-orm';
 import { notFound, redirect } from 'next/navigation';
 import { z } from 'zod';
 
 import { db } from 'db/drizzle';
-import { insertOrganzationSchema, organizations } from 'db/schema';
 
 type OrganizationInsertInput = Omit<
   z.infer<typeof insertOrganzationSchema>,

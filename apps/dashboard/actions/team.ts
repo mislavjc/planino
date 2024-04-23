@@ -1,10 +1,10 @@
 'use server';
 
+import { teams } from '@planino/database/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
 import { db } from 'db/drizzle';
-import { teams } from 'db/schema';
 
 import { getOrganization } from './organization';
 
