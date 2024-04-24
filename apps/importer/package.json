@@ -1,7 +1,7 @@
 {
   "name": "importer",
   "scripts": {
-    "dev": "wrangler dev src/index.ts",
+    "dev": "wrangler dev --remote src/index.ts",
     "deploy": "wrangler deploy --minify src/index.ts",
     "lint": "eslint ."
   },
@@ -13,6 +13,7 @@
     "drizzle-orm": "^0.30.9",
     "drizzle-zod": "^0.5.1",
     "hono": "^4.2.7",
+    "xlsx": "^0.18.5",
     "zod": "^3.23.3"
   },
   "devDependencies": {
