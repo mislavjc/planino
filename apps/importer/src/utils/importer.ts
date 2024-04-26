@@ -2,52 +2,70 @@ import { ExcelFile } from 'routes/import';
 
 export const extractMultipleTables = (worksheet: ExcelFile) => {
   const tables: ExcelFile[] = [];
-  let searchStartRow = 0;
 
-  while (searchStartRow < worksheet.length) {
-    const result = findNextTable(worksheet, searchStartRow);
-    if (!result) break;
+  let stillFindingTables = true;
 
-    const { table, nextStartRow } = result;
-    tables.push(table);
-    searchStartRow = nextStartRow;
+  while (stillFindingTables) {
+    try {
+      const extractedTableInfo = extractTable(worksheet);
+      tables.push(extractedTableInfo.table);
+
+      for (
+        let i = extractedTableInfo.startRow;
+        i < extractedTableInfo.endRow;
+        i++
+      ) {
+        for (
+          let j = extractedTableInfo.startColumn;
+          j <= extractedTableInfo.endColumn;
+          j++
+        ) {
+          worksheet[i][j] = null;
+        }
+      }
+    } catch (error) {
+      stillFindingTables = false;
+    }
   }
 
   return tables;
 };
-
-const findNextTable = (worksheet: ExcelFile, startSearchFromRow: number) => {
+const extractTable = (worksheet: ExcelFile) => {
   let startRow: number | null = null;
   let startColumn: number | null = null;
   let endColumn: number | null = null;
+  let endRow: number | null = null;
 
-  for (let i = startSearchFromRow; i < worksheet.length; i++) {
+  for (let i = 0; i < worksheet.length; i++) {
     const row = worksheet[i];
-
     for (let j = 0; j < row.length; j++) {
       const currentCell = row[j];
       const nextCell = row[j + 1];
 
-      if (currentCell && nextCell && startColumn === null) {
-        startColumn = j;
-        startRow = i;
+      if (currentCell && nextCell !== undefined) {
+        if (startColumn === null) {
+          startColumn = j;
+          startRow = i;
+        }
       }
 
-      if (currentCell && !nextCell && startColumn !== null) {
+      if (currentCell && nextCell === undefined) {
         endColumn = j;
         break;
       }
     }
 
-    if (endColumn !== null) break;
+    if (startColumn !== null && endColumn !== null) {
+      break;
+    }
   }
 
   if (startRow === null || startColumn === null || endColumn === null) {
-    return null;
+    throw new Error('Invalid excel file');
   }
 
   if (startColumn > 0 && startRow !== null) {
-    for (let i = startRow; i < worksheet.length; i++) {
+    for (let i = startRow + 1; i < worksheet.length; i++) {
       if (worksheet[i][startColumn - 1]) {
         startColumn -= 1;
         break;
@@ -55,21 +73,31 @@ const findNextTable = (worksheet: ExcelFile, startSearchFromRow: number) => {
     }
   }
 
-  const tableEndRow = worksheet
-    .slice(startRow + 1)
-    .findIndex((row) => row.every((cell) => cell === null || cell === ''));
+  endRow = worksheet
+    .slice(startRow)
+    .findIndex(
+      (row, index) =>
+        index > 0 &&
+        row
+          .slice(startColumn, endColumn + 1)
+          .every((cell) => cell === null || cell === ''),
+    );
+
+  if (endRow === -1) {
+    endRow = worksheet.length;
+  } else {
+    endRow += startRow;
+  }
 
   const table = worksheet
-    .slice(
-      startRow,
-      tableEndRow >= 0 ? startRow + tableEndRow + 1 : worksheet.length,
-    )
+    .slice(startRow, endRow)
     .map((row) => row.slice(startColumn, endColumn + 1));
-  const nextStartRow =
-    tableEndRow >= 0 ? startRow + tableEndRow + 2 : worksheet.length;
 
   return {
     table,
-    nextStartRow,
+    startRow,
+    startColumn,
+    endColumn,
+    endRow,
   };
 };

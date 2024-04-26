@@ -140,6 +140,7 @@ app.openapi(getExcelFile, async (c) => {
   const tables = extractMultipleTables(parsedExcel);
 
   return c.json({
+    count: tables.length,
     tables,
   });
 });
