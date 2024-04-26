@@ -2,7 +2,7 @@ import { createRoute, z } from '@hono/zod-openapi';
 import * as XLSX from 'xlsx';
 
 import { app } from 'utils/bindings';
-import { extractTable } from 'utils/importer';
+import { extractMultipleTables } from 'utils/importer';
 
 const importPayloadSchema = z.object({
   content: z.string().url(),
@@ -107,7 +107,7 @@ const getExcelFile = createRoute({
       content: {
         'application/json': {
           schema: {
-            table: excelFileSchema.openapi('Excel file schema'),
+            tables: z.array(excelFileSchema).openapi('Excel file schema'),
           },
         },
       },
@@ -137,10 +137,10 @@ app.openapi(getExcelFile, async (c) => {
 
   const parsedExcel = excelFileSchema.parse(excel);
 
-  const table = extractTable(parsedExcel);
+  const tables = extractMultipleTables(parsedExcel);
 
   return c.json({
-    table,
+    tables,
   });
 });
 
