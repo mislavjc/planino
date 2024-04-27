@@ -79,7 +79,7 @@ const DataPage = async () => {
     <div className="max-h-[80vh] max-w-screen-xl overflow-auto">
       <ScrollArea className="w-max">
         <div
-          className="grid"
+          className="relative grid"
           style={{
             gridTemplateColumns: `repeat(${maxCols}, 6rem)`,
           }}
@@ -127,6 +127,23 @@ const DataPage = async () => {
                 )}
             </React.Fragment>
           ))}
+          {data.tables.map((table, tableIndex) => {
+            const { startRow, startColumn } = table.coordinates;
+            return (
+              <div
+                key={tableIndex}
+                className="absolute bg-black"
+                style={{
+                  gridRowStart: startRow,
+                  gridColumnStart: startColumn + 1,
+                }}
+              >
+                <div className="h-6 p-1 font-mono text-xs uppercase text-white">
+                  {tableIndex + 1}. tablica
+                </div>
+              </div>
+            );
+          })}
         </div>
       </ScrollArea>
     </div>
