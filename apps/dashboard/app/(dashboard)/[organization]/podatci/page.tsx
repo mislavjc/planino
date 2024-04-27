@@ -64,7 +64,7 @@ const DataPage = async () => {
   const { data, error } = await importer.GET('/import/{file}/coordinates', {
     params: {
       path: {
-        file: 'medium.xlsx',
+        file: 'five.xlsx',
       },
     },
   });
@@ -81,7 +81,7 @@ const DataPage = async () => {
         <div
           className="grid"
           style={{
-            gridTemplateColumns: `repeat(${maxCols}, 10rem)`,
+            gridTemplateColumns: `repeat(${maxCols}, 6rem)`,
           }}
         >
           {data.worksheet.map((row, rowIndex) => (
@@ -96,7 +96,7 @@ const DataPage = async () => {
                 return (
                   <div
                     key={cellIndex}
-                    className="h-10 truncate border border-gray-300 p-2 font-mono"
+                    className="h-6 truncate border border-gray-300 p-1 font-mono text-xs"
                     style={{
                       backgroundColor: getColorByTableIndex(tableIndex),
                     }}
@@ -117,7 +117,7 @@ const DataPage = async () => {
                     return (
                       <div
                         key={emptyIndex}
-                        className="h-10 truncate border border-gray-300 p-2 font-mono"
+                        className="h-6 truncate border border-gray-300 p-2 font-mono"
                         style={{
                           backgroundColor: getColorByTableIndex(tableIndex),
                         }}
