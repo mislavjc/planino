@@ -9,12 +9,7 @@ export const extractMultipleTableCoordinates = (worksheet: ExcelFile) => {
     try {
       const extractedTableInfo = extractTable(worksheet);
       tables.push({
-        coordinates: {
-          startRow: extractedTableInfo.startRow,
-          startColumn: extractedTableInfo.startColumn,
-          endRow: extractedTableInfo.endRow,
-          endColumn: extractedTableInfo.endColumn,
-        },
+        coordinates: extractedTableInfo,
       });
 
       for (
@@ -96,12 +91,7 @@ const extractTable = (worksheet: ExcelFile) => {
     endRow += startRow;
   }
 
-  const table = worksheet
-    .slice(startRow, endRow)
-    .map((row) => row.slice(startColumn, endColumn + 1));
-
   return {
-    table,
     startRow,
     startColumn,
     endColumn,
