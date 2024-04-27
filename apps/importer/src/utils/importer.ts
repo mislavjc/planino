@@ -1,14 +1,21 @@
-import { ExcelFile } from 'routes/import';
+import { Coordinates, ExcelFile } from 'routes/import';
 
-export const extractMultipleTables = (worksheet: ExcelFile) => {
-  const tables: ExcelFile[] = [];
+export const extractMultipleTableCoordinates = (worksheet: ExcelFile) => {
+  const tables: Array<{ coordinates: Coordinates }> = [];
 
   let stillFindingTables = true;
 
   while (stillFindingTables) {
     try {
       const extractedTableInfo = extractTable(worksheet);
-      tables.push(extractedTableInfo.table);
+      tables.push({
+        coordinates: {
+          startRow: extractedTableInfo.startRow,
+          startColumn: extractedTableInfo.startColumn,
+          endRow: extractedTableInfo.endRow,
+          endColumn: extractedTableInfo.endColumn,
+        },
+      });
 
       for (
         let i = extractedTableInfo.startRow;

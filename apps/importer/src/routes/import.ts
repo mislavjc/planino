@@ -2,7 +2,7 @@ import { createRoute, z } from '@hono/zod-openapi';
 import * as XLSX from 'xlsx';
 
 import { app } from 'utils/bindings';
-import { extractMultipleTables } from 'utils/importer';
+import { extractMultipleTableCoordinates } from 'utils/importer';
 
 const importPayloadSchema = z.object({
   content: z.string().url(),
@@ -86,10 +86,19 @@ const excelFileSchema = z.array(
   ),
 );
 
+const coordinatesSchema = z.object({
+  startRow: z.number(),
+  startColumn: z.number(),
+  endRow: z.number(),
+  endColumn: z.number(),
+});
+
+export type Coordinates = z.infer<typeof coordinatesSchema>;
+
 const getExcelFile = createRoute({
   method: 'get',
   tags: ['import'],
-  path: '/import/files/{file}',
+  path: '/import/{file}/coordinates',
   request: {
     params: z
       .object({
@@ -108,14 +117,18 @@ const getExcelFile = createRoute({
         'application/json': {
           schema: z
             .object({
-              tables: z.array(excelFileSchema),
+              tables: z.array(
+                z.object({
+                  coordinates: coordinatesSchema,
+                }),
+              ),
             })
             .openapi({
-              title: 'Excel file tables',
+              title: 'Excel file table coordinates',
             }),
         },
       },
-      description: 'Get all excel files',
+      description: 'Get all table coordinates from excel file',
     },
     404: {
       content: {
@@ -155,7 +168,7 @@ app.openapi(getExcelFile, async (c) => {
 
   const parsedExcel = excelFileSchema.parse(excel);
 
-  const tables = extractMultipleTables(parsedExcel);
+  const tables = extractMultipleTableCoordinates(parsedExcel);
 
   return c.json({
     tables,
