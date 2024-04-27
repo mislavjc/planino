@@ -106,12 +106,30 @@ const getExcelFile = createRoute({
     200: {
       content: {
         'application/json': {
-          schema: {
-            tables: z.array(excelFileSchema).openapi('Excel file schema'),
-          },
+          schema: z
+            .object({
+              tables: z.array(excelFileSchema),
+            })
+            .openapi({
+              title: 'Excel file tables',
+            }),
         },
       },
       description: 'Get all excel files',
+    },
+    404: {
+      content: {
+        'application/json': {
+          schema: z
+            .object({
+              error: z.string(),
+            })
+            .openapi({
+              title: 'File not found',
+            }),
+        },
+      },
+      description: 'File not found',
     },
   },
 });
@@ -140,7 +158,6 @@ app.openapi(getExcelFile, async (c) => {
   const tables = extractMultipleTables(parsedExcel);
 
   return c.json({
-    count: tables.length,
     tables,
   });
 });
