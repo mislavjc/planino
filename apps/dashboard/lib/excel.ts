@@ -5,9 +5,13 @@ type TableCoordinates = {
   endColumn: number;
 };
 
-const generateIndexArray = (
-  coordinates: TableCoordinates,
-): [number, number][] => {
+/**
+ * Generates an array of index pairs based on the provided table coordinates.
+ *
+ * @param coordinates - The table coordinates specifying the start and end rows and columns.
+ * @returns An array of index pairs representing the rows and columns within the specified coordinates.
+ */
+const generateIndexArray = (coordinates: TableCoordinates) => {
   const { startRow, endRow, startColumn, endColumn } = coordinates;
   let indexArray: [number, number][] = [];
 
@@ -20,6 +24,13 @@ const generateIndexArray = (
   return indexArray;
 };
 
+/**
+ * Checks if a cell is present in any table.
+ * @param cellRow - The row index of the cell.
+ * @param cellColumn - The column index of the cell.
+ * @param tables - An array of table coordinates.
+ * @returns A tuple containing a boolean indicating if the cell is in any table, and the index of the table if found.
+ */
 export const isCellInAnyTable = (
   cellRow: number,
   cellColumn: number,
@@ -34,7 +45,7 @@ export const isCellInAnyTable = (
   return [false, -1];
 };
 
-export const predefinedColors = [
+const predefinedColors = [
   'hsla(0, 100%, 70%, 0.15)', // Red Pink
   'hsla(30, 100%, 75%, 0.15)', // Peach
   'hsla(60, 100%, 85%, 0.15)', // Pale Yellow
@@ -47,6 +58,13 @@ export const predefinedColors = [
   'hsla(150, 60%, 75%, 0.15)', // Eton Blue
 ];
 
+/**
+ * Returns the color based on the table index.
+ * If the index is -1, it returns 'transparent'.
+ * Otherwise, it returns a color from the predefinedColors array based on the index.
+ * @param index - The table index.
+ * @returns The color corresponding to the index.
+ */
 export const getColorByTableIndex = (index: number) => {
   if (index === -1) {
     return 'transparent';
