@@ -1,62 +1,10 @@
 import React from 'react';
 
+import { getColorByTableIndex, isCellInAnyTable } from 'lib/excel';
+
 import { importer } from 'api/importer/client';
 
-interface TableCoordinates {
-  startRow: number;
-  startColumn: number;
-  endRow: number;
-  endColumn: number;
-}
-
-const generateIndexArray = (
-  coordinates: TableCoordinates,
-): [number, number][] => {
-  const { startRow, endRow, startColumn, endColumn } = coordinates;
-  let indexArray: [number, number][] = [];
-
-  for (let row = startRow; row <= endRow; row++) {
-    for (let col = startColumn; col <= endColumn; col++) {
-      indexArray.push([row, col]);
-    }
-  }
-
-  return indexArray;
-};
-
-const isCellInAnyTable = (
-  cellRow: number,
-  cellColumn: number,
-  tables: TableCoordinates[],
-): [boolean, number] => {
-  for (let i = 0; i < tables.length; i++) {
-    const indexes = generateIndexArray(tables[i]);
-    if (indexes.some(([row, col]) => row === cellRow && col === cellColumn)) {
-      return [true, i];
-    }
-  }
-  return [false, -1];
-};
-const predefinedColors = [
-  'hsla(0, 100%, 70%, 0.15)', // Red Pink
-  'hsla(30, 100%, 75%, 0.15)', // Peach
-  'hsla(60, 100%, 85%, 0.15)', // Pale Yellow
-  'hsla(90, 100%, 80%, 0.15)', // Tea Green
-  'hsla(180, 100%, 75%, 0.15)', // Baby Blue
-  'hsla(210, 100%, 80%, 0.15)', // Blue Mauve
-  'hsla(270, 100%, 80%, 0.15)', // Mauve
-  'hsla(300, 100%, 80%, 0.15)', // Pink
-  'hsla(60, 100%, 95%, 0.15)', // Ivory
-  'hsla(150, 60%, 75%, 0.15)', // Eton Blue
-];
-
-const getColorByTableIndex = (index: number) => {
-  if (index === -1) {
-    return 'transparent';
-  }
-
-  return predefinedColors[index % predefinedColors.length];
-};
+import { ExcelTableCell } from './excel-table-cell';
 
 export const ExcelTable = async () => {
   const { data, error } = await importer.GET('/import/{file}/coordinates', {
@@ -90,15 +38,12 @@ export const ExcelTable = async () => {
             );
 
             return (
-              <div
+              <ExcelTableCell
                 key={cellIndex}
-                className="h-6 truncate border border-gray-300 p-1 font-mono text-xs"
-                style={{
-                  backgroundColor: getColorByTableIndex(tableIndex),
-                }}
+                backgroundColor={getColorByTableIndex(tableIndex)}
               >
                 {String(cell ?? '')}
-              </div>
+              </ExcelTableCell>
             );
           })}
           {row.length < maxCols &&
@@ -111,12 +56,9 @@ export const ExcelTable = async () => {
                 );
 
                 return (
-                  <div
+                  <ExcelTableCell
                     key={emptyIndex}
-                    className="h-6 truncate border border-gray-300 p-2 font-mono"
-                    style={{
-                      backgroundColor: getColorByTableIndex(tableIndex),
-                    }}
+                    backgroundColor={getColorByTableIndex(tableIndex)}
                   />
                 );
               },
