@@ -17,6 +17,9 @@
     },
     "db:studio": {
       "cache": false
+    },
+    "generate:importer-client": {
+      "cache": false
     }
   }
 }

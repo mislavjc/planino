@@ -6,6 +6,7 @@ import {
   GanttChartSquare,
   PiggyBank,
   Receipt,
+  Table,
   Users,
   Wallet,
   Warehouse,
@@ -49,6 +50,11 @@ export const templateConfig: TemplateConfig = {
       label: 'Odjeli',
       href: '/odjeli',
       icon: <Users width={16} className="text-neutral-600" />,
+    },
+    {
+      label: 'Podatci',
+      href: '/podatci',
+      icon: <Table width={16} className="text-neutral-600" />,
     },
   ],
   output: [
