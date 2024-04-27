@@ -80,10 +80,10 @@ app.openapi(getAllExcelFiles, async (c) => {
   return c.json(items);
 });
 
+const baseCellSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
+
 const excelFileSchema = z.array(
-  z.array(
-    z.union([z.string(), z.number(), z.boolean(), z.null(), z.undefined()]),
-  ),
+  z.array(z.union([baseCellSchema, z.undefined()])),
 );
 
 const coordinatesSchema = z.object({
@@ -117,6 +117,7 @@ const getExcelFile = createRoute({
         'application/json': {
           schema: z
             .object({
+              worksheet: z.array(z.array(baseCellSchema)),
               tables: z.array(
                 z.object({
                   coordinates: coordinatesSchema,
@@ -171,6 +172,7 @@ app.openapi(getExcelFile, async (c) => {
   const tables = extractMultipleTableCoordinates(parsedExcel);
 
   return c.json({
+    worksheet: excel,
     tables,
   });
 });

@@ -47,6 +47,7 @@ export interface paths {
         200: {
           content: {
             'application/json': {
+              worksheet: unknown[][];
               tables: {
                 coordinates: {
                   startRow: number;
