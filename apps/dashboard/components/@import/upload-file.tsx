@@ -70,12 +70,17 @@ export const FileDropzone = () => {
 
     revalidateTableCache();
 
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
     router.push(`/${organization}/podatci/pregled`);
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col gap-4"
+      >
         <FormField
           name="files"
           control={form.control}
@@ -85,10 +90,10 @@ export const FileDropzone = () => {
                 value={field.value}
                 onValueChange={field.onChange}
                 dropzoneOptions={dropZoneConfig}
-                className="relative rounded-lg p-2"
+                className="outline-border relative outline-dashed outline-2"
               >
-                <FileInput className="outline-dashed outline-1 outline-white">
-                  <div className="flex w-full flex-col items-center justify-center pb-4 pt-3 ">
+                <FileInput>
+                  <div className="flex w-full flex-col items-center justify-center p-8">
                     <FileBarChart />
                     <p className="mb-1 text-sm text-gray-500 dark:text-gray-400">
                       <span className="font-semibold">Klikni</span>
@@ -99,11 +104,11 @@ export const FileDropzone = () => {
                     </p>
                   </div>
                 </FileInput>
-                <FileUploaderContent>
+                <FileUploaderContent className="my-1 flex flex-col gap-1">
                   {field.value &&
                     field.value.length > 0 &&
                     field.value.map((file, i) => (
-                      <FileUploaderItem key={i} index={i}>
+                      <FileUploaderItem key={i} index={i} className="border">
                         <Paperclip className="size-4 stroke-current" />
                         <span>{file.name}</span>
                       </FileUploaderItem>
@@ -115,7 +120,7 @@ export const FileDropzone = () => {
         />
         <Button
           type="submit"
-          className="h-8 w-fit"
+          className="w-fit"
           disabled={!form.formState.isValid || form.formState.isSubmitting}
         >
           Učitaj
