@@ -185,7 +185,9 @@ const getExcelFile = createRoute({
 app.openapi(getExcelFile, async (c) => {
   const { file } = c.req.valid('param');
 
-  const object = await c.env.BUCKET.get(file);
+  const key = decodeURIComponent(file);
+
+  const object = await c.env.BUCKET.get(key);
 
   const objectData = await object?.arrayBuffer();
 

@@ -6,11 +6,11 @@ import { importer } from 'api/importer/client';
 
 import { ExcelTableCell } from './excel-table-cell';
 
-export const ExcelTable = async () => {
+export const ExcelTable = async ({ file }: { file: string }) => {
   const { data, error } = await importer.GET('/import/{file}/coordinates', {
     params: {
       path: {
-        file: 'five.xlsx',
+        file: encodeURIComponent(file),
       },
     },
   });
