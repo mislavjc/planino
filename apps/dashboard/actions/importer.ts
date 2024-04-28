@@ -1,5 +1,7 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
+
 import { importer } from 'api/importer/client';
 
 export const getPresignedUrls = async (names: string[]) => {
@@ -14,4 +16,8 @@ export const getPresignedUrls = async (names: string[]) => {
   }
 
   return r2Data.urls;
+};
+
+export const revalidateTableCache = () => {
+  revalidatePath('/[organization]/podatci/pregled');
 };

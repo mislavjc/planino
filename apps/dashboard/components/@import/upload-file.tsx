@@ -4,10 +4,10 @@ import { DropzoneOptions } from 'react-dropzone';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FileBarChart, Paperclip } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { z } from 'zod';
 
-import { getPresignedUrls } from 'actions/importer';
+import { getPresignedUrls, revalidateTableCache } from 'actions/importer';
 
 import { Button } from 'ui/button';
 import {
@@ -46,6 +46,8 @@ export const FileDropzone = () => {
 
   const { organization } = useParams();
 
+  const router = useRouter();
+
   const onSubmit = async (data: FormData) => {
     if (!data.files) return;
 
@@ -65,6 +67,10 @@ export const FileDropzone = () => {
         body: file,
       });
     }
+
+    revalidateTableCache();
+
+    router.push(`/${organization}/podatci/pregled`);
   };
 
   return (
