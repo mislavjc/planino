@@ -3,8 +3,11 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createRoute, z } from '@hono/zod-openapi';
 import * as XLSX from 'xlsx';
 
-import { app, getR2Client } from 'utils/bindings';
-import { extractMultipleTableCoordinates } from 'utils/importer';
+import { app, getAnthropicClient, getR2Client } from 'utils/bindings';
+import {
+  extractMultipleTableCoordinates,
+  extractTableFromCoordinates,
+} from 'utils/importer';
 
 const importPayloadSchema = z.object({
   names: z.array(z.string()).min(1),
@@ -214,5 +217,99 @@ app.openapi(getExcelFile, async (c) => {
 });
 
 export type ExcelFile = z.infer<typeof excelFileSchema>;
+
+const extractDataFromCoordinates = createRoute({
+  method: 'post',
+  tags: ['import'],
+  path: '/import/extract-data',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: z
+            .object({
+              worksheet: z.array(z.array(baseCellSchema)),
+              coordinates: coordinatesSchema,
+            })
+            .openapi({
+              title: 'Extract data from coordinates',
+            }),
+        },
+      },
+      required: true,
+    },
+  },
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: z
+            .object({
+              msg: z.array(
+                z.object({
+                  type: z.string(),
+                  text: z.string(),
+                }),
+              ),
+            })
+            .openapi({
+              title: 'Extracted data',
+            }),
+        },
+      },
+      description: 'Extract data from coordinates',
+    },
+  },
+});
+
+app.openapi(extractDataFromCoordinates, async (c) => {
+  const { worksheet, coordinates } = c.req.valid('json');
+
+  const extractedData = extractTableFromCoordinates(worksheet, coordinates);
+
+  const anthropic = getAnthropicClient(c.env);
+
+  const msg = await anthropic.messages.create({
+    model: 'claude-3-haiku-20240307',
+    max_tokens: 4096,
+    messages: [
+      {
+        role: 'user',
+        content: `You will be given a 2d array of data, your task is to take the data and convert it into an array of JSON objects. 
+                  The schema for JSON that you MUST follow is as follows, but ONLY if the data can be converted into this schema:
+                  <SCHEMA>
+                  type Item = {
+                    name: string,
+                    quantity: number,
+                    price: number,
+                    expenses: number,
+                  }
+                  </SCHEMA>
+
+                  You must convert the data into an array of JSON objects that follow the schema provided above.
+
+                  Do NOT return code or any other format, only the array of JSON objects.
+
+                  If the data cannot be converted into the schema provided, please return an empty array.
+
+                  The data will be as follows:
+                  <DATA>
+                  ${JSON.stringify(extractedData)}
+                  </DATA>
+
+                  You must convert the data into an array of JSON objects that follow the schema provided above.
+
+                  Do NOT return code or any other format, only the array of JSON objects.
+
+                  If the data cannot be converted into the schema provided, please return an empty array.
+
+                  Good luck!
+                  `,
+      },
+    ],
+  });
+
+  return c.json({ msg: msg.content });
+});
 
 export { app as importRoutes };

@@ -98,3 +98,14 @@ const extractTable = (worksheet: ExcelFile) => {
     endRow,
   };
 };
+
+export const extractTableFromCoordinates = (
+  worksheet: ExcelFile,
+  coordinates: Coordinates,
+) => {
+  const { startRow, startColumn, endRow, endColumn } = coordinates;
+
+  return worksheet
+    .slice(startRow, endRow)
+    .map((row) => row.slice(startColumn, endColumn + 1));
+};

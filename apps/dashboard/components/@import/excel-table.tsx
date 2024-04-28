@@ -21,6 +21,24 @@ export const ExcelTable = async ({ file }: { file: string }) => {
 
   const maxCols = Math.max(...data.worksheet.map((row) => row.length));
 
+  const sendDataForExtraction = async (formData: FormData) => {
+    'use server';
+
+    const coordinates =
+      data.tables[Number(formData.get('tableIndex'))].coordinates;
+
+    const { data: extracted } = await importer.POST('/import/extract-data', {
+      body: {
+        worksheet: data.worksheet,
+        coordinates,
+      },
+    });
+
+    const text = extracted?.msg.map((msg) => JSON.parse(msg.text));
+
+    console.log(text);
+  };
+
   return (
     <div
       className="relative grid"
@@ -68,18 +86,20 @@ export const ExcelTable = async ({ file }: { file: string }) => {
       {data.tables.map((table, tableIndex) => {
         const { startRow, startColumn } = table.coordinates;
         return (
-          <div
+          <form
             key={tableIndex}
             className="absolute bg-black"
             style={{
               gridRowStart: startRow,
               gridColumnStart: startColumn + 1,
             }}
+            action={sendDataForExtraction}
           >
-            <div className="h-6 p-1 font-mono text-xs uppercase text-white">
+            <input type="hidden" name="tableIndex" value={tableIndex} />
+            <button className="h-6 p-1 font-mono text-xs uppercase text-white">
               {tableIndex + 1}. tablica
-            </div>
-          </div>
+            </button>
+          </form>
         );
       })}
     </div>

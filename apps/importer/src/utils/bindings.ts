@@ -1,3 +1,4 @@
+import Anthropic from '@anthropic-ai/sdk';
 import { S3Client } from '@aws-sdk/client-s3';
 import { R2Bucket } from '@cloudflare/workers-types';
 import { OpenAPIHono } from '@hono/zod-openapi';
@@ -5,6 +6,7 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 type Env = {
   DATABASE_URL: string;
   BUCKET: R2Bucket;
+  CLAUDE_API_KEY: string;
   R2_ACCESS_KEY_ID: string;
   R2_SECRET_ACCESS_KEY: string;
   R2_ENDPOINT: string;
@@ -24,4 +26,12 @@ export const getR2Client = (env: Env) => {
   });
 
   return awsClient;
+};
+
+export const getAnthropicClient = (env: Env) => {
+  const anthropic = new Anthropic({
+    apiKey: env.CLAUDE_API_KEY,
+  });
+
+  return anthropic;
 };

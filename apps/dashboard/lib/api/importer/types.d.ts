@@ -33,7 +33,7 @@ export interface paths {
         };
       };
       responses: {
-        /** @description Get all excel files */
+        /** @description Get all excel files from organization bucket */
         200: {
           content: {
             'application/json': components['schemas']['All excel files schema'];
@@ -71,6 +71,36 @@ export interface paths {
           content: {
             'application/json': {
               error: string;
+            };
+          };
+        };
+      };
+    };
+  };
+  '/import/extract-data': {
+    post: {
+      requestBody: {
+        content: {
+          'application/json': {
+            worksheet: unknown[][];
+            coordinates: {
+              startRow: number;
+              startColumn: number;
+              endRow: number;
+              endColumn: number;
+            };
+          };
+        };
+      };
+      responses: {
+        /** @description Extract data from coordinates */
+        200: {
+          content: {
+            'application/json': {
+              msg: {
+                type: string;
+                text: string;
+              }[];
             };
           };
         };
