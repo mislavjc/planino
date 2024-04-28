@@ -12,7 +12,7 @@ export interface paths {
         };
       };
       responses: {
-        /** @description Get presigned URL for importing data */
+        /** @description Get presigned URLs for importing data */
         200: {
           content: {
             'application/json': {
@@ -25,8 +25,13 @@ export interface paths {
       };
     };
   };
-  '/import/files': {
+  '/import/{organization}/files': {
     get: {
+      parameters: {
+        path: {
+          organization: string;
+        };
+      };
       responses: {
         /** @description Get all excel files */
         200: {

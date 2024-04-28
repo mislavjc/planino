@@ -79,7 +79,19 @@ const allFilesSchema = z.object({
 const getAllExcelFiles = createRoute({
   method: 'get',
   tags: ['import'],
-  path: '/import/files',
+  path: '/import/{organization}/files',
+  request: {
+    params: z
+      .object({
+        organization: z.string(),
+      })
+      .openapi({
+        param: {
+          name: 'organization',
+          in: 'path',
+        },
+      }),
+  },
   responses: {
     200: {
       content: {
@@ -87,13 +99,17 @@ const getAllExcelFiles = createRoute({
           schema: allFilesSchema.openapi('All excel files schema'),
         },
       },
-      description: 'Get all excel files',
+      description: 'Get all excel files from organization bucket',
     },
   },
 });
 
 app.openapi(getAllExcelFiles, async (c) => {
-  const items = await c.env.BUCKET.list();
+  const { organization } = c.req.valid('param');
+
+  const items = await c.env.BUCKET.list({
+    prefix: organization + '/',
+  });
 
   return c.json(items);
 });
