@@ -1,17 +1,19 @@
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createRoute, z } from '@hono/zod-openapi';
 import * as XLSX from 'xlsx';
 
-import { app } from 'utils/bindings';
+import { app, getR2Client } from 'utils/bindings';
 import { extractMultipleTableCoordinates } from 'utils/importer';
 
 const importPayloadSchema = z.object({
-  content: z.string().url(),
+  names: z.array(z.string()).min(1),
 });
 
 const postImport = createRoute({
   method: 'post',
   tags: ['import'],
-  path: '/import',
+  path: '/import/presigned-url',
   request: {
     body: {
       content: {
@@ -26,25 +28,39 @@ const postImport = createRoute({
     200: {
       content: {
         'application/json': {
-          schema: {
-            type: 'object',
-            properties: {
-              success: {
-                type: 'boolean',
-              },
-            },
-          },
+          schema: z
+            .object({
+              urls: z.record(z.string()),
+            })
+            .openapi({
+              title: 'Presigned URLs',
+            }),
         },
       },
-      description: 'Import data',
+      description: 'Get presigned URLs for importing data',
     },
   },
 });
 
 app.openapi(postImport, async (c) => {
-  const { content } = c.req.valid('json');
+  const { names } = c.req.valid('json');
 
-  return c.json({ success: true, content });
+  const r2Client = getR2Client(c.env);
+  const urls: Record<string, string> = {};
+  for (const name of names) {
+    const url = await getSignedUrl(
+      r2Client,
+      new PutObjectCommand({
+        Bucket: c.env.R2_BUCKET_NAME,
+        Key: name,
+        Expires: new Date(Date.now() + 60 * 60 * 1000),
+      }),
+    );
+
+    urls[name] = url;
+  }
+
+  return c.json({ urls });
 });
 
 const allFilesSchema = z.object({

@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  '/import': {
+  '/import/presigned-url': {
     post: {
       requestBody: {
         content: {
@@ -12,11 +12,13 @@ export interface paths {
         };
       };
       responses: {
-        /** @description Import data */
+        /** @description Get presigned URL for importing data */
         200: {
           content: {
             'application/json': {
-              success?: boolean;
+              urls: {
+                [key: string]: string;
+              };
             };
           };
         };
@@ -77,8 +79,7 @@ export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
     'Import data payload schema': {
-      /** Format: uri */
-      content: string;
+      names: string[];
     };
     'All excel files schema': {
       objects: {
