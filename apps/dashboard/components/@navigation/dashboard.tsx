@@ -58,8 +58,12 @@ export const Navigation = ({
   const config = generateConfig(organization as string, templateConfig);
 
   const isInConfig =
-    config.input.some((item) => item.href === pathname) ||
-    config.output.some((item) => item.href === pathname);
+    config.input.some((item) =>
+      pathname.includes(item.href.replace(/\/$/, '')),
+    ) ||
+    config.output.some((item) =>
+      pathname.includes(item.href.replace(/\/$/, '')),
+    );
 
   if (!isInConfig && pathname !== '/' + organization) {
     redirect('/' + organization);

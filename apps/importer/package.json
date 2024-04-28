@@ -6,6 +6,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.564.0",
+    "@aws-sdk/s3-request-presigner": "^3.564.0",
     "@hono/zod-openapi": "^0.11.0",
     "@neondatabase/serverless": "^0.9.0",
     "@planino/database": "workspace:*",
