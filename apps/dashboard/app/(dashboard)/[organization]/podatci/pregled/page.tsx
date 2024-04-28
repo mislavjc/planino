@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
 
 import { ScrollArea } from 'ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'ui/tabs';
@@ -24,6 +25,10 @@ const DataOverview = async ({
 
   if (error) {
     throw new Error(error);
+  }
+
+  if (!data.objects.length) {
+    redirect(`/${organization}/podatci/uvoz`);
   }
 
   return (
