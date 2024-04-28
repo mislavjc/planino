@@ -53,8 +53,10 @@ app.openapi(postImport, async (c) => {
       new PutObjectCommand({
         Bucket: c.env.R2_BUCKET_NAME,
         Key: name,
-        Expires: new Date(Date.now() + 60 * 60 * 1000),
       }),
+      {
+        expiresIn: 3600,
+      },
     );
 
     urls[name] = url;

@@ -4,6 +4,7 @@ import { DropzoneOptions } from 'react-dropzone';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FileBarChart, Paperclip } from 'lucide-react';
+import { useParams } from 'next/navigation';
 import { z } from 'zod';
 
 import { getPresignedUrls } from 'actions/importer';
@@ -43,16 +44,27 @@ export const FileDropzone = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const { organization } = useParams();
+
   const onSubmit = async (data: FormData) => {
     if (!data.files) return;
 
-    const names = data.files.map(
-      (file) => `${file.name}-${new Date().getTime()}`,
+    const urls = await getPresignedUrls(
+      data.files.map((file) => `${organization}/${file.name}`),
     );
 
-    const urls = await getPresignedUrls(names);
+    for (const [name, url] of Object.entries(urls)) {
+      const file = data.files.find(
+        (file) => file.name === name.split('/').pop(),
+      );
 
-    console.log(urls);
+      if (!file) continue;
+
+      await fetch(url, {
+        method: 'PUT',
+        body: file,
+      });
+    }
   };
 
   return (
