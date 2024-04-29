@@ -97,10 +97,7 @@ export interface paths {
         200: {
           content: {
             'application/json': {
-              msg: {
-                type: string;
-                text: string;
-              }[];
+              functionCode: string;
             };
           };
         };

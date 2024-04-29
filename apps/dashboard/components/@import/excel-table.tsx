@@ -1,10 +1,17 @@
 import React from 'react';
 
-import { getColorByTableIndex, isCellInAnyTable } from 'lib/excel';
+import {
+  extractTableFromCoordinates,
+  getColorByTableIndex,
+  isCellInAnyTable,
+  tryImportFunction,
+} from 'lib/excel';
 
 import { importer } from 'api/importer/client';
 
 import { ExcelTableCell } from './excel-table-cell';
+
+export const runtime = 'nodejs';
 
 export const ExcelTable = async ({ file }: { file: string }) => {
   const { data, error } = await importer.GET('/import/{file}/coordinates', {
@@ -27,16 +34,18 @@ export const ExcelTable = async ({ file }: { file: string }) => {
     const coordinates =
       data.tables[Number(formData.get('tableIndex'))].coordinates;
 
-    const { data: extracted } = await importer.POST('/import/extract-data', {
-      body: {
-        worksheet: data.worksheet,
-        coordinates,
-      },
+    const func = await tryImportFunction(data.worksheet, coordinates);
+
+    const extractedData = extractTableFromCoordinates(
+      data.worksheet,
+      coordinates,
+    );
+
+    const result = func(extractedData);
+
+    console.log({
+      result,
     });
-
-    const text = extracted?.msg.map((msg) => JSON.parse(msg.text));
-
-    console.log(text);
   };
 
   return (
