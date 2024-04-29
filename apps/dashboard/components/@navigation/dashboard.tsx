@@ -72,32 +72,36 @@ export const Navigation = ({
   return (
     <nav className="relative grid gap-2 py-4 text-lg font-medium lg:fixed lg:w-[280px] lg:gap-3 lg:px-4 lg:text-sm">
       <div className="mb-4">{org}</div>
-      <TypographyP className="text-xs uppercase text-muted-foreground">
+      <TypographyP className="text-muted-foreground text-xs uppercase">
         Ulazni podatci
       </TypographyP>
-      {config.input.map((item, index) => (
-        <NavItem
-          key={index}
-          icon={item.icon}
-          href={item.href}
-          active={item.href === pathname}
-        >
-          {item.label}
-        </NavItem>
-      ))}
-      <TypographyP className="text-xs uppercase text-muted-foreground">
+      <div>
+        {config.input.map((item, index) => (
+          <NavItem
+            key={index}
+            icon={item.icon}
+            href={item.href}
+            active={item.href === pathname}
+          >
+            {item.label}
+          </NavItem>
+        ))}
+      </div>
+      <TypographyP className="text-muted-foreground text-xs uppercase">
         Izlazni podatci
       </TypographyP>
-      {config.output.map((item, index) => (
-        <NavItem
-          key={index}
-          icon={item.icon}
-          href={item.href}
-          active={item.href === pathname}
-        >
-          {item.label}
-        </NavItem>
-      ))}
+      <div>
+        {config.output.map((item, index) => (
+          <NavItem
+            key={index}
+            icon={item.icon}
+            href={item.href}
+            active={item.href === pathname}
+          >
+            {item.label}
+          </NavItem>
+        ))}
+      </div>
       <div className="fixed bottom-4 lg:w-[280px]">{user}</div>
     </nav>
   );
