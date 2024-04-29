@@ -27,7 +27,7 @@ const InventroyAndEquipmentPage = async ({
         <CardHeader>
           <TypographyH3>Imovina i oprema</TypographyH3>
         </CardHeader>
-        <CardContent>
+        <CardContent className="overflow-auto">
           <ScrollArea className="min-w-[40rem]">
             <TeamInputTable
               header={[
