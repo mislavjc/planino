@@ -8,6 +8,7 @@ import {
   extractMultipleTableCoordinates,
   extractTableFromCoordinates,
 } from 'utils/importer';
+import { functionExtractionPrompt } from 'utils/prompts';
 
 const importPayloadSchema = z.object({
   names: z.array(z.string()).min(1),
@@ -245,12 +246,7 @@ const extractDataFromCoordinates = createRoute({
         'application/json': {
           schema: z
             .object({
-              msg: z.array(
-                z.object({
-                  type: z.string(),
-                  text: z.string(),
-                }),
-              ),
+              functionCode: z.string(),
             })
             .openapi({
               title: 'Extracted data',
@@ -270,46 +266,18 @@ app.openapi(extractDataFromCoordinates, async (c) => {
   const anthropic = getAnthropicClient(c.env);
 
   const msg = await anthropic.messages.create({
-    model: 'claude-3-haiku-20240307',
+    model: 'claude-3-opus-20240229',
     max_tokens: 4096,
+    temperature: 0,
     messages: [
       {
         role: 'user',
-        content: `You will be given a 2d array of data, your task is to take the data and convert it into an array of JSON objects. 
-                  The schema for JSON that you MUST follow is as follows, but ONLY if the data can be converted into this schema:
-                  <SCHEMA>
-                  type Item = {
-                    name: string,
-                    quantity: number,
-                    price: number,
-                    expenses: number,
-                  }
-                  </SCHEMA>
-
-                  You must convert the data into an array of JSON objects that follow the schema provided above.
-
-                  Do NOT return code or any other format, only the array of JSON objects.
-
-                  If the data cannot be converted into the schema provided, please return an empty array.
-
-                  The data will be as follows:
-                  <DATA>
-                  ${JSON.stringify(extractedData)}
-                  </DATA>
-
-                  You must convert the data into an array of JSON objects that follow the schema provided above.
-
-                  Do NOT return code or any other format, only the array of JSON objects.
-
-                  If the data cannot be converted into the schema provided, please return an empty array.
-
-                  Good luck!
-                  `,
+        content: functionExtractionPrompt(extractedData),
       },
     ],
   });
 
-  return c.json({ msg: msg.content });
+  return c.json({ functionCode: msg.content[0].text });
 });
 
 export { app as importRoutes };
