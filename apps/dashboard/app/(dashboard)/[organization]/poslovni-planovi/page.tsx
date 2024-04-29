@@ -1,4 +1,4 @@
-import { getBusinessPlans } from 'actions/plans';
+import { createBusinessPlan, getBusinessPlans } from 'actions/plans';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
 import { TypographyH3, TypographyP } from 'ui/typography';
@@ -30,11 +30,21 @@ const BusinessPlans = async ({
                 </TypographyP>
               </div>
             ))}
-            <div className="bg-muted/40 hover:bg-muted/10 flex h-72 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed transition-all duration-100 ease-in-out">
-              <TypographyP className="text-sm text-neutral-600">
-                Kreiraj novi poslovni plan
-              </TypographyP>
-            </div>
+            <form
+              className="relative bg-muted/40 hover:bg-muted/10 flex h-72 items-center justify-center rounded-lg border-2 border-dashed transition-all duration-100 ease-in-out"
+              action={createBusinessPlan}
+            >
+              <button className="absolute inset-0">
+                <input
+                  type="hidden"
+                  name="organization"
+                  value={params.organization}
+                />
+                <TypographyP className="text-sm text-neutral-600">
+                  Kreiraj novi poslovni plan
+                </TypographyP>
+              </button>
+            </form>
           </div>
         </CardContent>
       </Card>
