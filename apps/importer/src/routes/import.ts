@@ -3,7 +3,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createRoute, z } from '@hono/zod-openapi';
 import * as XLSX from 'xlsx';
 
-import { app, getAnthropicClient, getR2Client } from 'utils/bindings';
+import { app, getOpenAIClient, getR2Client } from 'utils/bindings';
 import {
   extractMultipleTableCoordinates,
   extractTableFromCoordinates,
@@ -246,7 +246,7 @@ const extractDataFromCoordinates = createRoute({
         'application/json': {
           schema: z
             .object({
-              functionCode: z.string(),
+              functionCode: z.string().nullable(),
             })
             .openapi({
               title: 'Extracted data',
@@ -265,11 +265,10 @@ app.openapi(extractDataFromCoordinates, async (c) => {
 
   const slicedData = extractedData.slice(0, 5);
 
-  const anthropic = getAnthropicClient(c.env);
+  const openai = getOpenAIClient(c.env);
 
-  const msg = await anthropic.messages.create({
-    model: 'claude-3-opus-20240229',
-    max_tokens: 4096,
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4-turbo',
     temperature: 0,
     messages: [
       {
@@ -279,7 +278,7 @@ app.openapi(extractDataFromCoordinates, async (c) => {
     ],
   });
 
-  return c.json({ functionCode: msg.content[0].text });
+  return c.json({ functionCode: completion.choices[0].message.content });
 });
 
 export { app as importRoutes };
