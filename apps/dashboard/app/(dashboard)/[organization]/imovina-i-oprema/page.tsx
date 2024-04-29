@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader } from 'ui/card';
 import { ScrollArea } from 'ui/scroll-area';
 import { TypographyH3 } from 'ui/typography';
 
+import { Charts } from 'components/@inventory/charts';
 import { Overview } from 'components/@inventory/overview';
 import { Row } from 'components/@inventory/row';
 import { AddRow } from 'components/add-row';
@@ -61,6 +62,16 @@ const InventroyAndEquipmentPage = async ({
               })}
             />
           </ScrollArea>
+        </CardContent>
+      </Card>
+      <Card className="max-w-screen-xl">
+        <CardHeader>
+          <TypographyH3>Amortizacija imovine i opreme</TypographyH3>
+        </CardHeader>
+        <CardContent className="overflow-x-auto">
+          <Suspense>
+            <Charts organization={params.organization} />
+          </Suspense>
         </CardContent>
       </Card>
       <Card className="max-w-screen-xl">

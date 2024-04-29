@@ -43,12 +43,7 @@ export const TypographyH3 = ({ children, className }: TypographyProps) => {
 
 export const TypographyH4 = ({ children, className }: TypographyProps) => {
   return (
-    <h4
-      className={cn(
-        'scroll-m-20 text-xl font-semibold tracking-tight',
-        className,
-      )}
-    >
+    <h4 className={cn('scroll-m-20 text-xl tracking-tight', className)}>
       {children}
     </h4>
   );

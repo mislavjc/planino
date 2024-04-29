@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { createExpense, getOperationalExpenses } from 'actions/expense';
 
+import { Charts } from 'components/@expenses/charts';
 import { Overview } from 'components/@expenses/overview';
 import { Row } from 'components/@expenses/row';
 import { AddRow } from 'components/add-row';
@@ -57,6 +58,16 @@ const OperationalExpensesPage = async ({
             />
             <ScrollBar />
           </ScrollArea>
+        </CardContent>
+      </Card>
+      <Card className="max-w-screen-xl">
+        <CardHeader>
+          <TypographyH3>Troškovi po timovima</TypographyH3>
+        </CardHeader>
+        <CardContent className="overflow-x-auto">
+          <Suspense>
+            <Charts organization={organization} />
+          </Suspense>
         </CardContent>
       </Card>
       <Card className="max-w-screen-xl">

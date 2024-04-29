@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { getYearlyExpenseAggregation } from 'actions/expense';
 
 import { TeamYearlyTable } from 'components/table/team-yearly-table';
