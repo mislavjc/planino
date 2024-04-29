@@ -19,7 +19,7 @@ const BusinessPlans = async ({
           <TypographyH3>Poslovni planovi</TypographyH3>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-3 lg:grid-cols-6">
+          <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
             {businessPlans.map((plan) => (
               <div
                 key={plan.businessPlanId}
@@ -31,7 +31,7 @@ const BusinessPlans = async ({
               </div>
             ))}
             <form
-              className="relative bg-muted/40 hover:bg-muted/10 flex h-72 items-center justify-center rounded-lg border-2 border-dashed transition-all duration-100 ease-in-out"
+              className="bg-muted/40 hover:bg-muted/10 relative flex h-72 items-center justify-center rounded-lg border-2 border-dashed transition-all duration-100 ease-in-out"
               action={createBusinessPlan}
             >
               <button className="absolute inset-0">
