@@ -51,7 +51,7 @@ const tailwindColors = {
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
-  backgroundColor: 'rgba(0,0,0,0.9)',
+  backgroundColor: '#333',
   color: 'white',
 };
 
@@ -243,17 +243,19 @@ export const BarStackChart = ({ data }: BarStackProps) => {
                 left={tooltipLeft}
                 style={tooltipStyles}
               >
-                <div style={{ color: colorScale(tooltipData.key) }}>
-                  <strong>{tooltipData.key}</strong>
-                </div>
-                <div>
-                  {new Intl.NumberFormat('en-HR', {
-                    style: 'currency',
-                    currency: 'EUR',
-                  }).format(Number(tooltipData.bar.data[tooltipData.key]))}
-                </div>
-                <div>
-                  <small>{tooltipData.bar.data.year}</small>
+                <div className="flex flex-col justify-center gap-1 p-1">
+                  <div style={{ color: colorScale(tooltipData.key) }}>
+                    <strong>{tooltipData.key}</strong>
+                  </div>
+                  <div className="font-mono">
+                    {new Intl.NumberFormat('en-HR', {
+                      style: 'currency',
+                      currency: 'EUR',
+                    }).format(Number(tooltipData.bar.data[tooltipData.key]))}
+                  </div>
+                  <div>
+                    <small>{tooltipData.bar.data.year}</small>
+                  </div>
                 </div>
               </TooltipInPortal>
             )}
