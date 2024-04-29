@@ -1,5 +1,4 @@
 import React from 'react';
-import util from 'util';
 
 import { getColorByTableIndex, isCellInAnyTable } from 'lib/excel';
 
@@ -40,7 +39,7 @@ export const ExcelTable = async ({ file }: { file: string }) => {
       },
     );
 
-    console.log(util.inspect(extracted, { depth: null }));
+    console.log(extracted?.data);
   };
 
   return (
