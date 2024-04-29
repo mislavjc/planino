@@ -2,6 +2,7 @@ import { relations } from 'drizzle-orm';
 import {
   index,
   integer,
+  jsonb,
   numeric,
   pgTable,
   primaryKey,
@@ -322,5 +323,59 @@ export const inventoryItemsRelations = relations(inventoryItems, ({ one }) => ({
   team: one(teams, {
     fields: [inventoryItems.teamId],
     references: [teams.teamId],
+  }),
+}));
+
+export const businessPlans = pgTable('business_plan', {
+  businessPlanId: uuid('business_plan_id')
+    .notNull()
+    .primaryKey()
+    .defaultRandom(),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'date' }).$onUpdate(
+    () => new Date(),
+  ),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.organizationId, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+  name: text('name'),
+  description: text('description'),
+});
+
+export const businessPlansRelations = relations(
+  businessPlans,
+  ({ one, many }) => ({
+    organization: one(organizations, {
+      fields: [businessPlans.organizationId],
+      references: [organizations.organizationId],
+    }),
+    blocks: many(blocks),
+  }),
+);
+
+export const blocks = pgTable('block', {
+  blockId: uuid('block_id').notNull().primaryKey().defaultRandom(),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'date' }).$onUpdate(
+    () => new Date(),
+  ),
+  businessPlanId: uuid('business_plan_id')
+    .notNull()
+    .references(() => businessPlans.businessPlanId, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+  type: text('type'),
+  order: integer('order'),
+  content: jsonb('content'),
+});
+
+export const blocksRelations = relations(blocks, ({ one }) => ({
+  businessPlan: one(businessPlans, {
+    fields: [blocks.businessPlanId],
+    references: [businessPlans.businessPlanId],
   }),
 }));
