@@ -9,7 +9,7 @@ import {
   extractTableFromCoordinates,
   getTransformerFunction,
 } from 'utils/importer';
-import { functionExtractionPrompt } from 'utils/prompts';
+import { extractionTools, functionExtractionPrompt } from 'utils/prompts';
 
 const importPayloadSchema = z.object({
   names: z.array(z.string()).min(1),
@@ -220,6 +220,10 @@ app.openapi(getExcelFile, async (c) => {
 
 export type ExcelFile = z.infer<typeof excelFileSchema>;
 
+const extractionSchema = z.array(
+  z.record(z.string(), z.union([z.string(), z.number(), z.null()])),
+);
+
 const extractDataFromCoordinates = createRoute({
   method: 'post',
   tags: ['import'],
@@ -247,12 +251,7 @@ const extractDataFromCoordinates = createRoute({
         'application/json': {
           schema: z
             .object({
-              data: z.array(
-                z.record(
-                  z.string(),
-                  z.union([z.string(), z.number(), z.null()]),
-                ),
-              ),
+              data: extractionSchema,
             })
             .openapi({
               title: 'Extracted data',
@@ -300,28 +299,54 @@ app.openapi(extractDataFromCoordinates, async (c) => {
         content: functionExtractionPrompt(slicedData),
       },
     ],
+    tools: extractionTools,
   });
 
   const responseMessage = completion.choices[0].message;
 
   messages.push(responseMessage);
 
-  try {
-    const args = JSON.parse(messages[0].content || '{}');
+  const toolCalls = responseMessage.tool_calls;
 
-    const data = transformArrayToObjects(args);
+  if (toolCalls) {
+    const availableFunctions = {
+      transformArrayToObjects,
+    };
 
-    return c.json({
-      data,
-    });
-  } catch (error) {
-    return c.json(
-      {
-        error: error,
-      },
-      { status: 400 },
-    );
+    for (const toolCall of toolCalls) {
+      const calledFunction = toolCall.function;
+
+      if (calledFunction.name in availableFunctions) {
+        const args = JSON.parse(calledFunction.arguments || '{}');
+
+        const foundFunction =
+          availableFunctions[
+            calledFunction.name as keyof typeof availableFunctions
+          ];
+
+        const result = foundFunction(args);
+
+        messages.push({
+          tool_call_id: toolCall.id,
+          role: 'tool',
+          name: calledFunction.name,
+          content: result,
+        });
+      }
+    }
   }
+
+  const toolResponses = messages.filter((message) => message.role === 'tool');
+
+  if (toolResponses.length === 0) {
+    return c.json({ error: 'Error extracting data' }, { status: 400 });
+  }
+
+  const data = toolResponses[0].content;
+
+  const parsedData = extractionSchema.parse(data);
+
+  return c.json({ data: parsedData });
 });
 
 export { app as importRoutes };
