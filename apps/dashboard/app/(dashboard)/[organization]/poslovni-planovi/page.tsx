@@ -25,7 +25,7 @@ const BusinessPlans = async ({
               <Link
                 href={`/${params.organization}/poslovni-planovi/${plan.businessPlanId}`}
                 key={plan.businessPlanId}
-                className="hover:bg-muted/10 flex h-72 cursor-pointer items-center justify-center rounded-lg border-2 transition-all duration-100 ease-in-out"
+                className="hover:bg-muted/40 flex h-72 cursor-pointer items-center justify-center rounded-lg border-2 transition-all duration-100 ease-in-out"
               >
                 <TypographyP className="text-sm text-neutral-600">
                   {plan.name || `Bez naziva #${index + 1}`}
