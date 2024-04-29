@@ -3,8 +3,12 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createRoute, z } from '@hono/zod-openapi';
 import * as XLSX from 'xlsx';
 
-import { app, getR2Client } from 'utils/bindings';
-import { extractMultipleTableCoordinates } from 'utils/importer';
+import { app, getOpenAIClient, getR2Client } from 'utils/bindings';
+import {
+  extractMultipleTableCoordinates,
+  extractTableFromCoordinates,
+} from 'utils/importer';
+import { functionExtractionPrompt } from 'utils/prompts';
 
 const importPayloadSchema = z.object({
   names: z.array(z.string()).min(1),
@@ -214,5 +218,67 @@ app.openapi(getExcelFile, async (c) => {
 });
 
 export type ExcelFile = z.infer<typeof excelFileSchema>;
+
+const extractDataFromCoordinates = createRoute({
+  method: 'post',
+  tags: ['import'],
+  path: '/import/extract-data',
+  request: {
+    body: {
+      content: {
+        'application/json': {
+          schema: z
+            .object({
+              worksheet: z.array(z.array(baseCellSchema)),
+              coordinates: coordinatesSchema,
+            })
+            .openapi({
+              title: 'Extract data from coordinates',
+            }),
+        },
+      },
+      required: true,
+    },
+  },
+  responses: {
+    200: {
+      content: {
+        'application/json': {
+          schema: z
+            .object({
+              functionCode: z.string().nullable(),
+            })
+            .openapi({
+              title: 'Extracted data',
+            }),
+        },
+      },
+      description: 'Extract data from coordinates',
+    },
+  },
+});
+
+app.openapi(extractDataFromCoordinates, async (c) => {
+  const { worksheet, coordinates } = c.req.valid('json');
+
+  const extractedData = extractTableFromCoordinates(worksheet, coordinates);
+
+  const slicedData = extractedData.slice(0, 5);
+
+  const openai = getOpenAIClient(c.env);
+
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4-turbo',
+    temperature: 0,
+    messages: [
+      {
+        role: 'user',
+        content: functionExtractionPrompt(slicedData),
+      },
+    ],
+  });
+
+  return c.json({ functionCode: completion.choices[0].message.content });
+});
 
 export { app as importRoutes };

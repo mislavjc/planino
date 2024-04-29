@@ -1,3 +1,5 @@
+import { importer } from 'api/importer/client';
+
 type TableCoordinates = {
   startRow: number;
   startColumn: number;
@@ -71,4 +73,87 @@ export const getColorByTableIndex = (index: number) => {
   }
 
   return predefinedColors[index % predefinedColors.length];
+};
+
+export const extractTableFromCoordinates = (
+  worksheet: unknown[][],
+  coordinates: {
+    startRow: number;
+    startColumn: number;
+    endRow: number;
+    endColumn: number;
+  },
+) => {
+  const { startRow, startColumn, endRow, endColumn } = coordinates;
+
+  return worksheet
+    .slice(startRow, endRow)
+    .map((row) => row.slice(startColumn, endColumn + 1));
+};
+
+export const tryImportFunction = async (
+  worksheet: unknown[][],
+  coordinates: {
+    startRow: number;
+    startColumn: number;
+    endRow: number;
+    endColumn: number;
+  },
+): Promise<Function> => {
+  'use server';
+
+  const attempts = 3;
+
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const { data: extracted, error: extractedError } = await importer.POST(
+        '/import/extract-data',
+        {
+          body: {
+            worksheet,
+            coordinates,
+          },
+        },
+      );
+
+      if (extractedError) {
+        throw new Error(extractedError);
+      }
+
+      if (extracted.functionCode === undefined) {
+        throw new Error('Function code is not defined');
+      }
+
+      console.log({ extracted });
+
+      if (
+        typeof extracted.functionCode !== 'string' ||
+        !extracted.functionCode.startsWith('function')
+      ) {
+        console.error(
+          'Retrieved data is not a valid function string, retrying...',
+        );
+        console.log({ extracted });
+        continue;
+      }
+
+      const func = eval(`(${extracted.functionCode})`);
+
+      if (typeof func === 'function') {
+        return func;
+      } else {
+        console.error('Evaluated object is not a function, retrying...');
+        console.log({ func });
+      }
+    } catch (error) {
+      console.error(`Attempt ${i + 1} failed: ${error}`);
+      if (i === attempts - 1) {
+        throw new Error(
+          'Failed to retrieve a valid function after maximum attempts',
+        );
+      }
+    }
+  }
+
+  throw new Error('Invalid function after retries');
 };

@@ -1,10 +1,17 @@
 import React from 'react';
 
-import { getColorByTableIndex, isCellInAnyTable } from 'lib/excel';
+import {
+  extractTableFromCoordinates,
+  getColorByTableIndex,
+  isCellInAnyTable,
+  tryImportFunction,
+} from 'lib/excel';
 
 import { importer } from 'api/importer/client';
 
 import { ExcelTableCell } from './excel-table-cell';
+
+export const runtime = 'nodejs';
 
 export const ExcelTable = async ({ file }: { file: string }) => {
   const { data, error } = await importer.GET('/import/{file}/coordinates', {
@@ -20,6 +27,26 @@ export const ExcelTable = async ({ file }: { file: string }) => {
   }
 
   const maxCols = Math.max(...data.worksheet.map((row) => row.length));
+
+  const sendDataForExtraction = async (formData: FormData) => {
+    'use server';
+
+    const coordinates =
+      data.tables[Number(formData.get('tableIndex'))].coordinates;
+
+    const func = await tryImportFunction(data.worksheet, coordinates);
+
+    const extractedData = extractTableFromCoordinates(
+      data.worksheet,
+      coordinates,
+    );
+
+    const result = func(extractedData);
+
+    console.log({
+      result,
+    });
+  };
 
   return (
     <div
@@ -68,18 +95,20 @@ export const ExcelTable = async ({ file }: { file: string }) => {
       {data.tables.map((table, tableIndex) => {
         const { startRow, startColumn } = table.coordinates;
         return (
-          <div
+          <form
             key={tableIndex}
             className="absolute bg-black"
             style={{
               gridRowStart: startRow,
               gridColumnStart: startColumn + 1,
             }}
+            action={sendDataForExtraction}
           >
-            <div className="h-6 p-1 font-mono text-xs uppercase text-white">
+            <input type="hidden" name="tableIndex" value={tableIndex} />
+            <button className="h-6 p-1 font-mono text-xs uppercase text-white">
               {tableIndex + 1}. tablica
-            </div>
-          </div>
+            </button>
+          </form>
         );
       })}
     </div>
