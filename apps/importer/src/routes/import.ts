@@ -263,6 +263,8 @@ app.openapi(extractDataFromCoordinates, async (c) => {
 
   const extractedData = extractTableFromCoordinates(worksheet, coordinates);
 
+  const slicedData = extractedData.slice(0, 5);
+
   const anthropic = getAnthropicClient(c.env);
 
   const msg = await anthropic.messages.create({
@@ -272,7 +274,7 @@ app.openapi(extractDataFromCoordinates, async (c) => {
     messages: [
       {
         role: 'user',
-        content: functionExtractionPrompt(extractedData),
+        content: functionExtractionPrompt(slicedData),
       },
     ],
   });

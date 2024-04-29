@@ -18,6 +18,7 @@ export const functionExtractionPrompt = (
       Use function declaration syntax, not arrow function syntax. Name it 'extractData'.
       Follow the schema provided above.
       Make sure that for e.g. 'name' field, the value is a string, for 'quantity' field, the value is a number, etc.
+      Make sure to remove the header row from the data and to remove rows with all null values.
       </IMPORTANT>
 
       DO NOT return anything other than the code, no console logs, no comments, no other code.
