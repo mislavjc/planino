@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader } from 'ui/card';
 import { ScrollArea, ScrollBar } from 'ui/scroll-area';
 import { TypographyH3, TypographyP } from 'ui/typography';
 
+import { Charts } from 'components/@loans/charts';
 import { Overview } from 'components/@loans/overview';
 import { Row } from 'components/@loans/row';
 import { AddRow } from 'components/add-row';
@@ -57,6 +58,16 @@ const PaymentPlanPage = async ({
             </div>
             <ScrollBar />
           </ScrollArea>
+        </CardContent>
+      </Card>
+      <Card className="max-w-screen-xl">
+        <CardHeader>
+          <TypographyH3>Otplatni planovi</TypographyH3>
+        </CardHeader>
+        <CardContent className="overflow-x-auto">
+          <Suspense>
+            <Charts organization={organization} />
+          </Suspense>
         </CardContent>
       </Card>
       <Card className="max-w-screen-xl">
