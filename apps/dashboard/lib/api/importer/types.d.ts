@@ -97,7 +97,9 @@ export interface paths {
         200: {
           content: {
             'application/json': {
-              functionCode: string;
+              data: {
+                [key: string]: unknown;
+              }[];
             };
           };
         };

@@ -109,3 +109,21 @@ export const extractTableFromCoordinates = (
     .slice(startRow, endRow)
     .map((row) => row.slice(startColumn, endColumn + 1));
 };
+
+type ColumnMap = { [key: string]: number };
+
+export const getTransformerFunction = (data: unknown[][]) => {
+  return (columns: ColumnMap) => {
+    const filteredData = data.filter((row) =>
+      row.some((cell) => cell !== null && cell !== undefined && cell !== ''),
+    );
+    return filteredData.slice(1).map((row) => {
+      const result: { [key: string]: unknown } = {};
+
+      for (const key in columns) {
+        result[key] = row[columns[key]];
+      }
+      return result;
+    });
+  };
+};

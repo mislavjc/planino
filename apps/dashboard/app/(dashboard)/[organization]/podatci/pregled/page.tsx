@@ -12,8 +12,6 @@ import { importer } from 'api/importer/client';
 
 export const revalidate = 0;
 
-export const runtime = 'nodejs';
-
 const DataOverviewPage = async ({
   params: { organization },
 }: {

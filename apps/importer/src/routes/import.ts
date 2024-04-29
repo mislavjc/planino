@@ -7,6 +7,7 @@ import { app, getOpenAIClient, getR2Client } from 'utils/bindings';
 import {
   extractMultipleTableCoordinates,
   extractTableFromCoordinates,
+  getTransformerFunction,
 } from 'utils/importer';
 import { functionExtractionPrompt } from 'utils/prompts';
 
@@ -246,7 +247,12 @@ const extractDataFromCoordinates = createRoute({
         'application/json': {
           schema: z
             .object({
-              functionCode: z.string().nullable(),
+              data: z.array(
+                z.record(
+                  z.string(),
+                  z.union([z.string(), z.number(), z.null()]),
+                ),
+              ),
             })
             .openapi({
               title: 'Extracted data',
@@ -255,13 +261,31 @@ const extractDataFromCoordinates = createRoute({
       },
       description: 'Extract data from coordinates',
     },
+    400: {
+      content: {
+        'application/json': {
+          schema: z
+            .object({
+              error: z.string(),
+            })
+            .openapi({
+              title: 'Error',
+            }),
+        },
+      },
+      description: 'Error extracting data',
+    },
   },
 });
 
 app.openapi(extractDataFromCoordinates, async (c) => {
   const { worksheet, coordinates } = c.req.valid('json');
 
+  const messages = [];
+
   const extractedData = extractTableFromCoordinates(worksheet, coordinates);
+
+  const transformArrayToObjects = getTransformerFunction(extractedData);
 
   const slicedData = extractedData.slice(0, 5);
 
@@ -272,13 +296,32 @@ app.openapi(extractDataFromCoordinates, async (c) => {
     temperature: 0,
     messages: [
       {
-        role: 'user',
+        role: 'system',
         content: functionExtractionPrompt(slicedData),
       },
     ],
   });
 
-  return c.json({ functionCode: completion.choices[0].message.content });
+  const responseMessage = completion.choices[0].message;
+
+  messages.push(responseMessage);
+
+  try {
+    const args = JSON.parse(messages[0].content || '{}');
+
+    const data = transformArrayToObjects(args);
+
+    return c.json({
+      data,
+    });
+  } catch (error) {
+    return c.json(
+      {
+        error: error,
+      },
+      { status: 400 },
+    );
+  }
 });
 
 export { app as importRoutes };
