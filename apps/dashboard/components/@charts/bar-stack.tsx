@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AxisBottom } from '@visx/axis';
+import { AxisBottom, AxisLeft } from '@visx/axis';
 import { localPoint } from '@visx/event';
 import { Grid } from '@visx/grid';
 import { Group } from '@visx/group';
@@ -88,7 +88,7 @@ export const BarStackChart = ({ data }: BarStackProps) => {
     domain: data.map(getYear),
     padding: 0.2,
   });
-  const temperatureScale = scaleLinear<number>({
+  const valueScale = scaleLinear<number>({
     domain: [0, Math.max(...valueTotals)],
     nice: true,
   });
@@ -115,13 +115,13 @@ export const BarStackChart = ({ data }: BarStackProps) => {
       {(parent) => {
         const { width, height } = parent;
 
-        const margin = { top: 20, bottom: 40, left: 50, right: 20 };
+        const margin = { top: 20, bottom: 40, left: 70, right: 20 };
 
         const xMax = width - margin.left - margin.right;
         const yMax = height - margin.top - margin.bottom;
 
         dateScale.rangeRound([0, xMax]);
-        temperatureScale.range([yMax, 0]);
+        valueScale.range([yMax, 0]);
 
         return (
           <div className="relative">
@@ -138,20 +138,20 @@ export const BarStackChart = ({ data }: BarStackProps) => {
                 top={margin.top}
                 left={margin.left}
                 xScale={dateScale}
-                yScale={temperatureScale}
+                yScale={valueScale}
                 width={xMax}
                 height={yMax}
                 stroke="black"
                 strokeOpacity={0.1}
                 xOffset={dateScale.bandwidth() / 2}
               />
-              <Group top={margin.top}>
+              <Group top={margin.top} left={margin.left}>
                 <BarStack
                   data={data}
                   keys={keys.map((key) => key)}
                   x={getYear}
                   xScale={dateScale}
-                  yScale={temperatureScale}
+                  yScale={valueScale}
                   color={colorScale}
                 >
                   {(barStacks) =>
@@ -192,9 +192,33 @@ export const BarStackChart = ({ data }: BarStackProps) => {
                 tickStroke="black"
                 tickLabelProps={{
                   fill: 'black',
-                  fontSize: 11,
+                  fontSize: 10,
                   textAnchor: 'middle',
+                  fontFamily: 'monospace',
                 }}
+              />
+              <AxisLeft
+                scale={valueScale}
+                top={margin.top}
+                left={margin.left}
+                stroke="black"
+                tickStroke="black"
+                tickLabelProps={() => ({
+                  fill: 'black',
+                  fontSize: 10,
+                  textAnchor: 'end',
+                  dx: '-0.25em',
+                  dy: '0.25em',
+                  fontFamily: 'monospace',
+                })}
+                tickFormat={(value) =>
+                  value.toLocaleString('en-HR', {
+                    style: 'currency',
+                    currency: 'EUR',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  })
+                }
               />
             </svg>
             <div
