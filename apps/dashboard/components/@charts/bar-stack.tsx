@@ -71,8 +71,6 @@ export const BarStackChart = ({ data }: BarStackProps) => {
 
   const keys = Object.keys(data[0]).filter((d) => d !== 'year');
 
-  console.log({ data });
-
   const valueTotals = data.reduce((allTotals, currentYear) => {
     const totalValue = keys.reduce((dailyTotal, k) => {
       dailyTotal += Number(currentYear[k as keyof TransformedExpenseRecord]);
