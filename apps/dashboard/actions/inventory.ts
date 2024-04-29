@@ -105,6 +105,14 @@ export const getInventoryValues = async (organization: string) => {
 
   const parsedResult = inventoryValuesSchema.parse(result);
 
+  if (!parsedResult.length) {
+    return {
+      values: [],
+      years: [],
+      numberOfYears: 0,
+    };
+  }
+
   const numberOfYears = parsedResult[0].yearly_values.length;
 
   const years = Array.from({ length: numberOfYears }, (_, i) => {
