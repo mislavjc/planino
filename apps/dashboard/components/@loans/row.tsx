@@ -43,6 +43,14 @@ export const Row = ({
         );
       }
 
+      if (
+        field === 'interestRate' ||
+        field === 'amount' ||
+        field === 'duration'
+      ) {
+        formattedValue = value === '' ? '0' : value;
+      }
+
       const updateData =
         formattedValue === undefined
           ? { [field]: null }
