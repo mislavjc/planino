@@ -3,6 +3,7 @@ import {
   Coins,
   Euro,
   Factory,
+  FileText,
   GanttChartSquare,
   PiggyBank,
   Receipt,
@@ -22,6 +23,7 @@ type ConfigItem = {
 export type TemplateConfig = {
   input: ConfigItem[];
   output: ConfigItem[];
+  documents: ConfigItem[];
 };
 
 export const templateConfig: TemplateConfig = {
@@ -82,6 +84,13 @@ export const templateConfig: TemplateConfig = {
       label: 'Novčani tok',
       href: '/novcani-tok',
       icon: <ArrowUpDown width={16} className="text-neutral-600" />,
+    },
+  ],
+  documents: [
+    {
+      label: 'Poslovni planovi',
+      href: '/poslovni-planovi',
+      icon: <FileText width={16} className="text-neutral-600" />,
     },
   ],
 };

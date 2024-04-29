@@ -42,6 +42,10 @@ const generateConfig = (name: string, config: TemplateConfig) => {
       ...item,
       href: `/${name}${item.href}`,
     })),
+    documents: config.documents.map((item) => ({
+      ...item,
+      href: `/${name}${item.href}`,
+    })),
   };
 };
 
@@ -62,6 +66,9 @@ export const Navigation = ({
       pathname.includes(item.href.replace(/\/$/, '')),
     ) ||
     config.output.some((item) =>
+      pathname.includes(item.href.replace(/\/$/, '')),
+    ) ||
+    config.documents.some((item) =>
       pathname.includes(item.href.replace(/\/$/, '')),
     );
 
@@ -92,6 +99,21 @@ export const Navigation = ({
       </TypographyP>
       <div>
         {config.output.map((item, index) => (
+          <NavItem
+            key={index}
+            icon={item.icon}
+            href={item.href}
+            active={item.href === pathname}
+          >
+            {item.label}
+          </NavItem>
+        ))}
+      </div>
+      <TypographyP className="text-muted-foreground text-xs uppercase">
+        Dokumenti
+      </TypographyP>
+      <div>
+        {config.documents.map((item, index) => (
           <NavItem
             key={index}
             icon={item.icon}
