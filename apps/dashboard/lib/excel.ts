@@ -1,5 +1,3 @@
-import { importer } from 'api/importer/client';
-
 type TableCoordinates = {
   startRow: number;
   startColumn: number;
