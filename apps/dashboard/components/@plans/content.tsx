@@ -1,17 +1,36 @@
 'use client';
 
-import { useState } from 'react';
-import { JSONContent } from 'novel';
+import { updateBlock } from 'actions/block';
 
 import Editor from 'components/editor/advanced-editor';
+import { documentSchema } from 'components/editor/schema';
 
-import { defaultValue } from './default-value';
+export const EditorBlock = ({
+  content,
+  blockId,
+}: {
+  content: unknown;
+  blockId: string;
+}) => {
+  if (content === null) {
+    return (
+      <Editor
+        initialValue={undefined}
+        onChange={(_value) => {
+          updateBlock({ blockId, content: JSON.stringify(_value) });
+        }}
+      />
+    );
+  }
 
-export const Content = () => {
-  const [value, setValue] = useState<JSONContent>(defaultValue);
+  const parsedContent = documentSchema.parse(content);
+
   return (
-    <div className="mx-auto max-w-screen-lg">
-      <Editor initialValue={value} onChange={setValue} />
-    </div>
+    <Editor
+      initialValue={parsedContent}
+      onChange={(_value) => {
+        updateBlock({ blockId, content: JSON.stringify(_value) });
+      }}
+    />
   );
 };

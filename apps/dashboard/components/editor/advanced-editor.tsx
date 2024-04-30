@@ -8,11 +8,13 @@ import {
   EditorCommandItem,
   EditorCommandList,
   EditorContent,
+  EditorInstance,
   EditorRoot,
   type JSONContent,
 } from 'novel';
 import { handleCommandNavigation, ImageResizer } from 'novel/extensions';
 import { handleImageDrop, handleImagePaste } from 'novel/plugins';
+import { useDebouncedCallback } from 'use-debounce';
 
 import { Separator } from '../ui/separator';
 
@@ -32,15 +34,24 @@ interface EditorProp {
   initialValue?: JSONContent;
   onChange: (_value: JSONContent) => void;
 }
+
 const Editor = ({ initialValue, onChange }: EditorProp) => {
   const [openNode, setOpenNode] = useState(false);
   const [openColor, setOpenColor] = useState(false);
   const [openLink, setOpenLink] = useState(false);
 
+  const debouncedUpdates = useDebouncedCallback(
+    async (editor: EditorInstance) => {
+      const json = editor.getJSON();
+
+      onChange(json);
+    },
+    1_000,
+  );
+
   return (
     <EditorRoot>
       <EditorContent
-        className="border p-8"
         {...(initialValue && { initialContent: initialValue })}
         extensions={extensions}
         editorProps={{
@@ -55,7 +66,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
           },
         }}
         onUpdate={({ editor }) => {
-          onChange(editor.getJSON());
+          debouncedUpdates(editor);
         }}
         slotAfter={<ImageResizer />}
       >
