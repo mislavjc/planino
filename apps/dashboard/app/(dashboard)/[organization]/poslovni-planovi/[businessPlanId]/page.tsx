@@ -1,11 +1,11 @@
-import { Plus } from 'lucide-react';
 import { notFound } from 'next/navigation';
 
-import { createBlock } from 'actions/block';
 import { getBusinessPlan } from 'actions/plans';
 
+import { AddBlock } from 'components/@plans/add-block';
 import { EditorBlock } from 'components/@plans/content';
-import { Button } from 'components/ui/button';
+
+import { getBlockOptions } from 'lib/blocks';
 
 const BusinessPlanPage = async ({
   params: { businessPlanId, organization },
@@ -24,8 +24,10 @@ const BusinessPlanPage = async ({
     notFound();
   }
 
+  const blockOptions = await getBlockOptions(organization);
+
   return (
-    <div className="mx-auto w-full max-w-screen-lg border p-8">
+    <div className="mx-auto flex min-h-screen w-full max-w-screen-lg flex-col gap-8 border p-8">
       {businessPlan.blocks.map((block) => (
         <EditorBlock
           key={block.blockId}
@@ -33,17 +35,9 @@ const BusinessPlanPage = async ({
           content={block.content}
         />
       ))}
-      <form action={createBlock}>
-        <input
-          type="hidden"
-          name="business_plan_id"
-          value={businessPlan.businessPlanId}
-        />
-        <Button className="mt-8 w-full" variant="outline">
-          <Plus />
-          Dodaj blok
-        </Button>
-      </form>
+      <div>
+        <AddBlock blockOptions={blockOptions} />
+      </div>
     </div>
   );
 };
