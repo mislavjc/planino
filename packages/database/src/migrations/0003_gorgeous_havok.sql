@@ -1,0 +1,1 @@
+ALTER TABLE "block" ADD COLUMN "type" "block_type" NOT NULL;
