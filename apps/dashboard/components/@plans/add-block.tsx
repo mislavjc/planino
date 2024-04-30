@@ -2,6 +2,8 @@
 
 import { Plus } from 'lucide-react';
 
+import { createBlock } from 'actions/block';
+
 import { Button } from 'ui/button';
 import {
   DropdownMenu,
@@ -15,7 +17,15 @@ import {
 import { BlockOptions } from 'lib/blocks';
 import { getRandomColor } from 'lib/utils';
 
-export const AddBlock = ({ blockOptions }: { blockOptions: BlockOptions }) => {
+export const AddBlock = ({
+  blockOptions,
+  businessPlanId,
+  organization,
+}: {
+  blockOptions: BlockOptions;
+  businessPlanId: string;
+  organization: string;
+}) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -31,7 +41,22 @@ export const AddBlock = ({ blockOptions }: { blockOptions: BlockOptions }) => {
               <DropdownMenuLabel>{label}</DropdownMenuLabel>
               {Object.entries(charts).map(
                 ([chartType, { label, icon, description }]) => (
-                  <DropdownMenuItem key={chartType} className="flex gap-2">
+                  <DropdownMenuItem
+                    key={chartType}
+                    className="flex gap-2"
+                    onClick={async () => {
+                      await createBlock({
+                        organization,
+                        businessPlanId,
+                        type: 'component',
+                        content: {
+                          [blockType]: {
+                            charts: chartType,
+                          },
+                        },
+                      });
+                    }}
+                  >
                     <div
                       className="size-10 p-2"
                       style={{
@@ -50,7 +75,22 @@ export const AddBlock = ({ blockOptions }: { blockOptions: BlockOptions }) => {
               <DropdownMenuSeparator />
               {Object.entries(tables).map(
                 ([tableType, { label, icon, description }]) => (
-                  <DropdownMenuItem key={tableType} className="flex gap-2">
+                  <DropdownMenuItem
+                    key={tableType}
+                    className="flex gap-2"
+                    onClick={async () => {
+                      await createBlock({
+                        organization,
+                        businessPlanId,
+                        type: 'component',
+                        content: {
+                          [blockType]: {
+                            tables: tableType,
+                          },
+                        },
+                      });
+                    }}
+                  >
                     <div
                       className="size-10 p-2"
                       style={{

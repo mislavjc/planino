@@ -4,8 +4,9 @@ import { getBusinessPlan } from 'actions/plans';
 
 import { AddBlock } from 'components/@plans/add-block';
 import { EditorBlock } from 'components/@plans/content';
+import { RenderBlock } from 'components/@plans/render-block';
 
-import { getBlockOptions } from 'lib/blocks';
+import { getBlockFromOptions, getBlockOptions } from 'lib/blocks';
 
 const BusinessPlanPage = async ({
   params: { businessPlanId, organization },
@@ -28,15 +29,27 @@ const BusinessPlanPage = async ({
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-screen-lg flex-col gap-8 border p-8">
-      {businessPlan.blocks.map((block) => (
-        <EditorBlock
-          key={block.blockId}
-          blockId={block.blockId}
-          content={block.content}
-        />
-      ))}
+      {businessPlan.blocks.map((block) => {
+        return block.type === 'text' ? (
+          <EditorBlock
+            key={block.blockId}
+            blockId={block.blockId}
+            content={block.content}
+          />
+        ) : (
+          <RenderBlock
+            key={block.blockId}
+            content={block.content}
+            organization={organization}
+          />
+        );
+      })}
       <div>
-        <AddBlock blockOptions={blockOptions} />
+        <AddBlock
+          organization={organization}
+          blockOptions={blockOptions}
+          businessPlanId={businessPlanId}
+        />
       </div>
     </div>
   );

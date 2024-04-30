@@ -6,18 +6,36 @@ import { revalidatePath } from 'next/cache';
 
 import { db } from 'db/drizzle';
 
-export const createBlock = async (formData: FormData) => {
-  const businessPlanId = formData.get('business_plan_id') as string;
+import { blockOptionsSchema, DbBlockOptions } from 'lib/blocks';
+
+import { getOrganization } from './organization';
+
+export const createBlock = async ({
+  organization,
+  businessPlanId,
+  type,
+  content,
+}: {
+  organization: string;
+  businessPlanId: string;
+  type: 'component' | 'text';
+  content: DbBlockOptions;
+}) => {
+  await getOrganization(organization);
+
+  const parsedContent = blockOptionsSchema.parse(content);
 
   const newBlock = await db
     .insert(blocks)
     .values({
       businessPlanId,
+      type,
+      content: parsedContent,
     })
     .returning();
 
   if (!newBlock) {
-    throw new Error('Failed to create block');
+    throw new Error('Neuspjelo kreiranje bloka');
   }
 
   revalidatePath('/[organization]/poslovni-planovi/[businessPlanId]', 'page');
