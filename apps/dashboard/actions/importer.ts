@@ -18,6 +18,6 @@ export const getPresignedUrls = async (names: string[]) => {
   return r2Data.urls;
 };
 
-export const revalidateTableCache = () => {
+export const revalidateTableCache = async () => {
   revalidatePath('/[organization]/podatci/pregled');
 };
