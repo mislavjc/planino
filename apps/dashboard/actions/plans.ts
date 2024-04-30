@@ -1,7 +1,7 @@
 'use server';
 
 import { businessPlans } from '@planino/database/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 
 import { db } from 'db/drizzle';
@@ -32,4 +32,26 @@ export const createBusinessPlan = async (formData: FormData) => {
     .returning();
 
   redirect(`/${organization}/poslovni-planovi/${newPlan[0].businessPlanId}`);
+};
+
+export const getBusinessPlan = async ({
+  organization,
+  businessPlanId,
+}: {
+  organization: string;
+  businessPlanId: string;
+}) => {
+  const foundOrganization = await getOrganization(organization);
+
+  const dbPlan = await db.query.businessPlans.findFirst({
+    where: and(
+      eq(businessPlans.organizationId, foundOrganization.organizationId),
+      eq(businessPlans.businessPlanId, businessPlanId),
+    ),
+    with: {
+      blocks: true,
+    },
+  });
+
+  return dbPlan;
 };
