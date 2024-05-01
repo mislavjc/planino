@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import {
-  EditorBubble,
   EditorCommand,
   EditorCommandEmpty,
   EditorCommandItem,
@@ -18,6 +17,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { Separator } from '../ui/separator';
 
+import { GenerativeMenuSwitch } from './generative/generative-menu-switch';
 import { ColorSelector } from './selectors/color-selector';
 import { LinkSelector } from './selectors/link-selector';
 import { NodeSelector } from './selectors/node-selector';
@@ -39,6 +39,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
   const [openNode, setOpenNode] = useState(false);
   const [openColor, setOpenColor] = useState(false);
   const [openLink, setOpenLink] = useState(false);
+  const [openAI, setOpenAI] = useState(false);
 
   const debouncedUpdates = useDebouncedCallback(
     async (editor: EditorInstance) => {
@@ -70,8 +71,8 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
         }}
         slotAfter={<ImageResizer />}
       >
-        <EditorCommand className="border-muted bg-background z-50 h-auto max-h-[330px] overflow-y-auto rounded-md border px-1 py-2 shadow-md transition-all">
-          <EditorCommandEmpty className="text-muted-foreground px-2">
+        <EditorCommand className="z-50 h-auto max-h-[330px] overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all">
+          <EditorCommandEmpty className="px-2 text-muted-foreground">
             Nema rezultata
           </EditorCommandEmpty>
           <EditorCommandList>
@@ -79,15 +80,15 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
               <EditorCommandItem
                 value={item.title}
                 onCommand={(val) => item.command?.(val)}
-                className={`hover:bg-accent aria-selected:bg-accent flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm `}
+                className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm hover:bg-accent aria-selected:bg-accent `}
                 key={item.title}
               >
-                <div className="border-muted bg-background flex size-10 items-center justify-center rounded-md border">
+                <div className="flex size-10 items-center justify-center rounded-md border border-muted bg-background">
                   {item.icon}
                 </div>
                 <div>
                   <p className="font-medium">{item.title}</p>
-                  <p className="text-muted-foreground text-xs">
+                  <p className="text-xs text-muted-foreground">
                     {item.description}
                   </p>
                 </div>
@@ -96,12 +97,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
           </EditorCommandList>
         </EditorCommand>
 
-        <EditorBubble
-          tippyOptions={{
-            placement: 'top',
-          }}
-          className="border-muted bg-background flex w-fit max-w-[90vw] overflow-hidden rounded-md border shadow-xl"
-        >
+        <GenerativeMenuSwitch open={openAI} onOpenChange={setOpenAI}>
           <Separator orientation="vertical" />
           <NodeSelector open={openNode} onOpenChange={setOpenNode} />
           <Separator orientation="vertical" />
@@ -111,7 +107,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
           <TextButtons />
           <Separator orientation="vertical" />
           <ColorSelector open={openColor} onOpenChange={setOpenColor} />
-        </EditorBubble>
+        </GenerativeMenuSwitch>
       </EditorContent>
     </EditorRoot>
   );
