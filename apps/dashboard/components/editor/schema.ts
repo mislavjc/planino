@@ -13,31 +13,34 @@ const paragraphContentSchema = z.object({
 const headingContentSchema = z.object({
   type: z.literal('heading'),
   attrs: z.object({
-    level: z.union([z.literal(1), z.literal(2), z.literal(3)]),
+    level: z.number(),
   }),
   content: z.array(textContentSchema).optional(),
 });
 
 const listItemContentSchema = z.object({
   type: z.literal('listItem'),
-  content: z.array(paragraphContentSchema).optional(),
+  content: z
+    .array(z.union([textContentSchema, paragraphContentSchema]))
+    .optional(),
 });
 
-const bulletListContentSchema = z.object({
-  type: z.literal('bulletList'),
+const orderedListContentSchema = z.object({
+  type: z.literal('orderedList'),
   attrs: z.object({
-    tight: z.boolean(),
+    tight: z.boolean().optional(),
+    start: z.number().optional(),
   }),
   content: z.array(listItemContentSchema).optional(),
 });
 
 const documentContentSchema = z.union([
-  paragraphContentSchema,
   headingContentSchema,
-  bulletListContentSchema,
+  paragraphContentSchema,
+  orderedListContentSchema,
 ]);
 
 export const documentSchema = z.object({
   type: z.literal('doc'),
-  content: z.array(documentContentSchema),
+  content: z.array(documentContentSchema).optional(),
 });
