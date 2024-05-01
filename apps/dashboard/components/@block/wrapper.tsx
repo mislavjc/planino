@@ -1,6 +1,6 @@
 'use client';
 
-import { EllipsisVertical } from 'lucide-react';
+import { Grip, Trash } from 'lucide-react';
 
 import { deleteBlock } from 'actions/block';
 
@@ -22,7 +22,7 @@ export const BlockWrapper = ({
 }) => {
   return (
     <div className="group relative">
-      <div className="absolute -left-6 top-1/2 z-10">
+      <div className="absolute -left-20 top-1/2 z-10">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -30,7 +30,7 @@ export const BlockWrapper = ({
               variant="ghost"
               className="invisible grid place-items-center group-hover:visible"
             >
-              <EllipsisVertical />
+              <Grip />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -38,6 +38,7 @@ export const BlockWrapper = ({
               onClick={() => deleteBlock({ blockId })}
               className="text-red-600"
             >
+              <Trash className="mr-2 size-4" />
               Obriši
             </DropdownMenuItem>
           </DropdownMenuContent>
