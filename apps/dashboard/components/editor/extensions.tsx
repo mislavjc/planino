@@ -11,6 +11,8 @@ import {
   UpdatedImage,
 } from 'novel/extensions';
 import { UploadImagesPlugin } from 'novel/plugins';
+import AutoJoiner from 'tiptap-extension-auto-joiner';
+import GlobalDragHandle from 'tiptap-extension-global-drag-handle';
 
 const aiHighlight = AIHighlight;
 const placeholder = Placeholder.configure({
@@ -115,4 +117,6 @@ export const defaultExtensions = [
   taskItem,
   horizontalRule,
   aiHighlight,
+  GlobalDragHandle,
+  AutoJoiner,
 ];
