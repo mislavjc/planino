@@ -57,3 +57,9 @@ export const updateBlock = async ({
 
   revalidatePath('/[organization]/poslovni-planovi/[businessPlanId]', 'page');
 };
+
+export const deleteBlock = async ({ blockId }: { blockId: string }) => {
+  await db.delete(blocks).where(eq(blocks.blockId, blockId));
+
+  revalidatePath('/[organization]/poslovni-planovi/[businessPlanId]', 'page');
+};

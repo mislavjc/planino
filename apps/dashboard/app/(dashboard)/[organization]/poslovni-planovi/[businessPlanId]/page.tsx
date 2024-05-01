@@ -6,7 +6,7 @@ import { AddBlock } from 'components/@plans/add-block';
 import { EditorBlock } from 'components/@plans/content';
 import { RenderBlock } from 'components/@plans/render-block';
 
-import { getBlockFromOptions, getBlockOptions } from 'lib/blocks';
+import { getBlockOptions } from 'lib/blocks';
 
 const BusinessPlanPage = async ({
   params: { businessPlanId, organization },
@@ -40,6 +40,7 @@ const BusinessPlanPage = async ({
           <RenderBlock
             key={block.blockId}
             content={block.content}
+            blockId={block.blockId}
             organization={organization}
           />
         );

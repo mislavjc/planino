@@ -1,11 +1,15 @@
+import { BlockWrapper } from 'components/@block/wrapper';
+
 import { blockOptionsSchema, getBlockFromOptions } from 'lib/blocks';
 
 export const RenderBlock = async ({
   content,
   organization,
+  blockId,
 }: {
   content: unknown;
   organization: string;
+  blockId: string;
 }) => {
   const parsedContent = blockOptionsSchema.parse(content);
 
@@ -15,5 +19,5 @@ export const RenderBlock = async ({
     return null;
   }
 
-  return block;
+  return <BlockWrapper blockId={blockId}>{block}</BlockWrapper>;
 };
