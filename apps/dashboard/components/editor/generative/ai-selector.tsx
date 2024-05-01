@@ -56,7 +56,7 @@ export function AISelector({ open, onOpenChange }: AISelectorProps) {
         )}
 
         {isLoading && (
-          <div className="flex h-12 w-full items-center px-4 text-sm font-medium text-muted-foreground text-purple-500">
+          <div className="flex h-12 w-full items-center px-4 text-sm font-medium text-purple-500">
             <Sparkles className="mr-2 size-4 shrink-0  " />
             AI razmišlja...
             <div className="ml-2 mt-1">
