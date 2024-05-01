@@ -15,7 +15,6 @@ import {
 } from 'ui/dropdown-menu';
 
 import { BlockOptions } from 'lib/blocks';
-import { getRandomColor } from 'lib/utils';
 
 export const AddBlock = ({
   blockOptions,
@@ -118,14 +117,7 @@ const MenuItem = ({
 }) => {
   return (
     <DropdownMenuItem className="flex gap-2" onClick={onClick}>
-      <div
-        className="size-10 p-2"
-        style={{
-          backgroundColor: getRandomColor(label),
-        }}
-      >
-        {icon}
-      </div>
+      <div className="size-10 border p-2">{icon}</div>
       <div className="flex flex-col gap-1">
         <span>{label}</span>
         <span>{description}</span>
