@@ -1,72 +1,52 @@
 import { z } from 'zod';
 
-const textContentSchema = z.object({
+const baseContentSchema = z.object({
+  type: z.string(),
+});
+
+const textContentSchema = baseContentSchema.extend({
   type: z.literal('text'),
   text: z.string().optional(),
 });
 
-const paragraphContentSchema = z.object({
+const hardBreakContentSchema = baseContentSchema.extend({
+  type: z.literal('hardBreak'),
+});
+
+const paragraphContentSchema = baseContentSchema.extend({
   type: z.literal('paragraph'),
-  content: z.array(textContentSchema).optional(),
+  content: z
+    .array(z.union([textContentSchema, hardBreakContentSchema]))
+    .optional(),
 });
 
-const headingContentSchema = z.object({
+const headingContentSchema = baseContentSchema.extend({
   type: z.literal('heading'),
-  attrs: z.object({
-    level: z.number(),
-  }),
+  attrs: z
+    .object({
+      level: z.number(),
+    })
+    .optional(),
+});
+
+const codeBlockContentSchema = baseContentSchema.extend({
+  type: z.literal('codeBlock'),
+  attrs: z
+    .object({
+      language: z.string().nullable(),
+    })
+    .optional(),
   content: z.array(textContentSchema).optional(),
 });
 
-const taskItemContentSchema = z.object({
-  type: z.literal('taskItem'),
-  attrs: z.object({
-    checked: z.boolean(),
-  }),
-  content: z.array(paragraphContentSchema).optional(),
-});
-
-const taskListContentSchema = z.object({
-  type: z.literal('taskList'),
-  content: z.array(taskItemContentSchema).optional(),
-});
-
-const blockquoteContentSchema = z.object({
-  type: z.literal('blockquote'),
-  content: z.array(paragraphContentSchema).optional(),
-});
-
-const listItemContentSchema = z.object({
-  type: z.literal('listItem'),
-  content: z.array(paragraphContentSchema).optional(),
-});
-
-const orderedListContentSchema = z.object({
-  type: z.literal('orderedList'),
-  attrs: z.object({
-    tight: z.boolean().optional(),
-    start: z.number().optional(),
-  }),
-  content: z.array(listItemContentSchema).optional(),
-});
-
-const bulletListContentSchema = z.object({
-  type: z.literal('bulletList'),
-  content: z.array(listItemContentSchema).optional(),
-});
-
-const documentContentSchema = z.union([
+const documentContentSchema = z.discriminatedUnion('type', [
   headingContentSchema,
   paragraphContentSchema,
-  taskListContentSchema,
-  blockquoteContentSchema,
-  orderedListContentSchema,
-  bulletListContentSchema,
+  codeBlockContentSchema,
+  hardBreakContentSchema,
 ]);
 
-const documentSchema = z.object({
+export const documentSchema = z.object({
   type: z.literal('doc'),
-  content: z.array(documentContentSchema).optional(),
+  content: z.array(documentContentSchema),
 });
-
-export { documentSchema };
