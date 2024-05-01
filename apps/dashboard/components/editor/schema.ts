@@ -31,10 +31,37 @@ const taskListContentSchema = z.object({
   content: z.array(taskItemContentSchema).optional(),
 });
 
+const blockquoteContentSchema = z.object({
+  type: z.literal('blockquote'),
+  content: z.array(paragraphContentSchema).optional(),
+});
+
+const listItemContentSchema = z.object({
+  type: z.literal('listItem'),
+  content: z.array(paragraphContentSchema).optional(),
+});
+
+const orderedListContentSchema = z.object({
+  type: z.literal('orderedList'),
+  attrs: z.object({
+    tight: z.boolean().optional(),
+    start: z.number().optional(),
+  }),
+  content: z.array(listItemContentSchema).optional(),
+});
+
+const bulletListContentSchema = z.object({
+  type: z.literal('bulletList'),
+  content: z.array(listItemContentSchema).optional(),
+});
+
 const documentContentSchema = z.union([
   headingContentSchema,
   paragraphContentSchema,
   taskListContentSchema,
+  blockquoteContentSchema,
+  orderedListContentSchema,
+  bulletListContentSchema,
 ]);
 
 const documentSchema = z.object({
