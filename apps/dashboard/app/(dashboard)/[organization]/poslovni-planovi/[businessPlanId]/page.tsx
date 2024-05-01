@@ -35,6 +35,7 @@ const BusinessPlanPage = async ({
             key={block.blockId}
             blockId={block.blockId}
             content={block.content}
+            organization={organization}
           />
         ) : (
           <RenderBlock

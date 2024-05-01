@@ -19,5 +19,9 @@ export const RenderBlock = async ({
     return null;
   }
 
-  return <BlockWrapper blockId={blockId}>{block}</BlockWrapper>;
+  return (
+    <BlockWrapper blockId={blockId} organization={organization}>
+      {block}
+    </BlockWrapper>
+  );
 };

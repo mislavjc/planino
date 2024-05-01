@@ -16,9 +16,11 @@ import { Button } from 'components/ui/button';
 export const BlockWrapper = ({
   children,
   blockId,
+  organization,
 }: {
   children: React.ReactNode;
   blockId: string;
+  organization: string;
 }) => {
   return (
     <div className="group relative">
@@ -35,7 +37,7 @@ export const BlockWrapper = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem
-              onClick={() => deleteBlock({ blockId })}
+              onClick={() => deleteBlock({ blockId, organization })}
               className="text-red-600"
             >
               <Trash className="mr-2 size-4" />
