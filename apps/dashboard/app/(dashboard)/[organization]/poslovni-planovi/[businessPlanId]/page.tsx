@@ -8,6 +8,8 @@ import { RenderBlock } from 'components/@plans/render-block';
 
 import { getBlockOptions } from 'lib/blocks';
 
+export const runtime = 'nodejs';
+
 const BusinessPlanPage = async ({
   params: { businessPlanId, organization },
 }: {
