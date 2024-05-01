@@ -13,7 +13,9 @@ import {
 import { UploadImagesPlugin } from 'novel/plugins';
 
 const aiHighlight = AIHighlight;
-const placeholder = Placeholder;
+const placeholder = Placeholder.configure({
+  placeholder: 'Unesi tekst...',
+});
 const tiptapLink = TiptapLink.configure({
   HTMLAttributes: {
     class: cx(
