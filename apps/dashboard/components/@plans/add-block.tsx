@@ -1,6 +1,6 @@
 'use client';
 
-import { Plus } from 'lucide-react';
+import { Pilcrow, Plus } from 'lucide-react';
 
 import { createBlock } from 'actions/block';
 
@@ -35,15 +35,30 @@ export const AddBlock = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
+        <DropdownMenuLabel>Tekst</DropdownMenuLabel>
+        <MenuItem
+          icon={<Pilcrow />}
+          label="Tekst"
+          description="Dodaj tekstualni blok"
+          onClick={async () => {
+            await createBlock({
+              organization,
+              businessPlanId,
+              type: 'text',
+            });
+          }}
+        />
         {Object.entries(blockOptions).map(
           ([blockType, { label, charts, tables }]) => (
             <div key={blockType}>
               <DropdownMenuLabel>{label}</DropdownMenuLabel>
               {Object.entries(charts).map(
                 ([chartType, { label, icon, description }]) => (
-                  <DropdownMenuItem
+                  <MenuItem
                     key={chartType}
-                    className="flex gap-2"
+                    icon={icon}
+                    label={label}
+                    description={description}
                     onClick={async () => {
                       await createBlock({
                         organization,
@@ -56,28 +71,17 @@ export const AddBlock = ({
                         },
                       });
                     }}
-                  >
-                    <div
-                      className="size-10 p-2"
-                      style={{
-                        backgroundColor: getRandomColor(label),
-                      }}
-                    >
-                      {icon}
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span>{label}</span>
-                      <span>{description}</span>
-                    </div>
-                  </DropdownMenuItem>
+                  />
                 ),
               )}
               <DropdownMenuSeparator />
               {Object.entries(tables).map(
                 ([tableType, { label, icon, description }]) => (
-                  <DropdownMenuItem
+                  <MenuItem
                     key={tableType}
-                    className="flex gap-2"
+                    icon={icon}
+                    label={label}
+                    description={description}
                     onClick={async () => {
                       await createBlock({
                         organization,
@@ -90,20 +94,7 @@ export const AddBlock = ({
                         },
                       });
                     }}
-                  >
-                    <div
-                      className="size-10 p-2"
-                      style={{
-                        backgroundColor: getRandomColor(description, 0.25),
-                      }}
-                    >
-                      {icon}
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span>{label}</span>
-                      <span>{description}</span>
-                    </div>
-                  </DropdownMenuItem>
+                  />
                 ),
               )}
             </div>
@@ -111,5 +102,34 @@ export const AddBlock = ({
         )}
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+};
+
+const MenuItem = ({
+  icon,
+  label,
+  description,
+  onClick,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  description: string;
+  onClick: () => void;
+}) => {
+  return (
+    <DropdownMenuItem className="flex gap-2" onClick={onClick}>
+      <div
+        className="size-10 p-2"
+        style={{
+          backgroundColor: getRandomColor(label),
+        }}
+      >
+        {icon}
+      </div>
+      <div className="flex flex-col gap-1">
+        <span>{label}</span>
+        <span>{description}</span>
+      </div>
+    </DropdownMenuItem>
   );
 };

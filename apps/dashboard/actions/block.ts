@@ -19,18 +19,16 @@ export const createBlock = async ({
   organization: string;
   businessPlanId: string;
   type: 'component' | 'text';
-  content: DbBlockOptions;
+  content?: DbBlockOptions;
 }) => {
   await getOrganization(organization);
-
-  const parsedContent = blockOptionsSchema.parse(content);
 
   const newBlock = await db
     .insert(blocks)
     .values({
       businessPlanId,
       type,
-      content: parsedContent,
+      content: content ? blockOptionsSchema.parse(content) : null,
     })
     .returning();
 
