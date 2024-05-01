@@ -104,7 +104,13 @@ export async function POST(req: Request): Promise<Response> {
   const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     stream: true,
-    messages,
+    messages: [
+      {
+        role: 'system',
+        content: 'Respond in Croatian unless the user requests otherwise.',
+      },
+      ...messages,
+    ],
     temperature: 0.7,
     top_p: 1,
     frequency_penalty: 0,
