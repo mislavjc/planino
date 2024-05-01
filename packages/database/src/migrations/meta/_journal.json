@@ -15,6 +15,20 @@
       "when": 1714429750533,
       "tag": "0001_white_tiger_shark",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1714515434383,
+      "tag": "0002_gray_bishop",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1714515445087,
+      "tag": "0003_gorgeous_havok",
+      "breakpoints": true
     }
   ]
 }

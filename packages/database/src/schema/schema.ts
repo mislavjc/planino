@@ -4,6 +4,7 @@ import {
   integer,
   jsonb,
   numeric,
+  pgEnum,
   pgTable,
   primaryKey,
   text,
@@ -356,6 +357,8 @@ export const businessPlansRelations = relations(
   }),
 );
 
+export const blockTypeEnum = pgEnum('block_type', ['text', 'component']);
+
 export const blocks = pgTable('block', {
   blockId: uuid('block_id').notNull().primaryKey().defaultRandom(),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
@@ -368,7 +371,7 @@ export const blocks = pgTable('block', {
       onDelete: 'cascade',
       onUpdate: 'cascade',
     }),
-  type: text('type'),
+  type: blockTypeEnum('type').notNull(),
   order: integer('order'),
   content: jsonb('content'),
 });

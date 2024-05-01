@@ -11,7 +11,7 @@ export const TypographyH1 = ({ children, className }: TypographyProps) => {
   return (
     <h1
       className={cn(
-        'scroll-m-20 text-4xl tracking-tight lg:text-5xl',
+        'scroll-m-20 text-4xl tracking-tight lg:text-5xl font-normal',
         className,
       )}
     >
@@ -24,7 +24,7 @@ export const TypographyH2 = ({ children, className }: TypographyProps) => {
   return (
     <h2
       className={cn(
-        'scroll-m-20 pb-2 text-3xl tracking-tight first:mt-0',
+        'scroll-m-20 pb-2 text-3xl tracking-tight first:mt-0 font-normal',
         className,
       )}
     >
@@ -35,7 +35,12 @@ export const TypographyH2 = ({ children, className }: TypographyProps) => {
 
 export const TypographyH3 = ({ children, className }: TypographyProps) => {
   return (
-    <h3 className={cn('scroll-m-20 text-2xl tracking-tight', className)}>
+    <h3
+      className={cn(
+        'scroll-m-20 text-2xl tracking-tight font-normal',
+        className,
+      )}
+    >
       {children}
     </h3>
   );
@@ -43,7 +48,12 @@ export const TypographyH3 = ({ children, className }: TypographyProps) => {
 
 export const TypographyH4 = ({ children, className }: TypographyProps) => {
   return (
-    <h4 className={cn('scroll-m-20 text-xl tracking-tight', className)}>
+    <h4
+      className={cn(
+        'scroll-m-20 text-xl tracking-tight font-normal',
+        className,
+      )}
+    >
       {children}
     </h4>
   );
