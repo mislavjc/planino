@@ -18,29 +18,28 @@ const headingContentSchema = z.object({
   content: z.array(textContentSchema).optional(),
 });
 
-const listItemContentSchema = z.object({
-  type: z.literal('listItem'),
-  content: z
-    .array(z.union([textContentSchema, paragraphContentSchema]))
-    .optional(),
+const taskItemContentSchema = z.object({
+  type: z.literal('taskItem'),
+  attrs: z.object({
+    checked: z.boolean(),
+  }),
+  content: z.array(paragraphContentSchema).optional(),
 });
 
-const orderedListContentSchema = z.object({
-  type: z.literal('orderedList'),
-  attrs: z.object({
-    tight: z.boolean().optional(),
-    start: z.number().optional(),
-  }),
-  content: z.array(listItemContentSchema).optional(),
+const taskListContentSchema = z.object({
+  type: z.literal('taskList'),
+  content: z.array(taskItemContentSchema).optional(),
 });
 
 const documentContentSchema = z.union([
   headingContentSchema,
   paragraphContentSchema,
-  orderedListContentSchema,
+  taskListContentSchema,
 ]);
 
-export const documentSchema = z.object({
+const documentSchema = z.object({
   type: z.literal('doc'),
   content: z.array(documentContentSchema).optional(),
 });
+
+export { documentSchema };
