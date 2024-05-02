@@ -6,7 +6,7 @@ import {
   productPriceHistory,
   products,
 } from '@planino/database/schema';
-import { eq } from 'drizzle-orm';
+import { eq, sql, sum } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -204,4 +204,34 @@ export const updateProductGroup = async ({
   }
 
   revalidatePath('/[organization]/cijena-i-kolicina', 'page');
+};
+
+export const getProductAggregations = async ({
+  organization,
+  productId,
+}: {
+  organization: string;
+  productId: string;
+}) => {
+  await getOrganization(organization);
+
+  const foundProduct = await db
+    .select({
+      // TODO: adjust bar chart so it accepts any key
+      year: sql<string>`to_char(recorded_month, 'YYYY-MM')`.as('month'),
+      totalUnits: sum(productPriceHistory.unitCount),
+      totalValue: sum(productPriceHistory.unitPrice),
+      totalExpenses: sum(productPriceHistory.unitExpense),
+    })
+    .from(products)
+    .innerJoin(
+      productPriceHistory,
+      eq(products.productId, productPriceHistory.productId),
+    )
+    .where(eq(products.productId, productId))
+    .groupBy(sql<string>`to_char(recorded_month, 'YYYY-MM')`)
+
+    .orderBy(sql`month ASC`);
+
+  return foundProduct;
 };

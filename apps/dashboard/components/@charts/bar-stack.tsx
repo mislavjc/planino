@@ -15,7 +15,7 @@ import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
 type TooltipData = {
   bar: SeriesPoint<{
     year: string;
-    [key: string]: number | string;
+    [key: string]: number | string | null;
   }>;
   key: string;
   index: number;
@@ -28,7 +28,7 @@ type TooltipData = {
 
 interface TransformedExpenseRecord {
   year: string;
-  [key: string]: string;
+  [key: string]: string | number | null;
 }
 
 export type BarStackProps = {

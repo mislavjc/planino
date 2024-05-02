@@ -1,9 +1,11 @@
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 
 import { getProduct } from 'actions/product';
 
 import { TypographyH3 } from 'ui/typography';
 
+import { Charts } from 'components/@price-and-quantity/charts';
 import { Entry } from 'components/@price-and-quantity/entry';
 import { Card, CardContent, CardHeader } from 'components/ui/card';
 
@@ -21,7 +23,7 @@ const ProductPage = async ({
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <Card className="max-w-screen-md">
         <CardHeader>
           <TypographyH3
@@ -34,6 +36,16 @@ const ProductPage = async ({
         </CardHeader>
         <CardContent>
           <Entry product={product} />
+        </CardContent>
+      </Card>
+      <Card className="max-w-screen-md">
+        <CardHeader>
+          <TypographyH3>Pregled</TypographyH3>
+        </CardHeader>
+        <CardContent>
+          <Suspense>
+            <Charts organization={organization} productId={productId} />
+          </Suspense>
         </CardContent>
       </Card>
     </div>
