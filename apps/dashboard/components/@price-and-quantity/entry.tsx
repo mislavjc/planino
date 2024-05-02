@@ -6,9 +6,11 @@ import {
   selectProductSchema,
 } from '@planino/database/schema';
 import { addMonths } from 'date-fns';
+import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 
 import { createProductPriceHistory } from 'actions/product';
+import { updateProductName } from 'actions/product';
 
 import { SubmitButton } from 'components/submit-button';
 import { TableInput } from 'components/table/input';
@@ -35,15 +37,21 @@ export const Entry = ({ product }: EntryProps) => {
 
   const nextMonth = addMonths(lastPrice.recordedMonth, 1);
 
+  const debouncedUpdateName = useDebouncedCallback(async (name: string) => {
+    await updateProductName(productState.productId, name);
+  }, 1_000);
+
   return (
     <div className="grid grid-cols-4">
       <TableInput
         placeholder="Naziv"
         className="col-span-4"
         value={productState.name ?? ''}
-        onChange={(e) =>
-          setProductState({ ...productState, name: e.target.value })
-        }
+        onChange={(e) => {
+          setProductState({ ...productState, name: e.target.value });
+
+          debouncedUpdateName(e.target.value);
+        }}
       />
       <PriceHistoryRow priceHistory={product.priceHistory[0]} firstRow />
       {product.priceHistory.slice(1).map((priceHistory) => (

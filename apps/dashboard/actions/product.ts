@@ -120,3 +120,17 @@ export const updateProductPriceHistory = async (
 
   revalidatePath('/[organization]/cijena-i-kolicina', 'page');
 };
+
+export const updateProductName = async (productId: string, name: string) => {
+  const updatedProduct = await db
+    .update(products)
+    .set({ name })
+    .where(eq(products.productId, productId))
+    .returning();
+
+  if (!updatedProduct.length) {
+    throw new Error('Neuspjelo ažuriranje naziva proizvoda');
+  }
+
+  revalidatePath('/[organization]/cijena-i-kolicina', 'page');
+};
