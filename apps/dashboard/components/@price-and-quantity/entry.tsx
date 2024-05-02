@@ -10,7 +10,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 
 import { createProductPriceHistory } from 'actions/product';
-import { updateProductName } from 'actions/product';
+import { updateProduct } from 'actions/product';
 
 import { SubmitButton } from 'components/submit-button';
 import { TableInput } from 'components/table/input';
@@ -37,20 +37,33 @@ export const Entry = ({ product }: EntryProps) => {
 
   const nextMonth = addMonths(lastPrice.recordedMonth, 1);
 
-  const debouncedUpdateName = useDebouncedCallback(async (name: string) => {
-    await updateProductName(productState.productId, name);
+  const debouncedUpdateProduct = useDebouncedCallback(async () => {
+    await updateProduct(productState.productId, {
+      name: productState.name ?? '',
+      unitType: productState.unitType ?? '',
+    });
   }, 1_000);
 
   return (
     <div className="grid grid-cols-4">
       <TableInput
         placeholder="Naziv"
-        className="col-span-4"
+        className="col-span-3"
         value={productState.name ?? ''}
         onChange={(e) => {
           setProductState({ ...productState, name: e.target.value });
 
-          debouncedUpdateName(e.target.value);
+          debouncedUpdateProduct();
+        }}
+      />
+      <TableInput
+        placeholder="Jedinica mjere"
+        className="col-span-1"
+        value={productState.unitType ?? ''}
+        onChange={(e) => {
+          setProductState({ ...productState, unitType: e.target.value });
+
+          debouncedUpdateProduct();
         }}
       />
       <PriceHistoryRow priceHistory={product.priceHistory[0]} firstRow />

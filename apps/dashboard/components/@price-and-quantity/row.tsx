@@ -19,16 +19,11 @@ export const PriceHistoryRow = ({
 }) => {
   const [productPriceHistory, setProductPriceHistory] = useState(priceHistory);
 
-  const debouncePriceHistoryChange = useDebouncedCallback(
-    async (field: keyof ProductPriceHistory, value: string) => {
-      console.log('debouncePriceHistoryChange', field, value);
-
-      await updateProductPriceHistory({
-        ...productPriceHistory,
-      });
-    },
-    1_000,
-  );
+  const debouncePriceHistoryChange = useDebouncedCallback(async () => {
+    await updateProductPriceHistory({
+      ...productPriceHistory,
+    });
+  }, 1_000);
 
   return (
     <React.Fragment>
@@ -40,10 +35,7 @@ export const PriceHistoryRow = ({
               ...productPriceHistory,
               recordedMonth: date ?? new Date(),
             });
-            debouncePriceHistoryChange(
-              'recordedMonth',
-              date?.toDateString() ?? new Date().toDateString(),
-            );
+            debouncePriceHistoryChange();
           }}
         />
       ) : (
@@ -61,7 +53,7 @@ export const PriceHistoryRow = ({
             ...productPriceHistory,
             unitPrice: e.target.value,
           });
-          debouncePriceHistoryChange('unitPrice', e.target.value);
+          debouncePriceHistoryChange();
         }}
       />
       <TableInput
@@ -74,7 +66,7 @@ export const PriceHistoryRow = ({
             ...productPriceHistory,
             unitExpense: e.target.value,
           });
-          debouncePriceHistoryChange('unitExpense', e.target.value);
+          debouncePriceHistoryChange();
         }}
       />
       <TableInput
@@ -86,7 +78,7 @@ export const PriceHistoryRow = ({
             ...productPriceHistory,
             unitCount: e.target.value,
           });
-          debouncePriceHistoryChange('unitCount', e.target.value);
+          debouncePriceHistoryChange();
         }}
       />
     </React.Fragment>

@@ -121,10 +121,19 @@ export const updateProductPriceHistory = async (
   revalidatePath('/[organization]/cijena-i-kolicina', 'page');
 };
 
-export const updateProductName = async (productId: string, name: string) => {
+export const updateProduct = async (
+  productId: string,
+  {
+    name,
+    unitType,
+  }: {
+    name: string;
+    unitType: string;
+  },
+) => {
   const updatedProduct = await db
     .update(products)
-    .set({ name })
+    .set({ name, unitType })
     .where(eq(products.productId, productId))
     .returning();
 
