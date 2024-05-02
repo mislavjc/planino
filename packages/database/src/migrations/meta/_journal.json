@@ -36,6 +36,13 @@
       "when": 1714660240396,
       "tag": "0004_awesome_colossus",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1714674102002,
+      "tag": "0005_chief_hawkeye",
+      "breakpoints": true
     }
   ]
 }

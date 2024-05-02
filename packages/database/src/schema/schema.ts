@@ -416,6 +416,7 @@ export const products = pgTable('product', {
   productId: uuid('product_id').notNull().primaryKey().defaultRandom(),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
   name: text('name'),
+  unitType: text('unit_type'),
   productGroupId: uuid('product_group_id')
     .notNull()
     .references(() => productGroups.productGroupId, {
