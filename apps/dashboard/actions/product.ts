@@ -163,6 +163,27 @@ export const updateProduct = async (
   revalidatePath('/[organization]/cijena-i-kolicina', 'page');
 };
 
+export const createProductGroup = async ({
+  organization,
+}: {
+  organization: string;
+}) => {
+  const foundOrganization = await getOrganization(organization);
+
+  const createdProductGroup = await db
+    .insert(productGroups)
+    .values({
+      organizationId: foundOrganization.organizationId,
+    })
+    .returning();
+
+  if (!createdProductGroup) {
+    throw new Error('Neuspjelo kreiranje grupe proizvoda');
+  }
+
+  revalidatePath('/[organization]/cijena-i-kolicina', 'page');
+};
+
 export const updateProductGroup = async ({
   productGroupId,
   name,

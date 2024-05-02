@@ -1,11 +1,16 @@
 import Link from 'next/link';
 
-import { createProduct, getAllProducts } from 'actions/product';
+import {
+  createProduct,
+  createProductGroup,
+  getAllProducts,
+} from 'actions/product';
 
 import { GroupName } from 'components/@price-and-quantity/group-name';
 import { AddRow } from 'components/add-row';
 import { Card, CardContent, CardHeader } from 'components/ui/card';
 import { TypographyH3 } from 'components/ui/typography';
+
 import { cn } from 'lib/utils';
 
 const PriceAndQuantityPage = async ({
@@ -21,7 +26,7 @@ const PriceAndQuantityPage = async ({
         <CardHeader>
           <TypographyH3>Proizvodi</TypographyH3>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-col gap-4">
           {productGroups.map((productGroup) => (
             <div key={productGroup.productGroupId} className="flex flex-col">
               <GroupName productGroup={productGroup} />
@@ -54,6 +59,15 @@ const PriceAndQuantityPage = async ({
               </div>
             </div>
           ))}
+          <AddRow
+            action={async () => {
+              'use server';
+
+              await createProductGroup({ organization });
+            }}
+          >
+            Dodaj grupu proizvoda
+          </AddRow>
         </CardContent>
       </Card>
     </div>
