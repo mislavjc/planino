@@ -1,6 +1,19 @@
+import { cn } from 'lib/utils';
+
 import { SubmitButton } from './submit-button';
 
-export const AddRow = ({ action }: { action: () => Promise<void> }) => {
+export const AddRow = ({
+  action,
+  className,
+  children,
+  fullHeight,
+}: {
+  action: () => Promise<void>;
+
+  className?: string;
+  children?: string;
+  fullHeight?: boolean;
+}) => {
   return (
     <form
       action={async () => {
@@ -8,8 +21,15 @@ export const AddRow = ({ action }: { action: () => Promise<void> }) => {
 
         await action();
       }}
+      className={className}
     >
-      <SubmitButton />
+      <SubmitButton
+        className={cn({
+          'h-full': fullHeight,
+        })}
+      >
+        {children || 'Dodaj red'}
+      </SubmitButton>
     </form>
   );
 };
