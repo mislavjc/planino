@@ -31,7 +31,7 @@ export const DatePicker = ({
           ring={false}
         >
           {date ? (
-            format(date, 'PPP', {
+            format(date, 'MM. yyyy.', {
               locale: hr,
             })
           ) : (
