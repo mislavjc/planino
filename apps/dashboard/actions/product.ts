@@ -26,8 +26,10 @@ export const getAllProducts = async (organization: string) => {
         with: {
           priceHistory: true,
         },
+        orderBy: (products, { asc }) => [asc(products.createdAt)],
       },
     },
+    orderBy: (productGroups, { asc }) => [asc(productGroups.createdAt)],
   });
 
   return foundProductGroups;

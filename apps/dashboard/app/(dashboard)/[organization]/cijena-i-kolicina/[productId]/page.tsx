@@ -7,6 +7,8 @@ import { TypographyH3 } from 'ui/typography';
 import { Entry } from 'components/@price-and-quantity/entry';
 import { Card, CardContent, CardHeader } from 'components/ui/card';
 
+import { cn } from 'lib/utils';
+
 const ProductPage = async ({
   params: { organization, productId },
 }: {
@@ -22,7 +24,13 @@ const ProductPage = async ({
     <div>
       <Card className="max-w-screen-md">
         <CardHeader>
-          <TypographyH3>{product.name}</TypographyH3>
+          <TypographyH3
+            className={cn({
+              'text-muted-foreground/60': !product.name,
+            })}
+          >
+            {product.name ?? 'Neimenovani proizvod'}
+          </TypographyH3>
         </CardHeader>
         <CardContent>
           <Entry product={product} />
