@@ -123,6 +123,9 @@ export const organizationsRelations = relations(
       references: [users.id],
     }),
     loans: many(loans),
+    teams: many(teams),
+    businessPlans: many(businessPlans),
+    productGroups: many(productGroups),
   }),
 );
 
@@ -382,3 +385,82 @@ export const blocksRelations = relations(blocks, ({ one }) => ({
     references: [businessPlans.businessPlanId],
   }),
 }));
+
+export const productGroups = pgTable('product_group', {
+  productGroupId: uuid('product_group_id')
+    .notNull()
+    .primaryKey()
+    .defaultRandom(),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  name: text('name'),
+  organizationId: uuid('organization_id')
+    .notNull()
+    .references(() => organizations.organizationId, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+});
+
+export const productGroupsRelations = relations(
+  productGroups,
+  ({ one, many }) => ({
+    organization: one(organizations, {
+      fields: [productGroups.organizationId],
+      references: [organizations.organizationId],
+    }),
+    products: many(products),
+  }),
+);
+
+export const products = pgTable('product', {
+  productId: uuid('product_id').notNull().primaryKey().defaultRandom(),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  name: text('name'),
+  productGroupId: uuid('product_group_id')
+    .notNull()
+    .references(() => productGroups.productGroupId, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+});
+
+export const insertProductSchema = createInsertSchema(products);
+export const selectProductSchema = createSelectSchema(products);
+
+export const productsRelations = relations(products, ({ one, many }) => ({
+  productGroup: one(productGroups, {
+    fields: [products.productGroupId],
+    references: [productGroups.productGroupId],
+  }),
+  priceHistory: many(productPriceHistory),
+}));
+
+export const productPriceHistory = pgTable('product_price_history', {
+  productPriceId: uuid('product_price_history_id').notNull().primaryKey().defaultRandom(),
+  productId: uuid('product_id')
+    .notNull()
+    .references(() => products.productId, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+  recordedMonth: timestamp('recorded_month', { mode: 'date' }).notNull(),
+  unitCount: numeric('unit_count'),
+  unitExpense: numeric('unit_expense'),
+  unitPrice: numeric('unit_price'),
+});
+
+export const insertProductPriceHistorySchema =
+  createInsertSchema(productPriceHistory);
+
+export const selectProductPriceHistorySchema =
+  createSelectSchema(productPriceHistory);
+
+export const productPriceHistoryRelations = relations(
+  productPriceHistory,
+  ({ one }) => ({
+    product: one(products, {
+      fields: [productPriceHistory.productId],
+      references: [products.productId],
+    }),
+  }),
+);
