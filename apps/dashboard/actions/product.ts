@@ -219,9 +219,14 @@ export const getProductAggregations = async ({
     .select({
       // TODO: adjust bar chart so it accepts any key
       year: sql<string>`to_char(recorded_month, 'YYYY-MM')`.as('month'),
-      totalUnits: sum(productPriceHistory.unitCount),
-      totalValue: sum(productPriceHistory.unitPrice),
-      totalExpenses: sum(productPriceHistory.unitExpense),
+      totalValue:
+        sql<number>`${productPriceHistory.unitCount} * ${productPriceHistory.unitPrice}`.as(
+          'total_value',
+        ),
+      totalExpenses:
+        sql<number>`${productPriceHistory.unitCount} * ${productPriceHistory.unitExpense}`.as(
+          'total_expenses',
+        ),
     })
     .from(products)
     .innerJoin(
@@ -229,8 +234,6 @@ export const getProductAggregations = async ({
       eq(products.productId, productPriceHistory.productId),
     )
     .where(eq(products.productId, productId))
-    .groupBy(sql<string>`to_char(recorded_month, 'YYYY-MM')`)
-
     .orderBy(sql`month ASC`);
 
   return foundProduct;
