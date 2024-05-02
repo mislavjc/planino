@@ -3,17 +3,25 @@
 import { useFormStatus } from 'react-dom';
 import { Loader2, Plus } from 'lucide-react';
 
+import { cn } from 'lib/utils';
+
 import { FocusBorder } from './table/focus-border';
 import { Button } from './ui/button';
 import { TypographyP } from './ui/typography';
 
-export const SubmitButton = () => {
+export const SubmitButton = ({
+  className,
+  children = 'Dodaj redak',
+}: {
+  className?: string;
+  children?: string;
+}) => {
   const status = useFormStatus();
 
   return (
     <Button
       type="submit"
-      className="group relative flex w-full justify-start"
+      className={cn('group relative flex w-full justify-start', className)}
       variant="outline"
       disabled={status.pending}
       ring={false}
@@ -23,7 +31,7 @@ export const SubmitButton = () => {
       ) : (
         <div className="flex items-center gap-2">
           <Plus size={16} />
-          <TypographyP>Dodaj redak</TypographyP>
+          <TypographyP>{children}</TypographyP>
         </div>
       )}
       <FocusBorder />
