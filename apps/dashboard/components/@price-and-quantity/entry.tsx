@@ -48,6 +48,7 @@ export const Entry = ({ product }: EntryProps) => {
     <div className="grid grid-cols-4">
       <TableInput
         placeholder="Naziv"
+        inputClassName="bg-muted/60"
         className="col-span-3"
         value={productState.name ?? ''}
         onChange={(e) => {
@@ -58,6 +59,7 @@ export const Entry = ({ product }: EntryProps) => {
       />
       <TableInput
         placeholder="Jedinica mjere"
+        inputClassName="bg-muted/60"
         className="col-span-1"
         value={productState.unitType ?? ''}
         onChange={(e) => {
