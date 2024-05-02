@@ -27,8 +27,6 @@ export const getAllProducts = async (organization: string) => {
     },
   });
 
-  console.log(foundProductGroups);
-
   return foundProductGroups;
 };
 
