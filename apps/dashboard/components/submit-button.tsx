@@ -12,9 +12,11 @@ import { TypographyP } from './ui/typography';
 export const SubmitButton = ({
   className,
   children = 'Dodaj redak',
+  disabled,
 }: {
   className?: string;
   children?: string;
+  disabled?: boolean;
 }) => {
   const status = useFormStatus();
 
@@ -23,7 +25,7 @@ export const SubmitButton = ({
       type="submit"
       className={cn('group relative flex w-full justify-start', className)}
       variant="outline"
-      disabled={status.pending}
+      disabled={disabled || status.pending}
       ring={false}
     >
       {status.pending ? (

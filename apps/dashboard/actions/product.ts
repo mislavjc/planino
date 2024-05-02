@@ -8,8 +8,11 @@ import {
 } from '@planino/database/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 
 import { db } from 'db/drizzle';
+
+import { toUpdateSchema } from 'lib/zod';
 
 import { getOrganization } from './organization';
 
@@ -83,5 +86,37 @@ export const createProductPriceHistory = async (formData: FormData) => {
     throw new Error('Neuspjelo kreiranje povijesti cijena proizvoda');
   }
 
-  revalidatePath('/[organization]/cijena-i-kolicina');
+  revalidatePath('/[organization]/cijena-i-kolicina', 'page');
+};
+
+const updateProductPriceHistorySchema = toUpdateSchema(
+  insertProductPriceHistorySchema,
+);
+
+type UpdateProductPriceHistory = z.infer<
+  typeof updateProductPriceHistorySchema
+>;
+
+export const updateProductPriceHistory = async (
+  payload: UpdateProductPriceHistory,
+) => {
+  const parsedPayload = updateProductPriceHistorySchema.parse(payload);
+
+  if (!parsedPayload.productPriceId) {
+    return {
+      error: 'ID Cijene proizvoda je potreban.',
+    };
+  }
+
+  const updatedProductPriceHistory = await db
+    .update(productPriceHistory)
+    .set(parsedPayload)
+    .where(eq(productPriceHistory.productPriceId, parsedPayload.productPriceId))
+    .returning();
+
+  if (!updatedProductPriceHistory.length) {
+    throw new Error('Neuspjelo ažuriranje povijesti cijena proizvoda');
+  }
+
+  revalidatePath('/[organization]/cijena-i-kolicina', 'page');
 };
