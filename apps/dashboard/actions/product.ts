@@ -33,6 +33,25 @@ export const getAllProducts = async (organization: string) => {
   return foundProductGroups;
 };
 
+export const getProduct = async ({
+  organization,
+  productId,
+}: {
+  organization: string;
+  productId: string;
+}) => {
+  await getOrganization(organization);
+
+  const foundProduct = await db.query.products.findFirst({
+    where: eq(products.productId, productId),
+    with: {
+      priceHistory: true,
+    },
+  });
+
+  return foundProduct;
+};
+
 export const createProduct = async ({
   organization,
   group,
@@ -139,6 +158,26 @@ export const updateProduct = async (
 
   if (!updatedProduct.length) {
     throw new Error('Neuspjelo ažuriranje naziva proizvoda');
+  }
+
+  revalidatePath('/[organization]/cijena-i-kolicina', 'page');
+};
+
+export const updateProductGroup = async ({
+  productGroupId,
+  name,
+}: {
+  productGroupId: string;
+  name: string;
+}) => {
+  const updatedProductGroup = await db
+    .update(productGroups)
+    .set({ name })
+    .where(eq(productGroups.productGroupId, productGroupId))
+    .returning();
+
+  if (!updatedProductGroup.length) {
+    throw new Error('Neuspjelo ažuriranje naziva grupe proizvoda');
   }
 
   revalidatePath('/[organization]/cijena-i-kolicina', 'page');

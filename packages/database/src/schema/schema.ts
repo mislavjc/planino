@@ -401,6 +401,9 @@ export const productGroups = pgTable('product_group', {
     }),
 });
 
+export const insertProductGroupSchema = createInsertSchema(productGroups);
+export const selectProductGroupSchema = createSelectSchema(productGroups);
+
 export const productGroupsRelations = relations(
   productGroups,
   ({ one, many }) => ({
