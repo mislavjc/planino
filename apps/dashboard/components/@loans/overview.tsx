@@ -25,7 +25,9 @@ export const Overview = async ({ organization }: { organization: string }) => {
           <tr>
             <th>Godina</th>
             {years.map((year) => (
-              <th key={year}>{year}</th>
+              <th key={year} className="px-4 text-right font-mono">
+                {year}
+              </th>
             ))}
           </tr>
         </thead>

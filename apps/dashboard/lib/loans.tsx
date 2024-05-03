@@ -1,5 +1,7 @@
 import { ipmt, pmt, ppmt } from 'financial';
 
+import { Separator } from 'components/ui/separator';
+
 import { formatCurrency } from './utils';
 
 type PaymentCalculations = {
@@ -74,11 +76,21 @@ export const renderYearlyData = (
     return (
       <td
         key={year}
-        className="whitespace-nowrap px-6 py-4 text-sm text-gray-500"
+        className="whitespace-nowrap px-6 py-4 text-sm text-muted/60"
       >
-        <div>PMT: {formatCurrency(yearlyPMT)}</div>
-        <div>PPMT: {formatCurrency(yearlyPPMT)}</div>
-        <div>IPMT: {formatCurrency(yearlyIPMT)}</div>
+        <div className="flex justify-between">
+          Kamata:
+          <span className="font-mono">{formatCurrency(yearlyIPMT)}</span>
+        </div>
+        <div className="flex justify-between">
+          Glavnica:{' '}
+          <span className="font-mono">{formatCurrency(yearlyPPMT)}</span>
+        </div>
+        <Separator />
+        <div className="flex justify-between gap-4">
+          Plaćanje:{' '}
+          <span className="font-mono">{formatCurrency(yearlyPMT)}</span>
+        </div>
       </td>
     );
   });
@@ -96,9 +108,8 @@ type LoanForCalculation = {
 
 type YearlyPaymentData = {
   year: string;
-  yearlyPPMT: string;
-  yearlyIPMT: string;
-  yearlyPMT: string;
+  Glavnica: string;
+  Kamata: string;
 };
 
 export const getLoanPaymentData = (loans: LoanForCalculation[]) => {
@@ -113,7 +124,6 @@ export const getLoanPaymentData = (loans: LoanForCalculation[]) => {
     for (let year = loan.startingYear; year <= loan.endingYear; year++) {
       let yearlyPPMT = 0;
       let yearlyIPMT = 0;
-      let yearlyPMT = 0;
 
       for (let month = 1; month <= 12; month++) {
         const period = (year - loan.startingYear) * 12 + month;
@@ -133,12 +143,10 @@ export const getLoanPaymentData = (loans: LoanForCalculation[]) => {
         }
       }
 
-      yearlyPMT = yearlyPPMT + yearlyIPMT;
       yearlyData.push({
         year: year.toString(),
-        yearlyPPMT: yearlyPPMT.toFixed(2),
-        yearlyIPMT: yearlyIPMT.toFixed(2),
-        yearlyPMT: yearlyPMT.toFixed(2),
+        Glavnica: yearlyPPMT.toFixed(2),
+        Kamata: yearlyIPMT.toFixed(2),
       });
     }
 
