@@ -21,7 +21,7 @@ const BusinessPlans = async ({
           <TypographyH3>Poslovni planovi</TypographyH3>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
+          <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
             {businessPlans.map((plan, index) => (
               <Link
                 href={`/${params.organization}/poslovni-planovi/${plan.businessPlanId}`}
