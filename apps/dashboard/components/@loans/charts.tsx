@@ -17,7 +17,9 @@ export const Charts = async ({ organization }: { organization: string }) => {
         return loan.values.length ? (
           <div key={loan.name} className="h-[60vh]">
             <TypographyH4>{loan.name}</TypographyH4>
-            <BarStackChart key={loan.name} data={loan.values} />
+            <div className="h-[60vh]">
+              <BarStackChart key={loan.name} data={loan.values} />
+            </div>
           </div>
         ) : null;
       })}
