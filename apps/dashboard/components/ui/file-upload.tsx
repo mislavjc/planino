@@ -31,7 +31,7 @@ type FileUploaderContextType = {
   dropzoneState: DropzoneState;
   isLOF: boolean;
   isFileTooBig: boolean;
-  removeFileFromSet: (index: number) => void;
+  removeFileFromSet: (_index: number) => void;
   activeIndex: number;
   setActiveIndex: Dispatch<SetStateAction<number>>;
   orientation: 'horizontal' | 'vertical';
@@ -150,6 +150,7 @@ export const FileUploader = forwardRef<
           setActiveIndex(-1);
         }
       },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [value, activeIndex, removeFileFromSet],
     );
 
@@ -191,6 +192,7 @@ export const FileUploader = forwardRef<
           }
         }
       },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [reSelectAll, value],
     );
 
@@ -309,7 +311,7 @@ export const FileUploaderItem = forwardRef<
         onClick={() => removeFileFromSet(index)}
       >
         <span className="sr-only">remove item {index}</span>
-        <RemoveIcon className="size-4 duration-200 ease-in-out hover:stroke-destructive" />
+        <RemoveIcon className="hover:stroke-destructive size-4 duration-200 ease-in-out" />
       </button>
     </div>
   );

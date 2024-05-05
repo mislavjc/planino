@@ -29,7 +29,7 @@ export const ExcelTable = async ({ file }: { file: string }) => {
     const coordinates =
       data.tables[Number(formData.get('tableIndex'))].coordinates;
 
-    const { data: extracted, error: extractedError } = await importer.POST(
+    const { data: _extracted, error: _extractedError } = await importer.POST(
       '/import/extract-data',
       {
         body: {
