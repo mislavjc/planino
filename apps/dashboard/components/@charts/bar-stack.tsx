@@ -12,6 +12,8 @@ import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
 
+import { cn } from 'lib/utils';
+
 type TooltipData = {
   bar: SeriesPoint<{
     year: string;
@@ -33,6 +35,7 @@ interface TransformedExpenseRecord {
 
 export type BarStackProps = {
   data: TransformedExpenseRecord[];
+  className?: string;
 };
 
 // Define color variables using Tailwind colors
@@ -55,7 +58,7 @@ const tooltipStyles = {
   color: 'white',
 };
 
-export const BarStackChart = ({ data }: BarStackProps) => {
+export const BarStackChart = ({ data, className }: BarStackProps) => {
   const {
     tooltipOpen,
     tooltipLeft,
@@ -109,7 +112,7 @@ export const BarStackChart = ({ data }: BarStackProps) => {
   let tooltipTimeout: number;
 
   return (
-    <ParentSize className="relative">
+    <ParentSize className={cn('relative mt-4', className)}>
       {(parent) => {
         const { width, height } = parent;
 
@@ -201,14 +204,18 @@ export const BarStackChart = ({ data }: BarStackProps) => {
                 left={margin.left}
                 stroke="black"
                 tickStroke="black"
-                tickLabelProps={() => ({
-                  fill: 'black',
-                  fontSize: 10,
-                  textAnchor: 'end',
-                  dx: '-0.25em',
-                  dy: '0.25em',
-                  fontFamily: 'monospace',
-                })}
+                tickLabelProps={(label) => {
+                  if (label === 0) return { display: 'none' };
+
+                  return {
+                    fill: 'black',
+                    fontSize: 10,
+                    textAnchor: 'end',
+                    dx: '-0.25em',
+                    dy: '0.15em',
+                    fontFamily: 'monospace',
+                  };
+                }}
                 tickFormat={(value) =>
                   value.toLocaleString('en-HR', {
                     style: 'currency',
@@ -220,19 +227,15 @@ export const BarStackChart = ({ data }: BarStackProps) => {
               />
             </svg>
             <div
+              className="absolute flex  w-full justify-center text-sm"
               style={{
-                position: 'absolute',
-                top: margin.top / 2 - 10,
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                fontSize: '14px',
+                top: margin.top / 2 - 24,
               }}
             >
               <LegendOrdinal
                 scale={colorScale}
                 direction="row"
-                labelMargin="0 15px 0 0"
+                labelMargin="0 1rem 0 0"
               />
             </div>
             {tooltipOpen && tooltipData && (
