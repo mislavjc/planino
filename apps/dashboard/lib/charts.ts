@@ -46,10 +46,17 @@ export const transformAggregateValues = (
     });
   });
 
-  const transformedTeams = Object.keys(teams).map((teamName) => ({
-    name: teamName,
-    values: teams[teamName],
-  }));
+  const transformedTeams = Object.keys(teams)
+    .map((teamName) => {
+      const filteredValues = teams[teamName].filter((record) => {
+        return Object.keys(record).some(
+          (key) => key !== 'year' && record[key] !== '0',
+        );
+      });
+
+      return { name: teamName, values: filteredValues };
+    })
+    .filter((team) => team.values.length > 0);
 
   return transformedTeams;
 };
