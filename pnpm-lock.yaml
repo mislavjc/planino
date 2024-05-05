@@ -26,6 +26,9 @@ importers:
 
   apps/dashboard:
     dependencies:
+      '@ai-sdk/openai':
+        specifier: ^0.0.9
+        version: 0.0.9(zod@3.23.6)
       '@auth/core':
         specifier: ^0.30.0
         version: 0.30.0
@@ -134,9 +137,6 @@ importers:
       novel:
         specifier: ^0.3.1
         version: 0.3.1(@types/react@18.3.1)(react-dom@18.2.0)(react@18.3.1)
-      openai:
-        specifier: ^4.40.2
-        version: 4.40.2
       openapi-fetch:
         specifier: ^0.9.5
         version: 0.9.5
@@ -324,6 +324,20 @@ packages:
 
   /@adobe/css-tools@4.3.3:
     resolution: {integrity: sha512-rE0Pygv0sEZ4vBWHlAgJLGDU7Pm8xoO6p3wsEceb7GYAjScrOHpEo8KK/eVkAcnSM+slAEtXjA2JpdjLp4fJQQ==}
+    dev: false
+
+  /@ai-sdk/openai@0.0.9(zod@3.23.6):
+    resolution: {integrity: sha512-SSZGtX4KFDXWYmQ9JuhVumo1XOx1JAdHybYy08iwVXuCud9xdjZjjxgZkNPytQK9gRxFsYDOw1h0V/WXO7XgfQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.0.0
+    peerDependenciesMeta:
+      zod:
+        optional: true
+    dependencies:
+      '@ai-sdk/provider': 0.0.3
+      '@ai-sdk/provider-utils': 0.0.5(zod@3.23.6)
+      zod: 3.23.6
     dev: false
 
   /@ai-sdk/provider-utils@0.0.5(zod@3.23.6):

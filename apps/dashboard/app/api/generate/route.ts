@@ -1,15 +1,10 @@
-import { OpenAIStream, StreamingTextResponse } from 'ai';
-import OpenAI from 'openai';
-import { ChatCompletionMessageParam } from 'openai/resources/index.mjs';
+import { openai } from '@ai-sdk/openai';
+import { CoreMessage, StreamingTextResponse, streamText } from 'ai';
 import { match } from 'ts-pattern';
 
 export const runtime = 'edge';
 
 export async function POST(req: Request): Promise<Response> {
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-
   if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === '') {
     return new Response(
       'Missing OPENAI_API_KEY - make sure to add it to your .env file.',
@@ -24,7 +19,7 @@ export async function POST(req: Request): Promise<Response> {
   const messages = match(option)
     .with('continue', () => [
       {
-        role: 'system',
+        role: 'user',
         content:
           'You are an AI writing assistant that continues existing text based on context from prior text. ' +
           'Give more weight/priority to the later characters than the beginning ones. ' +
@@ -38,7 +33,7 @@ export async function POST(req: Request): Promise<Response> {
     ])
     .with('improve', () => [
       {
-        role: 'system',
+        role: 'user',
         content:
           'You are an AI writing assistant that improves existing text. ' +
           'Limit your response to no more than 200 characters, but make sure to construct complete sentences.' +
@@ -51,7 +46,7 @@ export async function POST(req: Request): Promise<Response> {
     ])
     .with('shorter', () => [
       {
-        role: 'system',
+        role: 'user',
         content:
           'You are an AI writing assistant that shortens existing text. ' +
           'Use Markdown formatting when appropriate.',
@@ -63,7 +58,7 @@ export async function POST(req: Request): Promise<Response> {
     ])
     .with('longer', () => [
       {
-        role: 'system',
+        role: 'user',
         content:
           'You are an AI writing assistant that lengthens existing text. ' +
           'Use Markdown formatting when appropriate.',
@@ -75,7 +70,7 @@ export async function POST(req: Request): Promise<Response> {
     ])
     .with('fix', () => [
       {
-        role: 'system',
+        role: 'user',
         content:
           'You are an AI writing assistant that fixes grammar and spelling errors in existing text. ' +
           'Limit your response to no more than 200 characters, but make sure to construct complete sentences.' +
@@ -88,7 +83,7 @@ export async function POST(req: Request): Promise<Response> {
     ])
     .with('zap', () => [
       {
-        role: 'system',
+        role: 'user',
         content:
           'You area an AI writing assistant that generates text based on a prompt. ' +
           'You take an input from the user and a command for manipulating the text' +
@@ -99,26 +94,18 @@ export async function POST(req: Request): Promise<Response> {
         content: `For this text: ${prompt}. You have to respect the command: ${command}`,
       },
     ])
-    .run() as ChatCompletionMessageParam[];
+    .run() as CoreMessage[];
 
-  const response = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
-    stream: true,
+  const response = await streamText({
+    model: openai('gpt-3.5-turbo'),
     messages: [
       {
-        role: 'system',
+        role: 'user',
         content: 'Respond in Croatian unless the user requests otherwise.',
       },
       ...messages,
     ],
-    temperature: 0.7,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-    n: 1,
   });
 
-  const stream = OpenAIStream(response);
-
-  return new StreamingTextResponse(stream);
+  return new StreamingTextResponse(response.toAIStream());
 }
