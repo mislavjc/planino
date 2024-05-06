@@ -14,12 +14,9 @@ export const Auth = async () => {
   if (!session) {
     return (
       <div>
-        <Link href="/prijava" className="text-sm">
-          Prijavi se
-        </Link>
         <Link href="/registracija" className="ml-4 text-sm">
           <Button>
-            Registriraj se
+            Prijavi se
             <ArrowRight size={16} className="ml-2" />
           </Button>
         </Link>

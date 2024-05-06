@@ -2,11 +2,15 @@ import { NextResponse } from 'next/server';
 
 import { auth } from './auth';
 
-const publicUrls = ['/prijava', '/registracija', '/'];
+const publicUrls = ['/prijava', '/'];
 
 export default auth((req) => {
   if (!req.auth && !publicUrls.includes(req.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL('/api/auth/signin', req.url));
+    return NextResponse.redirect(new URL('/prijava', req.url));
+  }
+
+  if (req.auth && req.nextUrl.pathname === '/prijava') {
+    return NextResponse.redirect(new URL('/', req.url));
   }
 
   return NextResponse.next();

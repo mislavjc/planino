@@ -12,4 +12,7 @@ export const {
 } = NextAuth({
   adapter: DrizzleAdapter(db),
   providers: [Google],
+  pages: {
+    signIn: '/prijava',
+  },
 });
