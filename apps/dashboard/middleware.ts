@@ -2,10 +2,10 @@ import { NextResponse } from 'next/server';
 
 import { auth } from './auth';
 
-const publicUrls = ['/login', '/signup', '/'];
+const publicUrls = ['/prijava', '/registracija', '/'];
 
 export default auth((req) => {
-  if (!req.auth && !publicUrls.includes(req.url)) {
+  if (!req.auth && !publicUrls.includes(req.nextUrl.pathname)) {
     return NextResponse.redirect(new URL('/api/auth/signin', req.url));
   }
 
