@@ -6,7 +6,7 @@ import { Auth } from './auth';
 
 export const Navigation = () => {
   return (
-    <div className="bg-muted/40 mx-auto max-w-screen-lg px-6 py-4">
+    <div className="bg-muted/40 sticky top-0 mx-auto max-w-screen-xl px-6 py-4">
       <div className="flex items-center justify-between">
         <div>
           <Link href="/" className="flex items-center gap-2">
@@ -17,7 +17,7 @@ export const Navigation = () => {
         <Suspense
           fallback={
             <div className="flex items-center gap-3">
-              <div className="w-24 bg-muted h-10 animate-pulse rounded-lg" />
+              <div className="bg-muted h-10 w-24 animate-pulse rounded-lg" />
             </div>
           }
         >

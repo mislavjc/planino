@@ -1,22 +1,9 @@
-import { auth } from 'auth';
-
-import { db } from 'db/drizzle';
+import { Hero } from 'components/@homepage/hero';
 
 const HomePage = async () => {
-  const session = await auth();
-
-  const users = await db.query.users.findMany();
-
   return (
-    <div>
-      {session?.user?.name ? `Hello, ${session.user.name}!` : 'Hello!'}
-      <h1>Page</h1>
-      {users.map((user) => (
-        <div key={user.id}>
-          <p>{user.name}</p>
-          <p>{user.email}</p>
-        </div>
-      ))}
+    <div className="mx-auto flex max-w-screen-lg flex-col gap-4 px-4">
+      <Hero />
     </div>
   );
 };
