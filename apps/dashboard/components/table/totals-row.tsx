@@ -24,10 +24,7 @@ export const TeamTotalsRow = ({
         <Sigma size={16} />
       </div>
       {calculateTotals(teamName).map((total, idx) => (
-        <div
-          key={idx}
-          className="bg-muted/60 border border-b-0 p-2 text-end font-mono"
-        >
+        <div key={idx} className="bg-muted/60 p-2 text-end font-mono">
           {formatCurrency(total)}
         </div>
       ))}
