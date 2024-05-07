@@ -188,6 +188,7 @@ export const BarStackChart = ({ data, className }: BarStackProps) => {
               </Group>
               <AxisBottom
                 top={yMax + margin.top}
+                left={margin.left}
                 scale={dateScale}
                 stroke="black"
                 tickStroke="black"
