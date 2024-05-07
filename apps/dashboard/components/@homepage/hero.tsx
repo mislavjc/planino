@@ -1,8 +1,11 @@
+import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { Button } from 'ui/button';
-import { Input } from 'ui/input';
 import { TypographyH1, TypographyP } from 'ui/typography';
+
+import { CALCOM_URL } from 'lib/constants';
 
 import ExpensesPng from 'public/images/expenses.png';
 
@@ -17,10 +20,12 @@ export const Hero = () => {
           Planino je aplikacija koja olakšava izradu poslovnih planova i
           praćenje troškova.
         </TypographyP>
-        <div className="flex">
-          <Input placeholder="Unesite svoj email" className="h-14" />
-          <Button className="h-14 w-48">Primaj novosti</Button>
-        </div>
+        <Link href={CALCOM_URL} target="_blank">
+          <Button className="h-14 w-48">
+            Ugovorite demo
+            <ArrowRight size={24} className="ml-2" />
+          </Button>
+        </Link>
       </div>
       <Image src={ExpensesPng} alt="Hero" className="border" />
     </div>
