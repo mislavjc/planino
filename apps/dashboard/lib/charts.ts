@@ -15,14 +15,7 @@ interface TransformedExpenseRecord {
   [key: string]: string;
 }
 
-interface TransformedTeamRecord {
-  name: string;
-  values: TransformedExpenseRecord[];
-}
-
-export const transformAggregateValues = (
-  data: ExpenseAggregation,
-): TransformedTeamRecord[] => {
+export const transformAggregateValues = (data: ExpenseAggregation) => {
   const teams: { [teamName: string]: TransformedExpenseRecord[] } = {};
 
   data.values.forEach(({ team_name, item_name }) => {

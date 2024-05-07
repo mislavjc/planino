@@ -14,11 +14,8 @@ import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
 
 import { cn } from 'lib/utils';
 
-type TooltipData = {
-  bar: SeriesPoint<{
-    year: string;
-    [key: string]: number | string | null;
-  }>;
+type TooltipData<T extends DataRecord> = {
+  bar: SeriesPoint<T>;
   key: string;
   index: number;
   height: number;
@@ -28,17 +25,14 @@ type TooltipData = {
   color: string;
 };
 
-interface TransformedExpenseRecord {
-  year: string;
-  [key: string]: string | number | null;
-}
+type DataRecord = Record<string, string>;
 
-export type BarStackProps = {
-  data: TransformedExpenseRecord[];
+export type BarStackProps<T extends DataRecord> = {
+  data: T[];
   className?: string;
+  domainKey: keyof T;
 };
 
-// Define color variables using Tailwind colors
 const tailwindColors = {
   blue: '#60a5fa', // Tailwind blue-400
   green: '#34d399', // Tailwind green-400
@@ -51,6 +45,7 @@ const tailwindColors = {
   indigo: '#818cf8', // Tailwind indigo-400
   lime: '#a3e635', // Tailwind lime-400
 };
+
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
@@ -58,7 +53,11 @@ const tooltipStyles = {
   color: 'white',
 };
 
-export const BarStackChart = ({ data, className }: BarStackProps) => {
+export const BarStackChart = <T extends DataRecord>({
+  data,
+  className,
+  domainKey,
+}: BarStackProps<T>) => {
   const {
     tooltipOpen,
     tooltipLeft,
@@ -66,27 +65,27 @@ export const BarStackChart = ({ data, className }: BarStackProps) => {
     tooltipData,
     hideTooltip,
     showTooltip,
-  } = useTooltip<TooltipData>();
+  } = useTooltip<TooltipData<T>>();
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal({
     scroll: true,
   });
 
-  const keys = Object.keys(data[0]).filter((d) => d !== 'year');
+  const keys = Object.keys(data[0]).filter((d) => d !== domainKey);
 
   const valueTotals = data.reduce((allTotals, currentYear) => {
     const totalValue = keys.reduce((dailyTotal, k) => {
-      dailyTotal += Number(currentYear[k as keyof TransformedExpenseRecord]);
+      dailyTotal += Number(currentYear[k as keyof T]);
       return dailyTotal;
     }, 0);
     allTotals.push(totalValue);
     return allTotals;
   }, [] as number[]);
 
-  const getYear = (d: TransformedExpenseRecord) => d.year.toString();
+  const getDomain = (d: T) => d[domainKey];
 
   const dateScale = scaleBand<string>({
-    domain: data.map(getYear),
+    domain: data.map(getDomain),
     padding: 0.2,
   });
   const valueScale = scaleLinear<number>({
@@ -150,7 +149,7 @@ export const BarStackChart = ({ data, className }: BarStackProps) => {
                 <BarStack
                   data={data}
                   keys={keys.map((key) => key)}
-                  x={getYear}
+                  x={getDomain}
                   xScale={dateScale}
                   yScale={valueScale}
                   color={colorScale}
@@ -256,7 +255,7 @@ export const BarStackChart = ({ data, className }: BarStackProps) => {
                     }).format(Number(tooltipData.bar.data[tooltipData.key]))}
                   </div>
                   <div>
-                    <small>{tooltipData.bar.data.year}</small>
+                    <small>{tooltipData.bar.data[domainKey]}</small>
                   </div>
                 </div>
               </TooltipInPortal>

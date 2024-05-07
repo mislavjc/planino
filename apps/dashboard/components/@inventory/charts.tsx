@@ -21,7 +21,11 @@ export const Charts = async ({ organization }: { organization: string }) => {
         <div key={team.name}>
           <TypographyH4>{team.name}</TypographyH4>
           <div className="h-[60vh]">
-            <BarStackChart key={team.name} data={team.values} />
+            <BarStackChart
+              key={team.name}
+              data={team.values}
+              domainKey="year"
+            />
           </div>
         </div>
       ))}

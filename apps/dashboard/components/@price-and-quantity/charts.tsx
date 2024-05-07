@@ -13,7 +13,7 @@ export const Charts = async ({
 
   return (
     <div className="h-[50vh]">
-      <BarStackChart data={product} />
+      <BarStackChart data={product} domainKey="month" />
     </div>
   );
 };

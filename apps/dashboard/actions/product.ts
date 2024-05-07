@@ -217,10 +217,9 @@ export const getProductAggregations = async ({
 
   const foundProduct = await db
     .select({
-      // TODO: adjust bar chart so it accepts any key
-      year: sql<string>`to_char(recorded_month, 'YYYY-MM')`.as('month'),
+      month: sql<string>`to_char(recorded_month, 'YYYY-MM')`.as('month'),
       'Ukupno zarađeno':
-        sql<number>`${productPriceHistory.unitCount} * (${productPriceHistory.unitPrice} - ${productPriceHistory.unitExpense})`.as(
+        sql<string>`${productPriceHistory.unitCount} * (${productPriceHistory.unitPrice} - ${productPriceHistory.unitExpense})`.as(
           'totalValue',
         ),
     })

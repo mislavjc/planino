@@ -18,7 +18,11 @@ export const Charts = async ({ organization }: { organization: string }) => {
           <div key={loan.name} className="h-[60vh]">
             <TypographyH4>{loan.name}</TypographyH4>
             <div className="h-[60vh]">
-              <BarStackChart key={loan.name} data={loan.values} />
+              <BarStackChart
+                key={loan.name}
+                data={loan.values}
+                domainKey="year"
+              />
             </div>
           </div>
         ) : null;
