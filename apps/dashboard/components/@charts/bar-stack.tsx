@@ -12,7 +12,7 @@ import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
 
-import { cn } from 'lib/utils';
+import { cn, formatCurrency } from 'lib/utils';
 
 type TooltipData<T extends DataRecord> = {
   bar: SeriesPoint<T>;
@@ -249,10 +249,9 @@ export const BarStackChart = <T extends DataRecord>({
                     <strong>{tooltipData.key}</strong>
                   </div>
                   <div className="font-mono">
-                    {new Intl.NumberFormat('en-HR', {
-                      style: 'currency',
-                      currency: 'EUR',
-                    }).format(Number(tooltipData.bar.data[tooltipData.key]))}
+                    {formatCurrency(
+                      Number(tooltipData.bar.data[tooltipData.key]),
+                    )}
                   </div>
                   <div>
                     <small>{tooltipData.bar.data[domainKey]}</small>
