@@ -27,6 +27,7 @@ const headingContentSchema = baseContentSchema.extend({
       level: z.number(),
     })
     .optional(),
+  content: z.array(textContentSchema).optional(),
 });
 
 const codeBlockContentSchema = baseContentSchema.extend({
@@ -39,11 +40,24 @@ const codeBlockContentSchema = baseContentSchema.extend({
   content: z.array(textContentSchema).optional(),
 });
 
+const listItemContentSchema = baseContentSchema.extend({
+  type: z.literal('listItem'),
+  content: z.array(paragraphContentSchema).optional(),
+});
+
+const bulletListContentSchema = baseContentSchema.extend({
+  type: z.literal('bulletList'),
+  attrs: z.object({ tight: z.boolean().optional() }).optional(),
+  content: z.array(listItemContentSchema),
+});
+
 const documentContentSchema = z.discriminatedUnion('type', [
   headingContentSchema,
   paragraphContentSchema,
   codeBlockContentSchema,
   hardBreakContentSchema,
+  bulletListContentSchema,
+  listItemContentSchema,
 ]);
 
 export const documentSchema = z.object({
