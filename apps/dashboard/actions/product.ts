@@ -6,7 +6,7 @@ import {
   productPriceHistory,
   products,
 } from '@planino/database/schema';
-import { eq, sql, sum } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -47,7 +47,11 @@ export const getProduct = async ({
   const foundProduct = await db.query.products.findFirst({
     where: eq(products.productId, productId),
     with: {
-      priceHistory: true,
+      priceHistory: {
+        orderBy: (productPriceHistory, { asc }) => [
+          asc(productPriceHistory.recordedMonth),
+        ],
+      },
     },
   });
 
