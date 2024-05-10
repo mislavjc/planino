@@ -90,7 +90,7 @@ export const FileDropzone = () => {
                 value={field.value}
                 onValueChange={field.onChange}
                 dropzoneOptions={dropZoneConfig}
-                className="outline-border relative outline-dashed outline-2"
+                className="relative outline-dashed outline-2 outline-border"
               >
                 <FileInput>
                   <div className="flex w-full flex-col items-center justify-center p-8">

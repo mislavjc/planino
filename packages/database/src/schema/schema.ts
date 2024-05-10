@@ -440,7 +440,10 @@ export const productsRelations = relations(products, ({ one, many }) => ({
 }));
 
 export const productPriceHistory = pgTable('product_price_history', {
-  productPriceId: uuid('product_price_history_id').notNull().primaryKey().defaultRandom(),
+  productPriceId: uuid('product_price_history_id')
+    .notNull()
+    .primaryKey()
+    .defaultRandom(),
   productId: uuid('product_id')
     .notNull()
     .references(() => products.productId, {
@@ -453,8 +456,14 @@ export const productPriceHistory = pgTable('product_price_history', {
   unitPrice: numeric('unit_price'),
 });
 
-export const insertProductPriceHistorySchema =
-  createInsertSchema(productPriceHistory);
+export const insertProductPriceHistorySchema = createInsertSchema(
+  productPriceHistory,
+  {
+    unitPrice: z.coerce.string(),
+    unitExpense: z.coerce.string(),
+    unitCount: z.coerce.string(),
+  },
+);
 
 export const selectProductPriceHistorySchema =
   createSelectSchema(productPriceHistory);

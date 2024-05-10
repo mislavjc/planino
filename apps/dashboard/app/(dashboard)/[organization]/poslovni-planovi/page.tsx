@@ -26,7 +26,7 @@ const BusinessPlans = async ({
               <Link
                 href={`/${params.organization}/poslovni-planovi/${plan.businessPlanId}`}
                 key={plan.businessPlanId}
-                className="hover:bg-muted/40 flex h-72 cursor-pointer items-center justify-center rounded-lg border-2 transition-all duration-100 ease-in-out"
+                className="flex h-72 cursor-pointer items-center justify-center rounded-lg border-2 transition-all duration-100 ease-in-out hover:bg-muted/40"
               >
                 <TypographyP className="text-sm text-neutral-600">
                   {plan.name || `Bez naziva #${index + 1}`}
@@ -34,7 +34,7 @@ const BusinessPlans = async ({
               </Link>
             ))}
             <form
-              className="bg-muted/40 hover:bg-muted/10 relative flex h-72 items-center justify-center rounded-lg border-2 border-dashed transition-all duration-100 ease-in-out"
+              className="relative flex h-72 items-center justify-center rounded-lg border-2 border-dashed bg-muted/40 transition-all duration-100 ease-in-out hover:bg-muted/10"
               action={createBusinessPlan}
             >
               <button className="absolute inset-0">

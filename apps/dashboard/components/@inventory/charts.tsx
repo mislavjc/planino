@@ -18,9 +18,15 @@ export const Charts = async ({ organization }: { organization: string }) => {
   return (
     <div className="grid lg:grid-cols-2">
       {transformedData.map((team) => (
-        <div key={team.name} className="h-[60vh]">
+        <div key={team.name}>
           <TypographyH4>{team.name}</TypographyH4>
-          <BarStackChart key={team.name} data={team.values} />
+          <div className="h-[60vh]">
+            <BarStackChart
+              key={team.name}
+              data={team.values}
+              domainKey="year"
+            />
+          </div>
         </div>
       ))}
     </div>

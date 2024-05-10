@@ -79,7 +79,7 @@ export const Navigation = ({
   return (
     <nav className="relative grid gap-2 py-4 text-lg font-medium lg:fixed lg:w-[280px] lg:gap-3 lg:px-4 lg:text-sm">
       <div className="mb-4">{org}</div>
-      <TypographyP className="text-muted-foreground text-xs uppercase">
+      <TypographyP className="text-xs uppercase text-muted-foreground">
         Ulazni podatci
       </TypographyP>
       <div>
@@ -94,7 +94,7 @@ export const Navigation = ({
           </NavItem>
         ))}
       </div>
-      <TypographyP className="text-muted-foreground text-xs uppercase">
+      <TypographyP className="text-xs uppercase text-muted-foreground">
         Izlazni podatci
       </TypographyP>
       <div>
@@ -109,7 +109,7 @@ export const Navigation = ({
           </NavItem>
         ))}
       </div>
-      <TypographyP className="text-muted-foreground text-xs uppercase">
+      <TypographyP className="text-xs uppercase text-muted-foreground">
         Dokumenti
       </TypographyP>
       <div>

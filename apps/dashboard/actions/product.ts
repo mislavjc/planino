@@ -6,7 +6,7 @@ import {
   productPriceHistory,
   products,
 } from '@planino/database/schema';
-import { eq, sql, sum } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
@@ -47,7 +47,11 @@ export const getProduct = async ({
   const foundProduct = await db.query.products.findFirst({
     where: eq(products.productId, productId),
     with: {
-      priceHistory: true,
+      priceHistory: {
+        orderBy: (productPriceHistory, { asc }) => [
+          asc(productPriceHistory.recordedMonth),
+        ],
+      },
     },
   });
 
@@ -217,10 +221,9 @@ export const getProductAggregations = async ({
 
   const foundProduct = await db
     .select({
-      // TODO: adjust bar chart so it accepts any key
-      year: sql<string>`to_char(recorded_month, 'YYYY-MM')`.as('month'),
+      month: sql<string>`to_char(recorded_month, 'YYYY-MM')`.as('month'),
       'Ukupno zarađeno':
-        sql<number>`${productPriceHistory.unitCount} * (${productPriceHistory.unitPrice} - ${productPriceHistory.unitExpense})`.as(
+        sql<string>`${productPriceHistory.unitCount} * (${productPriceHistory.unitPrice} - ${productPriceHistory.unitExpense})`.as(
           'totalValue',
         ),
     })

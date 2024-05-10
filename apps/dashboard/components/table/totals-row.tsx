@@ -1,5 +1,7 @@
 import { Sigma } from 'lucide-react';
 
+import { formatCurrency } from 'lib/utils';
+
 type TeamTotalsRowProps = {
   teamName: string;
   numberOfYears: number;
@@ -18,18 +20,12 @@ export const TeamTotalsRow = ({
         gridTemplateColumns: `repeat(${numberOfYears + 1}, minmax(0, 1fr))`,
       }}
     >
-      <div className="flex items-center gap-2 bg-muted/60 p-2">
+      <div className="bg-muted/60 flex items-center gap-2 p-2">
         <Sigma size={16} />
       </div>
       {calculateTotals(teamName).map((total, idx) => (
-        <div
-          key={idx}
-          className="border border-b-0 bg-muted/60 p-2 text-end font-mono"
-        >
-          {Intl.NumberFormat('hr-HR', {
-            style: 'currency',
-            currency: 'eur',
-          }).format(total)}
+        <div key={idx} className="bg-muted/60 p-2 text-end font-mono">
+          {formatCurrency(total)}
         </div>
       ))}
     </div>
@@ -53,10 +49,7 @@ export const TotalsRow = ({
       <div className="p-2">Ukupno</div>
       {calculateYearlyTotals().map((total, index) => (
         <div key={index} className="p-2 text-end">
-          {Intl.NumberFormat('hr-HR', {
-            style: 'currency',
-            currency: 'eur',
-          }).format(total)}
+          {formatCurrency(total)}
         </div>
       ))}
     </div>

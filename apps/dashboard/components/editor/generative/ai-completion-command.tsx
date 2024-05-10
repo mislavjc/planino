@@ -34,7 +34,7 @@ export const AICompletionCommands = ({
               .run();
           }}
         >
-          <Check className="text-muted-foreground size-4" />
+          <Check className="size-4 text-muted-foreground" />
           Zamijeni odabrano
         </CommandItem>
         <CommandItem
@@ -49,7 +49,7 @@ export const AICompletionCommands = ({
               .run();
           }}
         >
-          <TextQuote className="text-muted-foreground size-4" />
+          <TextQuote className="size-4 text-muted-foreground" />
           Unesi ispod
         </CommandItem>
       </CommandGroup>
@@ -57,7 +57,7 @@ export const AICompletionCommands = ({
 
       <CommandGroup>
         <CommandItem onSelect={onDiscard} value="thrash" className="gap-2 px-4">
-          <TrashIcon className="text-muted-foreground size-4" />
+          <TrashIcon className="size-4 text-muted-foreground" />
           Odbaci
         </CommandItem>
       </CommandGroup>

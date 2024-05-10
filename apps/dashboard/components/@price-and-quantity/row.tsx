@@ -40,7 +40,7 @@ export const PriceHistoryRow = ({
           className="font-mono"
         />
       ) : (
-        <div className="bg-background border-input flex h-10 items-center border px-4 py-2 font-mono text-sm">
+        <div className="flex h-10 items-center border border-input bg-background px-4 py-2 font-mono text-sm">
           {format(priceHistory.recordedMonth.toDateString(), 'MM. yyyy.')}
         </div>
       )}

@@ -12,11 +12,10 @@ import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
 
-type TooltipData = {
-  bar: SeriesPoint<{
-    year: string;
-    [key: string]: number | string | null;
-  }>;
+import { cn, formatCurrency } from 'lib/utils';
+
+type TooltipData<T extends DataRecord> = {
+  bar: SeriesPoint<T>;
   key: string;
   index: number;
   height: number;
@@ -26,16 +25,14 @@ type TooltipData = {
   color: string;
 };
 
-interface TransformedExpenseRecord {
-  year: string;
-  [key: string]: string | number | null;
-}
+type DataRecord = Record<string, string>;
 
-export type BarStackProps = {
-  data: TransformedExpenseRecord[];
+export type BarStackProps<T extends DataRecord> = {
+  data: T[];
+  className?: string;
+  domainKey: keyof T;
 };
 
-// Define color variables using Tailwind colors
 const tailwindColors = {
   blue: '#60a5fa', // Tailwind blue-400
   green: '#34d399', // Tailwind green-400
@@ -48,6 +45,7 @@ const tailwindColors = {
   indigo: '#818cf8', // Tailwind indigo-400
   lime: '#a3e635', // Tailwind lime-400
 };
+
 const tooltipStyles = {
   ...defaultStyles,
   minWidth: 60,
@@ -55,7 +53,11 @@ const tooltipStyles = {
   color: 'white',
 };
 
-export const BarStackChart = ({ data }: BarStackProps) => {
+export const BarStackChart = <T extends DataRecord>({
+  data,
+  className,
+  domainKey,
+}: BarStackProps<T>) => {
   const {
     tooltipOpen,
     tooltipLeft,
@@ -63,27 +65,27 @@ export const BarStackChart = ({ data }: BarStackProps) => {
     tooltipData,
     hideTooltip,
     showTooltip,
-  } = useTooltip<TooltipData>();
+  } = useTooltip<TooltipData<T>>();
 
   const { containerRef, TooltipInPortal } = useTooltipInPortal({
     scroll: true,
   });
 
-  const keys = Object.keys(data[0]).filter((d) => d !== 'year');
+  const keys = Object.keys(data[0]).filter((d) => d !== domainKey);
 
   const valueTotals = data.reduce((allTotals, currentYear) => {
     const totalValue = keys.reduce((dailyTotal, k) => {
-      dailyTotal += Number(currentYear[k as keyof TransformedExpenseRecord]);
+      dailyTotal += Number(currentYear[k as keyof T]);
       return dailyTotal;
     }, 0);
     allTotals.push(totalValue);
     return allTotals;
   }, [] as number[]);
 
-  const getYear = (d: TransformedExpenseRecord) => d.year.toString();
+  const getDomain = (d: T) => d[domainKey];
 
   const dateScale = scaleBand<string>({
-    domain: data.map(getYear),
+    domain: data.map(getDomain),
     padding: 0.2,
   });
   const valueScale = scaleLinear<number>({
@@ -109,7 +111,7 @@ export const BarStackChart = ({ data }: BarStackProps) => {
   let tooltipTimeout: number;
 
   return (
-    <ParentSize className="relative">
+    <ParentSize className={cn('relative mt-4', className)}>
       {(parent) => {
         const { width, height } = parent;
 
@@ -147,7 +149,7 @@ export const BarStackChart = ({ data }: BarStackProps) => {
                 <BarStack
                   data={data}
                   keys={keys.map((key) => key)}
-                  x={getYear}
+                  x={getDomain}
                   xScale={dateScale}
                   yScale={valueScale}
                   color={colorScale}
@@ -185,6 +187,7 @@ export const BarStackChart = ({ data }: BarStackProps) => {
               </Group>
               <AxisBottom
                 top={yMax + margin.top}
+                left={margin.left}
                 scale={dateScale}
                 stroke="black"
                 tickStroke="black"
@@ -201,14 +204,18 @@ export const BarStackChart = ({ data }: BarStackProps) => {
                 left={margin.left}
                 stroke="black"
                 tickStroke="black"
-                tickLabelProps={() => ({
-                  fill: 'black',
-                  fontSize: 10,
-                  textAnchor: 'end',
-                  dx: '-0.25em',
-                  dy: '0.25em',
-                  fontFamily: 'monospace',
-                })}
+                tickLabelProps={(label) => {
+                  if (label === 0) return { display: 'none' };
+
+                  return {
+                    fill: 'black',
+                    fontSize: 10,
+                    textAnchor: 'end',
+                    dx: '-0.25em',
+                    dy: '0.15em',
+                    fontFamily: 'monospace',
+                  };
+                }}
                 tickFormat={(value) =>
                   value.toLocaleString('en-HR', {
                     style: 'currency',
@@ -220,19 +227,15 @@ export const BarStackChart = ({ data }: BarStackProps) => {
               />
             </svg>
             <div
+              className="absolute flex  w-full justify-center text-sm"
               style={{
-                position: 'absolute',
-                top: margin.top / 2 - 10,
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                fontSize: '14px',
+                top: margin.top / 2 - 24,
               }}
             >
               <LegendOrdinal
                 scale={colorScale}
                 direction="row"
-                labelMargin="0 15px 0 0"
+                labelMargin="0 1rem 0 0"
               />
             </div>
             {tooltipOpen && tooltipData && (
@@ -246,13 +249,12 @@ export const BarStackChart = ({ data }: BarStackProps) => {
                     <strong>{tooltipData.key}</strong>
                   </div>
                   <div className="font-mono">
-                    {new Intl.NumberFormat('en-HR', {
-                      style: 'currency',
-                      currency: 'EUR',
-                    }).format(Number(tooltipData.bar.data[tooltipData.key]))}
+                    {formatCurrency(
+                      Number(tooltipData.bar.data[tooltipData.key]),
+                    )}
                   </div>
                   <div>
-                    <small>{tooltipData.bar.data.year}</small>
+                    <small>{tooltipData.bar.data[domainKey]}</small>
                   </div>
                 </div>
               </TooltipInPortal>
