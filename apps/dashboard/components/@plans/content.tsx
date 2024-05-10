@@ -4,7 +4,7 @@ import { updateBlock } from 'actions/block';
 
 import { BlockWrapper } from 'components/@block/wrapper';
 import Editor from 'components/editor/advanced-editor';
-import { documentSchema } from 'components/editor/schema';
+import { JSONContentSchema } from 'components/editor/schema';
 
 export const EditorBlock = ({
   content,
@@ -28,7 +28,7 @@ export const EditorBlock = ({
     );
   }
 
-  const parsedContent = documentSchema.parse(content);
+  const parsedContent = JSONContentSchema.parse(content);
 
   return (
     <BlockWrapper blockId={blockId} organization={organization}>
