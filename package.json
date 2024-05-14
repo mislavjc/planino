@@ -18,10 +18,10 @@
     "generate:importer-client": "turbo generate:importer-client --filter=dashboard"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.2.2",
+    "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "husky": "^9.0.11",
-    "knip": "^5.9.4",
+    "knip": "^5.15.1",
     "prettier": "^3.2.5"
   },
   "volta": {

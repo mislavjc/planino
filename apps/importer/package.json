@@ -6,25 +6,25 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.569.0",
-    "@aws-sdk/s3-request-presigner": "^3.569.0",
-    "@hono/zod-openapi": "^0.11.0",
-    "@neondatabase/serverless": "^0.9.1",
+    "@aws-sdk/client-s3": "^3.575.0",
+    "@aws-sdk/s3-request-presigner": "^3.575.0",
+    "@hono/zod-openapi": "^0.11.1",
+    "@neondatabase/serverless": "^0.9.3",
     "@planino/database": "workspace:*",
-    "@scalar/hono-api-reference": "^0.5.20",
+    "@scalar/hono-api-reference": "^0.5.35",
     "drizzle-orm": "^0.30.10",
     "drizzle-zod": "^0.5.1",
-    "hono": "^4.3.2",
-    "openai": "^4.40.2",
+    "hono": "^4.3.6",
+    "openai": "^4.47.0",
     "xlsx": "^0.18.5",
-    "zod": "^3.23.6"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240502.0",
-    "@typescript-eslint/eslint-plugin": "^7.8.0",
-    "@typescript-eslint/parser": "^7.8.0",
+    "@cloudflare/workers-types": "^4.20240512.0",
+    "@typescript-eslint/eslint-plugin": "^7.9.0",
+    "@typescript-eslint/parser": "^7.9.0",
     "eslint": "^8.57.0",
     "eslint-config-custom": "workspace:*",
-    "wrangler": "^3.53.1"
+    "wrangler": "^3.55.0"
   }
 }
