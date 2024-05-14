@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.2
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.1.1...v0.1.2)
+
+### 🚀 Enhancements
+
+- Add changelogen as npm scrupt ([dc83a78](https://github.com/mislavjc/planino/commit/dc83a78))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.1.1
 
 
