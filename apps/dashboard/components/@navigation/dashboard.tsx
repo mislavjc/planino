@@ -79,50 +79,52 @@ export const Navigation = ({
   return (
     <nav className="relative grid gap-2 py-4 text-lg font-medium lg:fixed lg:w-[280px] lg:gap-3 lg:px-4 lg:text-sm">
       <div className="mb-4">{org}</div>
-      <TypographyP className="text-xs uppercase text-muted-foreground">
-        Ulazni podatci
-      </TypographyP>
-      <div>
-        {config.input.map((item, index) => (
-          <NavItem
-            key={index}
-            icon={item.icon}
-            href={item.href}
-            active={item.href === pathname}
-          >
-            {item.label}
-          </NavItem>
-        ))}
-      </div>
-      <TypographyP className="text-xs uppercase text-muted-foreground">
-        Izlazni podatci
-      </TypographyP>
-      <div>
-        {config.output.map((item, index) => (
-          <NavItem
-            key={index}
-            icon={item.icon}
-            href={item.href}
-            active={item.href === pathname}
-          >
-            {item.label}
-          </NavItem>
-        ))}
-      </div>
-      <TypographyP className="text-xs uppercase text-muted-foreground">
-        Dokumenti
-      </TypographyP>
-      <div>
-        {config.documents.map((item, index) => (
-          <NavItem
-            key={index}
-            icon={item.icon}
-            href={item.href}
-            active={item.href === pathname}
-          >
-            {item.label}
-          </NavItem>
-        ))}
+      <div className="flex max-h-[calc(100svh-12rem)] flex-col gap-2 overflow-y-auto">
+        <TypographyP className="text-muted-foreground text-xs uppercase">
+          Ulazni podatci
+        </TypographyP>
+        <div>
+          {config.input.map((item, index) => (
+            <NavItem
+              key={index}
+              icon={item.icon}
+              href={item.href}
+              active={item.href === pathname}
+            >
+              {item.label}
+            </NavItem>
+          ))}
+        </div>
+        <TypographyP className="text-muted-foreground text-xs uppercase">
+          Izlazni podatci
+        </TypographyP>
+        <div>
+          {config.output.map((item, index) => (
+            <NavItem
+              key={index}
+              icon={item.icon}
+              href={item.href}
+              active={item.href === pathname}
+            >
+              {item.label}
+            </NavItem>
+          ))}
+        </div>
+        <TypographyP className="text-muted-foreground text-xs uppercase">
+          Dokumenti
+        </TypographyP>
+        <div>
+          {config.documents.map((item, index) => (
+            <NavItem
+              key={index}
+              icon={item.icon}
+              href={item.href}
+              active={item.href === pathname}
+            >
+              {item.label}
+            </NavItem>
+          ))}
+        </div>
       </div>
       <div className="fixed bottom-4 lg:w-[280px]">{user}</div>
     </nav>
