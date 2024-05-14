@@ -16,7 +16,7 @@ export const Charts = async ({ organization }: { organization: string }) => {
   });
 
   return (
-    <div className="grid lg:grid-cols-2">
+    <div className="grid xl:grid-cols-2">
       {transformedData.map((team) => (
         <div key={team.name}>
           <TypographyH4>{team.name}</TypographyH4>

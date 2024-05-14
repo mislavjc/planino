@@ -12,10 +12,10 @@ export const Charts = async ({ organization }: { organization: string }) => {
   const loanData = getLoanPaymentData(loansForCalculation);
 
   return (
-    <div className="grid lg:grid-cols-2">
+    <div className="grid xl:grid-cols-2">
       {loanData.map((loan) => {
         return loan.values.length ? (
-          <div key={loan.name} className="h-[60vh]">
+          <div key={loan.name}>
             <TypographyH4>{loan.name}</TypographyH4>
             <div className="h-[60vh]">
               <BarStackChart
