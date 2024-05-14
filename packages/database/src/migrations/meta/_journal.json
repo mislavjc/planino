@@ -43,6 +43,13 @@
       "when": 1714674102002,
       "tag": "0005_chief_hawkeye",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1715704968803,
+      "tag": "0006_icy_iron_monger",
+      "breakpoints": true
     }
   ]
 }

@@ -9,7 +9,7 @@
     "./schema": "./src/schema/index.ts"
   },
   "scripts": {
-    "db:generate": "drizzle-kit generate:pg",
+    "db:generate": "drizzle-kit generate",
     "db:migrate": "npx tsx ./src/migrate.ts",
     "db:studio": "drizzle-kit studio"
   },
@@ -21,7 +21,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "drizzle-kit": "^0.20.18",
+    "drizzle-kit": "^0.21.1",
     "tsx": "^4.10.2"
   }
 }

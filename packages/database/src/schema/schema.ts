@@ -100,14 +100,15 @@ export const organizations = pgTable(
       .defaultRandom(),
     createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
     name: text('name').notNull(),
+    slug: text('slug').notNull().unique(),
     userId: text('user_id')
       .notNull()
       .references(() => users.id, { onDelete: 'cascade' }),
   },
   (organizations) => {
     return {
-      organizationsNameKey: uniqueIndex('organizations_name_key').on(
-        organizations.name,
+      organizationsSlugKey: uniqueIndex('organizations_slug_key').on(
+        organizations.slug,
       ),
     };
   },

@@ -38,7 +38,10 @@ export const OrganizationForm = () => {
   const slugifiedName = slugify(form.watch('name') ?? '');
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const response = await createOrganization(data);
+    const response = await createOrganization({
+      name: data.name,
+      slug: slugify(data.name),
+    });
 
     if (response.error) {
       form.setError('name', {

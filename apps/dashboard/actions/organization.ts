@@ -43,7 +43,7 @@ export const createOrganization = async (data: OrganizationInsertInput) => {
   };
 };
 
-export const getOrganization = async (name: string) => {
+export const getOrganization = async (slug: string) => {
   const session = await auth();
 
   if (!session?.user || !session.user.id) {
@@ -52,7 +52,7 @@ export const getOrganization = async (name: string) => {
 
   const organization = await db.query.organizations.findFirst({
     where: and(
-      eq(organizations.name, name),
+      eq(organizations.slug, slug),
       eq(organizations.userId, session.user.id),
     ),
     columns: {
