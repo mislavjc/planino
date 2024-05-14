@@ -27,7 +27,7 @@ export const Auth = async () => {
   const organization = await db.query.organizations.findFirst({
     where: eq(organizations.userId, session.user?.id ?? ''),
     columns: {
-      name: true,
+      slug: true,
     },
   });
 
@@ -43,7 +43,7 @@ export const Auth = async () => {
   }
 
   return (
-    <Link href={`/${organization?.name}`}>
+    <Link href={`/${organization?.slug}`}>
       <Button>
         U aplikaciju
         <ArrowRight size={16} className="ml-2" />
