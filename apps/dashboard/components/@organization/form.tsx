@@ -23,9 +23,14 @@ import {
 import { Input } from '../ui/input';
 
 const formSchema = z.object({
-  name: z.string().min(5, {
-    message: 'Naziv organizacije mora imati bar 5 slova.',
-  }),
+  name: z
+    .string()
+    .min(5, {
+      message: 'Naziv organizacije mora imati bar 5 slova.',
+    })
+    .max(30, {
+      message: 'Naziv organizacije ne smije imati više od 30 slova.',
+    }),
 });
 
 export const OrganizationForm = () => {
