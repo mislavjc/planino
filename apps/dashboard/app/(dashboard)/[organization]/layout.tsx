@@ -59,7 +59,7 @@ const OrganizationLayout = ({
               </SheetContent>
             </Sheet>
           </header>
-          <main className="m-4 flex max-w-[calc(100vw-2rem)] flex-1 flex-col gap-4 border bg-white p-4 lg:max-w-[calc(100vw-284px)] lg:gap-6 lg:p-6">
+          <main className="m-4 flex max-w-[calc(100dvw-3rem)] flex-1 flex-col gap-4 border bg-white p-4 lg:max-w-[calc(100dvw-328px)] lg:gap-6 lg:p-6">
             {children}
           </main>
         </div>
