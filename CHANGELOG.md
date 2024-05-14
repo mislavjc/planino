@@ -1,6 +1,21 @@
 # Changelog
 
 
+## v0.1.3
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.1.2...v0.1.3)
+
+### 🩹 Fixes
+
+- Overflow of navbar on lower height ([2da8a75](https://github.com/mislavjc/planino/commit/2da8a75))
+- Active link state not working for nested links ([3ccf219](https://github.com/mislavjc/planino/commit/3ccf219))
+- Overflow on lower width ([901871b](https://github.com/mislavjc/planino/commit/901871b))
+- Graph rendering issues ([3f7f870](https://github.com/mislavjc/planino/commit/3f7f870))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.1.2
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.1.1...v0.1.2)
