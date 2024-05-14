@@ -89,7 +89,7 @@ export const Navigation = ({
               key={index}
               icon={item.icon}
               href={item.href}
-              active={item.href === pathname}
+              active={pathname.startsWith(item.href)}
             >
               {item.label}
             </NavItem>
@@ -104,7 +104,7 @@ export const Navigation = ({
               key={index}
               icon={item.icon}
               href={item.href}
-              active={item.href === pathname}
+              active={pathname.startsWith(item.href)}
             >
               {item.label}
             </NavItem>
@@ -119,7 +119,7 @@ export const Navigation = ({
               key={index}
               icon={item.icon}
               href={item.href}
-              active={item.href === pathname}
+              active={pathname.startsWith(item.href)}
             >
               {item.label}
             </NavItem>
