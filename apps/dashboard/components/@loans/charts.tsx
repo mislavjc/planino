@@ -1,8 +1,8 @@
+import { BarStackChart } from '@planino/charts';
+
 import { getLoansForCalulation } from 'actions/loan';
 
 import { TypographyH4 } from 'ui/typography';
-
-import { BarStackChart } from 'components/@charts/bar-stack';
 
 import { getLoanPaymentData } from 'lib/loans';
 

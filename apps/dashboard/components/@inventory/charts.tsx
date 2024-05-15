@@ -1,6 +1,7 @@
+import { BarStackChart } from '@planino/charts';
+
 import { getInventoryValues } from 'actions/inventory';
 
-import { BarStackChart } from 'components/@charts/bar-stack';
 import { TypographyH4 } from 'components/ui/typography';
 
 import { transformAggregateValues } from 'lib/charts';
