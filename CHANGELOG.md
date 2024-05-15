@@ -1,6 +1,29 @@
 # Changelog
 
 
+## v0.1.4
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.1.3...v0.1.4)
+
+### 🚀 Enhancements
+
+- Use slugs for organizations ([bc3ad53](https://github.com/mislavjc/planino/commit/bc3ad53))
+- Update auth button url ([d255c36](https://github.com/mislavjc/planino/commit/d255c36))
+- Limit number of letters ([aa6e349](https://github.com/mislavjc/planino/commit/aa6e349))
+- Use system role ([7d6153d](https://github.com/mislavjc/planino/commit/7d6153d))
+- Add updatedAt fields ([7d791fc](https://github.com/mislavjc/planino/commit/7d791fc))
+- Add getLaterDate util ([bc3774d](https://github.com/mislavjc/planino/commit/bc3774d))
+- Add row wrapper component ([5b9a469](https://github.com/mislavjc/planino/commit/5b9a469))
+- Adjust padding in table input ([8654ce0](https://github.com/mislavjc/planino/commit/8654ce0))
+- Add more options to expenses ([c48a5ff](https://github.com/mislavjc/planino/commit/c48a5ff))
+- Add more options to inventory ([69dc5e4](https://github.com/mislavjc/planino/commit/69dc5e4))
+- Add more options to loans ([e6090b7](https://github.com/mislavjc/planino/commit/e6090b7))
+- Add deletion of prices ([c48a7c2](https://github.com/mislavjc/planino/commit/c48a7c2))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.1.3
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.1.2...v0.1.3)
