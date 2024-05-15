@@ -1,10 +1,8 @@
 {
-  "id": "1325dee8-7ef5-46b4-9cbf-fa3c052be63b",
-  "prevId": "00000000-0000-0000-0000-000000000000",
-  "version": "5",
-  "dialect": "pg",
+  "version": "6",
+  "dialect": "postgresql",
   "tables": {
-    "account": {
+    "public.account": {
       "name": "account",
       "schema": "",
       "columns": {
@@ -80,15 +78,15 @@
         "account_userId_user_id_fk": {
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
-          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
@@ -102,7 +100,7 @@
       },
       "uniqueConstraints": {}
     },
-    "expense_frequency": {
+    "public.expense_frequency": {
       "name": "expense_frequency",
       "schema": "",
       "columns": {
@@ -132,7 +130,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "expense_type": {
+    "public.expense_type": {
       "name": "expense_type",
       "schema": "",
       "columns": {
@@ -162,7 +160,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "expense": {
+    "public.expense": {
       "name": "expense",
       "schema": "",
       "columns": {
@@ -224,60 +222,60 @@
         "expense_financial_attribute_id_financial_attribute_financial_attribute_id_fk": {
           "name": "expense_financial_attribute_id_financial_attribute_financial_attribute_id_fk",
           "tableFrom": "expense",
-          "tableTo": "financial_attribute",
           "columnsFrom": [
             "financial_attribute_id"
           ],
+          "tableTo": "financial_attribute",
           "columnsTo": [
             "financial_attribute_id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
         },
         "expense_expense_frequency_id_expense_frequency_expense_frequency_id_fk": {
           "name": "expense_expense_frequency_id_expense_frequency_expense_frequency_id_fk",
           "tableFrom": "expense",
-          "tableTo": "expense_frequency",
           "columnsFrom": [
             "expense_frequency_id"
           ],
+          "tableTo": "expense_frequency",
           "columnsTo": [
             "expense_frequency_id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
         },
         "expense_expense_type_id_expense_type_expense_type_id_fk": {
           "name": "expense_expense_type_id_expense_type_expense_type_id_fk",
           "tableFrom": "expense",
-          "tableTo": "expense_type",
           "columnsFrom": [
             "expense_type_id"
           ],
+          "tableTo": "expense_type",
           "columnsTo": [
             "expense_type_id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
         },
         "expense_team_id_team_team_id_fk": {
           "name": "expense_team_id_team_team_id_fk",
           "tableFrom": "expense",
-          "tableTo": "team",
           "columnsFrom": [
             "team_id"
           ],
+          "tableTo": "team",
           "columnsTo": [
             "team_id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "financial_attribute": {
+    "public.financial_attribute": {
       "name": "financial_attribute",
       "schema": "",
       "columns": {
@@ -325,7 +323,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "inventory_item": {
+    "public.inventory_item": {
       "name": "inventory_item",
       "schema": "",
       "columns": {
@@ -379,21 +377,21 @@
         "inventory_item_team_id_team_team_id_fk": {
           "name": "inventory_item_team_id_team_team_id_fk",
           "tableFrom": "inventory_item",
-          "tableTo": "team",
           "columnsFrom": [
             "team_id"
           ],
+          "tableTo": "team",
           "columnsTo": [
             "team_id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "loan": {
+    "public.loan": {
       "name": "loan",
       "schema": "",
       "columns": {
@@ -461,21 +459,21 @@
         "loan_organization_id_organization_organization_id_fk": {
           "name": "loan_organization_id_organization_organization_id_fk",
           "tableFrom": "loan",
-          "tableTo": "organization",
           "columnsFrom": [
             "organization_id"
           ],
+          "tableTo": "organization",
           "columnsTo": [
             "organization_id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "organization": {
+    "public.organization": {
       "name": "organization",
       "schema": "",
       "columns": {
@@ -519,21 +517,21 @@
         "organization_user_id_user_id_fk": {
           "name": "organization_user_id_user_id_fk",
           "tableFrom": "organization",
-          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "session": {
+    "public.session": {
       "name": "session",
       "schema": "",
       "columns": {
@@ -561,21 +559,21 @@
         "session_userId_user_id_fk": {
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
-          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
+          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "team": {
+    "public.team": {
       "name": "team",
       "schema": "",
       "columns": {
@@ -611,21 +609,21 @@
         "team_organization_id_organization_organization_id_fk": {
           "name": "team_organization_id_organization_organization_id_fk",
           "tableFrom": "team",
-          "tableTo": "organization",
           "columnsFrom": [
             "organization_id"
           ],
+          "tableTo": "organization",
           "columnsTo": [
             "organization_id"
           ],
-          "onDelete": "cascade",
-          "onUpdate": "cascade"
+          "onUpdate": "cascade",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "user": {
+    "public.user": {
       "name": "user",
       "schema": "",
       "columns": {
@@ -665,7 +663,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "verificationToken": {
+    "public.verificationToken": {
       "name": "verificationToken",
       "schema": "",
       "columns": {
@@ -705,8 +703,10 @@
   "enums": {},
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "1325dee8-7ef5-46b4-9cbf-fa3c052be63b",
+  "prevId": "00000000-0000-0000-0000-000000000000"
 }

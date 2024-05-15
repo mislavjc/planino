@@ -45,7 +45,7 @@ const PaymentPlanPage = async ({
               </div>
               <div>
                 {loans.map((loan) => (
-                  <Row key={loan.loanId} {...loan} />
+                  <Row key={`${loan.loanId}-${loan.updatedAt}`} {...loan} />
                 ))}
               </div>
               <AddRow

@@ -10,10 +10,18 @@ import { toast } from 'sonner';
 import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 
-import { updateExpense } from 'actions/expense';
+import {
+  clearExpense,
+  deleteExpense,
+  duplicateExpense,
+  updateExpense,
+} from 'actions/expense';
 
+import { RowWrapper } from 'components/row-wrapper';
 import { DatePicker } from 'components/table/date-picker';
 import { TableInput } from 'components/table/input';
+
+import { getLaterDate } from 'lib/utils';
 
 type ExpenseSelect = z.infer<typeof selectExpenseSchema>;
 
@@ -27,10 +35,18 @@ type RowProps = {
 
 export const Row = ({
   expense: {
+    updatedAt,
+    createdAt,
     financialAttributeId,
     expenseId,
     name,
-    financialAttribute: { raisePercentage, startingMonth, endingMonth, amount },
+    financialAttribute: {
+      raisePercentage,
+      startingMonth,
+      endingMonth,
+      amount,
+      updatedAt: financialAttributeUpdatedAt,
+    },
   },
 }: RowProps) => {
   const [expense, setExpense] = useState({
@@ -120,51 +136,61 @@ export const Row = ({
   );
 
   return (
-    <div className="grid grid-cols-6">
-      <TableInput
-        className="col-span-2"
-        value={expense.name ?? ''}
-        onChange={(e) => {
-          setExpense({ ...expense, name: e.target.value });
-          debounceExpenseChange('name', e.target.value);
-        }}
-      />
-      <DatePicker
-        date={expense.startingMonth ?? undefined}
-        setDate={(date) => {
-          if (!date) return;
+    <RowWrapper
+      updatedAt={getLaterDate(
+        new Date(updatedAt ?? createdAt),
+        new Date(financialAttributeUpdatedAt ?? createdAt),
+      )}
+      deleteAction={() => deleteExpense(expenseId)}
+      clearAction={() => clearExpense(expenseId)}
+      duplicateAction={() => duplicateExpense(expenseId)}
+    >
+      <div className="grid grid-cols-6">
+        <TableInput
+          className="col-span-2"
+          value={expense.name ?? ''}
+          onChange={(e) => {
+            setExpense({ ...expense, name: e.target.value });
+            debounceExpenseChange('name', e.target.value);
+          }}
+        />
+        <DatePicker
+          date={expense.startingMonth ?? undefined}
+          setDate={(date) => {
+            if (!date) return;
 
-          setExpense({ ...expense, startingMonth: date });
-          debounceExpenseChange('startingMonth', date);
-        }}
-      />
-      <DatePicker
-        date={expense.endingMonth ?? undefined}
-        setDate={(date) => {
-          if (!date) return;
+            setExpense({ ...expense, startingMonth: date });
+            debounceExpenseChange('startingMonth', date);
+          }}
+        />
+        <DatePicker
+          date={expense.endingMonth ?? undefined}
+          setDate={(date) => {
+            if (!date) return;
 
-          setExpense({ ...expense, endingMonth: date });
-          debounceExpenseChange('endingMonth', date);
-        }}
-      />
-      <TableInput
-        type="number"
-        value={expense.amount ?? ''}
-        onChange={(e) => {
-          setExpense({ ...expense, amount: e.target.value });
-          debounceExpenseChange('amount', e.target.value);
-        }}
-        icon={Euro}
-      />
-      <TableInput
-        type="number"
-        value={expense.raisePercentage ?? ''}
-        onChange={(e) => {
-          setExpense({ ...expense, raisePercentage: e.target.value });
-          debounceExpenseChange('raisePercentage', e.target.value);
-        }}
-        icon={Percent}
-      />
-    </div>
+            setExpense({ ...expense, endingMonth: date });
+            debounceExpenseChange('endingMonth', date);
+          }}
+        />
+        <TableInput
+          type="number"
+          value={expense.amount ?? ''}
+          onChange={(e) => {
+            setExpense({ ...expense, amount: e.target.value });
+            debounceExpenseChange('amount', e.target.value);
+          }}
+          icon={Euro}
+        />
+        <TableInput
+          type="number"
+          value={expense.raisePercentage ?? ''}
+          onChange={(e) => {
+            setExpense({ ...expense, raisePercentage: e.target.value });
+            debounceExpenseChange('raisePercentage', e.target.value);
+          }}
+          icon={Percent}
+        />
+      </div>
+    </RowWrapper>
   );
 };

@@ -78,6 +78,57 @@ export const updateInventoryItem = async (payload: UpdateInventoryItem) => {
   revalidatePath('/[organization]/imovina-i-oprema', 'page');
 };
 
+export const deleteInventoryItem = async (inventoryItemId: string) => {
+  await db
+    .delete(inventoryItems)
+    .where(eq(inventoryItems.inventoryItemId, inventoryItemId));
+
+  revalidatePath('/[organization]/imovina-i-oprema', 'page');
+};
+
+export const clearInventoryItem = async (inventoryItemId: string) => {
+  await db
+    .update(inventoryItems)
+    .set({
+      amortizationLength: null,
+      name: null,
+      startingMonth: null,
+      value: null,
+    })
+    .where(eq(inventoryItems.inventoryItemId, inventoryItemId));
+
+  revalidatePath('/[organization]/imovina-i-oprema', 'page');
+};
+
+export const duplicateInventoryItem = async (inventoryItemId: string) => {
+  const inventoryItem = await db.query.inventoryItems.findFirst({
+    where: eq(inventoryItems.inventoryItemId, inventoryItemId),
+  });
+
+  if (!inventoryItem) {
+    throw new Error('Inventurna stavka nije pronađena.');
+  }
+
+  const newInventoryItem = await db
+    .insert(inventoryItems)
+    .values({
+      teamId: inventoryItem.teamId,
+      amortizationLength: inventoryItem.amortizationLength,
+      name: inventoryItem.name,
+      startingMonth: inventoryItem.startingMonth,
+      value: inventoryItem.value,
+    })
+    .returning();
+
+  if (!newInventoryItem.length) {
+    throw new Error('Neuspjelo dupliciranje inventurne stavke.');
+  }
+
+  revalidatePath('/[organization]/imovina-i-oprema', 'page');
+
+  return newInventoryItem[0];
+};
+
 const inventoryValuesSchema = z.array(
   z.object({
     team_name: z.string(),

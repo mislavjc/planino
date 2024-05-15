@@ -135,6 +135,9 @@ export const loans = pgTable(
   {
     loanId: uuid('loan_id').notNull().primaryKey().defaultRandom(),
     createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { mode: 'date' }).$onUpdate(
+      () => new Date(),
+    ),
     organizationId: uuid('organization_id')
       .notNull()
       .references(() => organizations.organizationId, {
@@ -192,6 +195,9 @@ export const financialAttributes = pgTable('financial_attribute', {
     .primaryKey()
     .defaultRandom(),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'date' }).$onUpdate(
+    () => new Date(),
+  ),
   startingMonth: timestamp('starting_month', { mode: 'date' }),
   amount: numeric('amount'),
   raisePercentage: numeric('raise_percentage'),
@@ -246,6 +252,9 @@ export const expenses = pgTable(
   {
     expenseId: uuid('expense_id').notNull().primaryKey().defaultRandom(),
     createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+    updatedAt: timestamp('updated_at', { mode: 'date' }).$onUpdate(
+      () => new Date(),
+    ),
     name: text('name'),
     financialAttributeId: uuid('financial_attribute_id')
       .notNull()
@@ -309,6 +318,9 @@ export const inventoryItems = pgTable('inventory_item', {
     .primaryKey()
     .defaultRandom(),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'date' }).$onUpdate(
+    () => new Date(),
+  ),
   name: text('name'),
   value: numeric('value'),
   startingMonth: timestamp('starting_month', { mode: 'date' }),
@@ -419,6 +431,9 @@ export const productGroupsRelations = relations(
 export const products = pgTable('product', {
   productId: uuid('product_id').notNull().primaryKey().defaultRandom(),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'date' }).$onUpdate(
+    () => new Date(),
+  ),
   name: text('name'),
   unitType: text('unit_type'),
   productGroupId: uuid('product_group_id')
@@ -441,6 +456,10 @@ export const productsRelations = relations(products, ({ one, many }) => ({
 }));
 
 export const productPriceHistory = pgTable('product_price_history', {
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { mode: 'date' }).$onUpdate(
+    () => new Date(),
+  ),
   productPriceId: uuid('product_price_history_id')
     .notNull()
     .primaryKey()

@@ -6,10 +6,14 @@ import {
   selectProductSchema,
 } from '@planino/database/schema';
 import { addMonths } from 'date-fns';
+import { Trash } from 'lucide-react';
 import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 
-import { createProductPriceHistory } from 'actions/product';
+import {
+  createProductPriceHistory,
+  deleteProductPriceHistory,
+} from 'actions/product';
 import { updateProduct } from 'actions/product';
 
 import { SubmitButton } from 'components/submit-button';
@@ -75,21 +79,35 @@ export const Entry = ({ product }: EntryProps) => {
           priceHistory={priceHistory}
         />
       ))}
-      <form action={createProductPriceHistory} className="col-span-4">
-        <input type="hidden" value={productState.productId} name="productId" />
-        <input
-          type="hidden"
-          value={nextMonth.toDateString()}
-          name="recordedMonth"
-        />
-        <SubmitButton
-          disabled={
-            !lastPrice.unitPrice ||
-            !lastPrice.unitCount ||
-            !lastPrice.unitExpense
-          }
-        />
-      </form>
+      <div className="col-span-4 grid grid-cols-4">
+        <form action={createProductPriceHistory} className="col-span-3">
+          <input
+            type="hidden"
+            value={productState.productId}
+            name="productId"
+          />
+          <input
+            type="hidden"
+            value={nextMonth.toDateString()}
+            name="recordedMonth"
+          />
+          <SubmitButton
+            disabled={
+              !lastPrice.unitPrice ||
+              !lastPrice.unitCount ||
+              !lastPrice.unitExpense
+            }
+          />
+        </form>
+        <form action={deleteProductPriceHistory} className="col-span-1">
+          <input
+            type="hidden"
+            value={lastPrice.productPriceId}
+            name="productPriceId"
+          />
+          <SubmitButton icon={Trash}>Obriši cijenu</SubmitButton>
+        </form>
+      </div>
     </div>
   );
 };

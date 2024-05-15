@@ -50,6 +50,13 @@
       "when": 1715704968803,
       "tag": "0006_icy_iron_monger",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1715777149989,
+      "tag": "0007_flowery_boom_boom",
+      "breakpoints": true
     }
   ]
 }
