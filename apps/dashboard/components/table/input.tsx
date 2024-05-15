@@ -16,17 +16,17 @@ const TableInput = React.forwardRef<HTMLInputElement, TableInputProps>(
     return (
       <div className={cn('group relative', className)}>
         {Icon && (
-          <div className="absolute right-1 top-1/3">
+          <div className="absolute right-2 top-1/3">
             <Icon size={14} />
           </div>
         )}
         <input
           type={type}
           className={cn(
-            'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+            'flex h-10 w-full rounded-md border border-input bg-background px-6 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
             inputClassName,
             {
-              'pr-5': Icon,
+              'pr-6': Icon,
               'text-right font-mono': type === 'number',
             },
           )}
