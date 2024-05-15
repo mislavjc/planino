@@ -1,4 +1,6 @@
 {
+  "id": "06267b0a-8134-436e-8c96-948704334fee",
+  "prevId": "173dd834-f38b-44f2-b63b-a7c2d7265681",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -78,15 +80,15 @@
         "account_userId_user_id_fk": {
           "name": "account_userId_user_id_fk",
           "tableFrom": "account",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -130,6 +132,13 @@
           "primaryKey": false,
           "notNull": true
         },
+        "type": {
+          "name": "type",
+          "type": "block_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
         "order": {
           "name": "order",
           "type": "integer",
@@ -148,15 +157,15 @@
         "block_business_plan_id_business_plan_business_plan_id_fk": {
           "name": "block_business_plan_id_business_plan_business_plan_id_fk",
           "tableFrom": "block",
+          "tableTo": "business_plan",
           "columnsFrom": [
             "business_plan_id"
           ],
-          "tableTo": "business_plan",
           "columnsTo": [
             "business_plan_id"
           ],
-          "onUpdate": "cascade",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -210,15 +219,15 @@
         "business_plan_organization_id_organization_organization_id_fk": {
           "name": "business_plan_organization_id_organization_organization_id_fk",
           "tableFrom": "business_plan",
+          "tableTo": "organization",
           "columnsFrom": [
             "organization_id"
           ],
-          "tableTo": "organization",
           "columnsTo": [
             "organization_id"
           ],
-          "onUpdate": "cascade",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -302,6 +311,12 @@
           "notNull": true,
           "default": "now()"
         },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
         "name": {
           "name": "name",
           "type": "text",
@@ -346,54 +361,54 @@
         "expense_financial_attribute_id_financial_attribute_financial_attribute_id_fk": {
           "name": "expense_financial_attribute_id_financial_attribute_financial_attribute_id_fk",
           "tableFrom": "expense",
+          "tableTo": "financial_attribute",
           "columnsFrom": [
             "financial_attribute_id"
           ],
-          "tableTo": "financial_attribute",
           "columnsTo": [
             "financial_attribute_id"
           ],
-          "onUpdate": "cascade",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         },
         "expense_expense_frequency_id_expense_frequency_expense_frequency_id_fk": {
           "name": "expense_expense_frequency_id_expense_frequency_expense_frequency_id_fk",
           "tableFrom": "expense",
+          "tableTo": "expense_frequency",
           "columnsFrom": [
             "expense_frequency_id"
           ],
-          "tableTo": "expense_frequency",
           "columnsTo": [
             "expense_frequency_id"
           ],
-          "onUpdate": "cascade",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         },
         "expense_expense_type_id_expense_type_expense_type_id_fk": {
           "name": "expense_expense_type_id_expense_type_expense_type_id_fk",
           "tableFrom": "expense",
+          "tableTo": "expense_type",
           "columnsFrom": [
             "expense_type_id"
           ],
-          "tableTo": "expense_type",
           "columnsTo": [
             "expense_type_id"
           ],
-          "onUpdate": "cascade",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         },
         "expense_team_id_team_team_id_fk": {
           "name": "expense_team_id_team_team_id_fk",
           "tableFrom": "expense",
+          "tableTo": "team",
           "columnsFrom": [
             "team_id"
           ],
-          "tableTo": "team",
           "columnsTo": [
             "team_id"
           ],
-          "onUpdate": "cascade",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -416,6 +431,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         },
         "starting_month": {
           "name": "starting_month",
@@ -465,6 +486,12 @@
           "notNull": true,
           "default": "now()"
         },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
         "name": {
           "name": "name",
           "type": "text",
@@ -501,15 +528,15 @@
         "inventory_item_team_id_team_team_id_fk": {
           "name": "inventory_item_team_id_team_team_id_fk",
           "tableFrom": "inventory_item",
+          "tableTo": "team",
           "columnsFrom": [
             "team_id"
           ],
-          "tableTo": "team",
           "columnsTo": [
             "team_id"
           ],
-          "onUpdate": "cascade",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -532,6 +559,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         },
         "organization_id": {
           "name": "organization_id",
@@ -583,15 +616,15 @@
         "loan_organization_id_organization_organization_id_fk": {
           "name": "loan_organization_id_organization_organization_id_fk",
           "tableFrom": "loan",
+          "tableTo": "organization",
           "columnsFrom": [
             "organization_id"
           ],
-          "tableTo": "organization",
           "columnsTo": [
             "organization_id"
           ],
-          "onUpdate": "cascade",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -621,6 +654,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "user_id": {
           "name": "user_id",
           "type": "text",
@@ -629,10 +668,10 @@
         }
       },
       "indexes": {
-        "organizations_name_key": {
-          "name": "organizations_name_key",
+        "organizations_slug_key": {
+          "name": "organizations_slug_key",
           "columns": [
-            "name"
+            "slug"
           ],
           "isUnique": true
         }
@@ -641,15 +680,209 @@
         "organization_user_id_user_id_fk": {
           "name": "organization_user_id_user_id_fk",
           "tableFrom": "organization",
+          "tableTo": "user",
           "columnsFrom": [
             "user_id"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "organization_slug_unique": {
+          "name": "organization_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      }
+    },
+    "public.product_group": {
+      "name": "product_group",
+      "schema": "",
+      "columns": {
+        "product_group_id": {
+          "name": "product_group_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "product_group_organization_id_organization_organization_id_fk": {
+          "name": "product_group_organization_id_organization_organization_id_fk",
+          "tableFrom": "product_group",
+          "tableTo": "organization",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "organization_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.product_price_history": {
+      "name": "product_price_history",
+      "schema": "",
+      "columns": {
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "product_price_history_id": {
+          "name": "product_price_history_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "product_id": {
+          "name": "product_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "recorded_month": {
+          "name": "recorded_month",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unit_count": {
+          "name": "unit_count",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unit_expense": {
+          "name": "unit_expense",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unit_price": {
+          "name": "unit_price",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "product_price_history_product_id_product_product_id_fk": {
+          "name": "product_price_history_product_id_product_product_id_fk",
+          "tableFrom": "product_price_history",
+          "tableTo": "product",
+          "columnsFrom": [
+            "product_id"
+          ],
+          "columnsTo": [
+            "product_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.product": {
+      "name": "product",
+      "schema": "",
+      "columns": {
+        "product_id": {
+          "name": "product_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unit_type": {
+          "name": "unit_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "product_group_id": {
+          "name": "product_group_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "product_product_group_id_product_group_product_group_id_fk": {
+          "name": "product_product_group_id_product_group_product_group_id_fk",
+          "tableFrom": "product",
+          "tableTo": "product_group",
+          "columnsFrom": [
+            "product_group_id"
+          ],
+          "columnsTo": [
+            "product_group_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -683,15 +916,15 @@
         "session_userId_user_id_fk": {
           "name": "session_userId_user_id_fk",
           "tableFrom": "session",
+          "tableTo": "user",
           "columnsFrom": [
             "userId"
           ],
-          "tableTo": "user",
           "columnsTo": [
             "id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -733,15 +966,15 @@
         "team_organization_id_organization_organization_id_fk": {
           "name": "team_organization_id_organization_organization_id_fk",
           "tableFrom": "team",
+          "tableTo": "organization",
           "columnsFrom": [
             "organization_id"
           ],
-          "tableTo": "organization",
           "columnsTo": [
             "organization_id"
           ],
-          "onUpdate": "cascade",
-          "onDelete": "cascade"
+          "onDelete": "cascade",
+          "onUpdate": "cascade"
         }
       },
       "compositePrimaryKeys": {},
@@ -836,10 +1069,8 @@
   },
   "schemas": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "id": "4afaa974-20c9-42a8-8044-a6fb1847e85e",
-  "prevId": "2fbc9eda-a8f6-49c8-bc45-cac6e854306f"
+    "tables": {}
+  }
 }
