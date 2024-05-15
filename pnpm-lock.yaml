@@ -196,6 +196,9 @@ importers:
         specifier: ^3.23.8
         version: 3.23.8
     devDependencies:
+      '@planino/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
       '@types/node':
         specifier: ^20.12.12
         version: 20.12.12
@@ -211,9 +214,6 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-custom
       eslint-config-next:
         specifier: 14.2.3
         version: 14.2.3(eslint@8.57.0)(typescript@5.4.5)
@@ -272,6 +272,9 @@ importers:
       '@cloudflare/workers-types':
         specifier: ^4.20240512.0
         version: 4.20240512.0
+      '@planino/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config-custom
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.9.0
         version: 7.9.0(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)(typescript@5.4.5)
@@ -281,9 +284,6 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-custom
       wrangler:
         specifier: ^3.55.0
         version: 3.55.0(@cloudflare/workers-types@4.20240512.0)

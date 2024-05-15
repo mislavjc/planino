@@ -1,4 +1,4 @@
 {
   "root": true,
-  "extends": ["custom/next", "custom/import-sort", "custom/base"]
+  "extends": ["@planino/eslint-config/next.js", "@planino/eslint-config/import-sort.js", "@planino/eslint-config/base.js"]
 }

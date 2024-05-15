@@ -6,8 +6,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "custom/import-sort",
-    "custom/base"
+    "@planino/eslint-config/import-sort.js",
+    "@planino/eslint-config/base.js"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
