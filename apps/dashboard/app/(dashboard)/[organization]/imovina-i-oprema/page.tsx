@@ -42,7 +42,7 @@ const InventroyAndEquipmentPage = async ({
                   name: team.name,
                   items: team.inventoryItems.map((inventoryItem) => (
                     <Row
-                      key={inventoryItem.inventoryItemId}
+                      key={`${inventoryItem.inventoryItemId}-${inventoryItem.updatedAt}`}
                       inventoryItem={inventoryItem}
                     />
                   )),
