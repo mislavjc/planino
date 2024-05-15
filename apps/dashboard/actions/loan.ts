@@ -78,6 +78,60 @@ export const updateLoan = async (payload: UpdateLoan) => {
   revalidatePath('/[organization]/otplatni-plan', 'page');
 };
 
+export const deleteLoan = async (loanId: string) => {
+  await db.delete(loans).where(eq(loans.loanId, loanId));
+
+  revalidatePath('/[organization]/imovina-i-oprema', 'page');
+};
+
+export const clearLoan = async (loanId: string) => {
+  const clearedLoan = await db
+    .update(loans)
+    .set({
+      name: null,
+      interestRate: null,
+      duration: null,
+      startingMonth: null,
+      amount: null,
+    })
+    .where(eq(loans.loanId, loanId))
+    .returning();
+
+  if (!clearedLoan.length) {
+    throw new Error('Neuspjelo brisanje kredita.');
+  }
+
+  revalidatePath('/[organization]/imovina-i-oprema', 'page');
+};
+
+export const duplicateLoan = async (loanId: string) => {
+  const foundLoan = await db.query.loans.findFirst({
+    where: eq(loans.loanId, loanId),
+  });
+
+  if (!foundLoan) {
+    throw new Error('Kredit nije pronađen.');
+  }
+
+  const loan = await db
+    .insert(loans)
+    .values({
+      organizationId: foundLoan.organizationId,
+      name: foundLoan.name,
+      interestRate: foundLoan.interestRate,
+      duration: foundLoan.duration,
+      startingMonth: foundLoan.startingMonth,
+      amount: foundLoan.amount,
+    })
+    .returning();
+
+  if (!loan.length) {
+    throw new Error('Neuspjelo dupliciranje kredita.');
+  }
+
+  revalidatePath('/[organization]/imovina-i-oprema', 'page');
+};
+
 export const getLoansForCalulation = async (organization: string) => {
   const foundOrganization = await getOrganization(organization);
 
