@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { AxisBottom, AxisLeft } from '@visx/axis';
 import { localPoint } from '@visx/event';
 import { Grid } from '@visx/grid';
@@ -10,6 +11,7 @@ import { scaleBand, scaleLinear, scaleOrdinal } from '@visx/scale';
 import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
+
 import { formatCurrency } from '../lib/utils';
 
 type TooltipData<T extends DataRecord> = {
@@ -67,7 +69,8 @@ export const BarStackChart = <T extends DataRecord>({
     scroll: true,
   });
 
-  const keys = data.length > 0 ? Object.keys(data[0]).filter((d) => d !== domainKey) : [];
+  const keys =
+    data.length > 0 ? Object.keys(data[0]).filter((d) => d !== domainKey) : [];
 
   const valueTotals = data.reduce((allTotals, currentYear) => {
     const totalValue = keys.reduce((dailyTotal, k) => {

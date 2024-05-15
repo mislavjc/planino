@@ -297,6 +297,9 @@ importers:
       '@chromatic-com/storybook':
         specifier: ^1.4.0
         version: 1.4.0(react@18.3.1)
+      '@planino/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config-custom
       '@storybook/addon-essentials':
         specifier: ^8.1.1
         version: 8.1.1(@types/react-dom@18.3.0)(@types/react@18.3.2)(prettier@3.2.5)(react-dom@18.3.1)(react@18.3.1)
@@ -330,9 +333,21 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^7.9.0
+        version: 7.9.0(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)(typescript@5.4.5)
+      '@typescript-eslint/parser':
+        specifier: ^7.9.0
+        version: 7.9.0(eslint@8.57.0)(typescript@5.4.5)
       autoprefixer:
         specifier: ^10.4.19
         version: 10.4.19(postcss@8.4.38)
+      eslint:
+        specifier: ^8.57.0
+        version: 8.57.0
+      eslint-plugin-react:
+        specifier: ^7.34.1
+        version: 7.34.1(eslint@8.57.0)
       postcss:
         specifier: ^8.4.38
         version: 8.4.38
