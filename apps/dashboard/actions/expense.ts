@@ -156,6 +156,76 @@ export const updateExpense = async (payload: UpdateExpenseProps) => {
   revalidatePath('/[organization]/operativni-troskovi', 'page');
 };
 
+export const deleteExpense = async (expenseId: string) => {
+  await db.delete(expenses).where(eq(expenses.expenseId, expenseId));
+
+  revalidatePath('/[organization]/operativni-troskovi', 'page');
+};
+
+export const clearExpense = async (expenseId: string) => {
+  const newFinancialAttribute = await db
+    .insert(financialAttributes)
+    .values({})
+    .returning();
+
+  const clearedExpense = await db
+    .update(expenses)
+    .set({
+      name: '',
+      financialAttributeId: newFinancialAttribute[0].financialAttributeId,
+    })
+    .where(eq(expenses.expenseId, expenseId))
+    .returning();
+
+  if (!clearedExpense.length) {
+    throw new Error('Neuspjelo brisanje financijskog atributa.');
+  }
+
+  revalidatePath('/[organization]/operativni-troskovi', 'page');
+};
+
+export const duplicateExpense = async (expenseId: string) => {
+  const foundExpense = await db.query.expenses.findFirst({
+    where: eq(expenses.expenseId, expenseId),
+    with: {
+      financialAttribute: true,
+    },
+  });
+
+  if (!foundExpense) {
+    throw new Error('Trošak nije pronađen.');
+  }
+
+  const financialAttribute = await db
+    .insert(financialAttributes)
+    .values({
+      startingMonth: foundExpense.financialAttribute.startingMonth,
+      endingMonth: foundExpense.financialAttribute.endingMonth,
+      amount: foundExpense.financialAttribute.amount,
+      raisePercentage: foundExpense.financialAttribute.raisePercentage,
+    })
+    .returning();
+
+  const newExpense = await db
+    .insert(expenses)
+    .values({
+      teamId: foundExpense.teamId,
+      name: foundExpense.name,
+      financialAttributeId: financialAttribute[0].financialAttributeId,
+      expenseFrequencyId: foundExpense.expenseFrequencyId,
+      expenseTypeId: foundExpense.expenseTypeId,
+    })
+    .returning();
+
+  if (!newExpense.length) {
+    throw new Error('Neuspjelo dupliciranje troška.');
+  }
+
+  revalidatePath('/[organization]/operativni-troskovi', 'page');
+
+  return newExpense[0];
+};
+
 const yearlyExpenseAggregationSchema = z.array(
   z.object({
     team_name: z.string(),

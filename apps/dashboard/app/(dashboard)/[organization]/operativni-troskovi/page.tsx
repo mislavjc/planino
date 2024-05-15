@@ -24,7 +24,7 @@ const OperationalExpensesPage = async ({
         <CardHeader>
           <TypographyH3>Operativni troškovi</TypographyH3>
         </CardHeader>
-        <CardContent className="overflow-x-auto">
+        <CardContent>
           <ScrollArea className="min-w-[40rem]">
             <TeamInputTable
               header={[
@@ -39,7 +39,10 @@ const OperationalExpensesPage = async ({
                   teamId: team.teamId,
                   name: team.name,
                   items: team.expenses.map((expense) => (
-                    <Row key={expense.expenseId} expense={expense} />
+                    <Row
+                      key={`${expense.expenseId}-${expense.updatedAt}`}
+                      expense={expense}
+                    />
                   )),
                   add: (
                     <AddRow
