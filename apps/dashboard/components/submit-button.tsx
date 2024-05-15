@@ -1,7 +1,7 @@
 'use client';
 
 import { useFormStatus } from 'react-dom';
-import { Loader2, Plus } from 'lucide-react';
+import { Loader2, LucideIcon, Plus } from 'lucide-react';
 
 import { cn } from 'lib/utils';
 
@@ -13,10 +13,12 @@ export const SubmitButton = ({
   className,
   children = 'Dodaj redak',
   disabled,
+  icon: Icon = Plus,
 }: {
   className?: string;
   children?: string;
   disabled?: boolean;
+  icon?: LucideIcon;
 }) => {
   const status = useFormStatus();
 
@@ -32,7 +34,7 @@ export const SubmitButton = ({
         <Loader2 className="mr-2 size-4 animate-spin" />
       ) : (
         <div className="flex items-center gap-2">
-          <Plus size={16} />
+          <Icon className="size-4" />
           <TypographyP>{children}</TypographyP>
         </div>
       )}

@@ -146,6 +146,29 @@ export const updateProductPriceHistory = async (
   revalidatePath('/[organization]/cijena-i-kolicina', 'page');
 };
 
+const deleteProductPriceHistorySchema = z.object({
+  productPriceId: z.string(),
+});
+
+export const deleteProductPriceHistory = async (formData: FormData) => {
+  const parsedFormData = deleteProductPriceHistorySchema.parse({
+    productPriceId: formData.get('productPriceId'),
+  });
+
+  const deletedProductPriceHistory = await db
+    .delete(productPriceHistory)
+    .where(
+      eq(productPriceHistory.productPriceId, parsedFormData.productPriceId),
+    )
+    .returning();
+
+  if (!deletedProductPriceHistory.length) {
+    throw new Error('Neuspjelo brisanje povijesti cijena proizvoda');
+  }
+
+  revalidatePath('/[organization]/cijena-i-kolicina', 'page');
+};
+
 export const updateProduct = async (
   productId: string,
   {
