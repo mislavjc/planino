@@ -73,3 +73,13 @@ export const getRandomColor = (text: string, opacity?: number) => {
 
   return color;
 };
+
+/**
+ * Returns the later date between two given dates.
+ * @param date1 - The first date.
+ * @param date2 - The second date.
+ * @returns The later date.
+ */
+export const getLaterDate = (date1: Date, date2: Date) => {
+  return date1 > date2 ? date1 : date2;
+};
