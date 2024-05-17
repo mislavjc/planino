@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v0.1.5
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.1.4...v0.1.5)
+
+### 🚀 Enhancements
+
+- Rename shared eslint config ([090edf1](https://github.com/mislavjc/planino/commit/090edf1))
+- Add charts package with storybook ([a4d440b](https://github.com/mislavjc/planino/commit/a4d440b))
+- Use new charts package ([d39b0be](https://github.com/mislavjc/planino/commit/d39b0be))
+- Add eslint ([82b939b](https://github.com/mislavjc/planino/commit/82b939b))
+- Extract tsconfig ([49dab23](https://github.com/mislavjc/planino/commit/49dab23))
+- Extract tailwind config ([96e886c](https://github.com/mislavjc/planino/commit/96e886c))
+- Add more changelog commands ([0c0df47](https://github.com/mislavjc/planino/commit/0c0df47))
+
+### 🏡 Chore
+
+- Rename eslint config folder ([be6fcc9](https://github.com/mislavjc/planino/commit/be6fcc9))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.1.4
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.1.3...v0.1.4)
