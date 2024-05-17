@@ -22,6 +22,7 @@
   "devDependencies": {
     "@chromatic-com/storybook": "^1.4.0",
     "@planino/eslint-config": "workspace:*",
+    "@planino/tailwind-config": "workspace:*",
     "@planino/typescript-config": "workspace:*",
     "@storybook/addon-essentials": "^8.1.1",
     "@storybook/addon-interactions": "^8.1.1",

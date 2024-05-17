@@ -153,9 +153,6 @@ importers:
       tailwind-merge:
         specifier: ^2.3.0
         version: 2.3.0
-      tailwindcss-animate:
-        specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.3)
       tiptap-extension-auto-joiner:
         specifier: ^0.1.3
         version: 0.1.3
@@ -175,6 +172,9 @@ importers:
       '@planino/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
+      '@planino/tailwind-config':
+        specifier: workspace:*
+        version: link:../../packages/tailwind-config
       '@planino/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -306,6 +306,9 @@ importers:
       '@planino/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config-custom
+      '@planino/tailwind-config':
+        specifier: workspace:*
+        version: link:../tailwind-config
       '@planino/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
@@ -406,6 +409,22 @@ importers:
       eslint-plugin-tailwindcss:
         specifier: ^3.15.1
         version: 3.15.1(tailwindcss@3.4.3)
+
+  packages/tailwind-config:
+    dependencies:
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@3.4.3)
+    devDependencies:
+      '@planino/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^20.12.12
+        version: 20.12.12
+      tailwindcss:
+        specifier: ^3.4.3
+        version: 3.4.3
 
   packages/typescript-config: {}
 
