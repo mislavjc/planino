@@ -1,6 +1,7 @@
+import { BarStackChart } from '@planino/charts';
+
 import { getYearlyExpenseAggregation } from 'actions/expense';
 
-import { BarStackChart } from 'components/@charts/bar-stack';
 import { TypographyH4 } from 'components/ui/typography';
 
 import { transformAggregateValues } from 'lib/charts';

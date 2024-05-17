@@ -1,6 +1,6 @@
-import { getProductAggregations } from 'actions/product';
+import { BarStackChart } from '@planino/charts';
 
-import { BarStackChart } from 'components/@charts/bar-stack';
+import { getProductAggregations } from 'actions/product';
 
 export const Charts = async ({
   organization,

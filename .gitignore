@@ -45,3 +45,4 @@ wrangler.toml
 
 # VSCode
 .vscode
+*storybook.log

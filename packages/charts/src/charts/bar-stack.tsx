@@ -12,7 +12,7 @@ import { BarStack } from '@visx/shape';
 import { SeriesPoint } from '@visx/shape/lib/types';
 import { defaultStyles, useTooltip, useTooltipInPortal } from '@visx/tooltip';
 
-import { cn, formatCurrency } from 'lib/utils';
+import { formatCurrency } from '../lib/utils';
 
 type TooltipData<T extends DataRecord> = {
   bar: SeriesPoint<T>;
@@ -29,7 +29,6 @@ type DataRecord = Record<string, string>;
 
 export type BarStackProps<T extends DataRecord> = {
   data: T[];
-  className?: string;
   domainKey: keyof T;
 };
 
@@ -55,7 +54,6 @@ const tooltipStyles = {
 
 export const BarStackChart = <T extends DataRecord>({
   data,
-  className,
   domainKey,
 }: BarStackProps<T>) => {
   const {
@@ -71,7 +69,8 @@ export const BarStackChart = <T extends DataRecord>({
     scroll: true,
   });
 
-  const keys = Object.keys(data[0]).filter((d) => d !== domainKey);
+  const keys =
+    data.length > 0 ? Object.keys(data[0]).filter((d) => d !== domainKey) : [];
 
   const valueTotals = data.reduce((allTotals, currentYear) => {
     const totalValue = keys.reduce((dailyTotal, k) => {
@@ -111,7 +110,7 @@ export const BarStackChart = <T extends DataRecord>({
   let tooltipTimeout: number;
 
   return (
-    <ParentSize className={cn('relative mt-4', className)}>
+    <ParentSize className="relative mt-4">
       {(parent) => {
         const { width, height } = parent;
 

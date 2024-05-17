@@ -11,6 +11,7 @@ const nextConfig = {
       },
     ],
   },
+  transpilePackages: ['@planino/charts'],
 };
 
 export default withPlausibleProxy()(nextConfig);
