@@ -175,6 +175,9 @@ importers:
       '@planino/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
+      '@planino/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@types/node':
         specifier: ^20.12.12
         version: 20.12.12
@@ -251,6 +254,9 @@ importers:
       '@planino/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config-custom
+      '@planino/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@typescript-eslint/eslint-plugin':
         specifier: ^7.9.0
         version: 7.9.0(@typescript-eslint/parser@7.9.0)(eslint@8.57.0)(typescript@5.4.5)
@@ -300,6 +306,9 @@ importers:
       '@planino/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config-custom
+      '@planino/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@storybook/addon-essentials':
         specifier: ^8.1.1
         version: 8.1.1(@types/react-dom@18.3.0)(@types/react@18.3.2)(prettier@3.2.5)(react-dom@18.3.1)(react@18.3.1)
@@ -397,6 +406,8 @@ importers:
       eslint-plugin-tailwindcss:
         specifier: ^3.15.1
         version: 3.15.1(tailwindcss@3.4.3)
+
+  packages/typescript-config: {}
 
 packages:
 

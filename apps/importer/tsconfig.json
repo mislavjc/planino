@@ -1,4 +1,5 @@
 {
+  "extends": "@planino/typescript-config/base.json",
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
