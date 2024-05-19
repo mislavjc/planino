@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.1.6
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.1.5...v0.1.6)
+
+### 🚀 Enhancements
+
+- Update storybook build command ([ca6e87e](https://github.com/mislavjc/planino/commit/ca6e87e))
+- Update novel version ([dc03dce](https://github.com/mislavjc/planino/commit/dc03dce))
+
+### 🏡 Chore
+
+- **release:** V0.1.5 ([167df71](https://github.com/mislavjc/planino/commit/167df71))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.1.5
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.1.4...v0.1.5)
