@@ -171,7 +171,7 @@ export const insertLoanSchema = createInsertSchema(loans);
 export const teams = pgTable('team', {
   teamId: uuid('team_id').notNull().primaryKey().defaultRandom(),
   createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
-  name: text('name').notNull(),
+  name: text('name'),
   organizationId: uuid('organization_id')
     .notNull()
     .references(() => organizations.organizationId, {

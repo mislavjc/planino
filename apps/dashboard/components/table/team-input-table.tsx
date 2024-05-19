@@ -19,12 +19,14 @@ type TeamInputTableProps = {
     add: React.ReactNode;
   }>;
   onHeaderChange?: (_value: { id: string; value: string }) => Promise<void>;
+  headerPlaceholder?: string;
 };
 
 export const TeamInputTable = ({
   header,
   teams,
   onHeaderChange,
+  headerPlaceholder,
 }: TeamInputTableProps) => {
   const headerColumnWidth = header.reduce(
     (acc, column) => acc + (column.width || 1),
@@ -60,6 +62,7 @@ export const TeamInputTable = ({
                 onChange={onHeaderChange}
                 value={team.name}
                 id={team.teamId}
+                placeholder={headerPlaceholder}
               />
             ) : (
               <div className="bg-muted px-4 py-2 font-mono text-sm uppercase">

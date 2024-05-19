@@ -1,6 +1,11 @@
 import { Suspense } from 'react';
 
-import { createMember, getTeams, updateTeamName } from 'actions/team';
+import {
+  createMember,
+  createTeam,
+  getTeams,
+  updateTeamName,
+} from 'actions/team';
 
 import { Charts } from 'components/@teams/charts';
 import { Overview } from 'components/@teams/overview';
@@ -43,10 +48,11 @@ const TeamsPage = async ({
                   name: value,
                 });
               }}
+              headerPlaceholder="Naziv odjela..."
               teams={teams.map((team) => {
                 return {
                   teamId: team.teamId,
-                  name: team.name,
+                  name: team.name || '',
                   items: team.members.map((member) => (
                     <Row
                       key={`${member.memberId}-${member.updatedAt}`}
@@ -68,6 +74,16 @@ const TeamsPage = async ({
                 };
               })}
             />
+            <AddRow
+              action={async () => {
+                'use server';
+
+                await createTeam(organization);
+              }}
+              className="mt-4"
+            >
+              Dodaj odjel
+            </AddRow>
             <ScrollBar />
           </ScrollArea>
         </CardContent>

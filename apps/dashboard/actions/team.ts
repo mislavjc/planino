@@ -28,13 +28,12 @@ export const getTeams = async (organization: string) => {
   return foundTeams;
 };
 
-export const createTeam = async (organization: string, name: string) => {
+export const createTeam = async (organization: string) => {
   const foundOrganization = await getOrganization(organization);
 
   const team = await db
     .insert(teams)
     .values({
-      name,
       organizationId: foundOrganization.organizationId,
     })
     .returning();

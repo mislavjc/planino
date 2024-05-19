@@ -7,12 +7,14 @@ type EditableHeaderProps = {
   value: string;
   id: string;
   onChange: (_value: { id: string; value: string }) => Promise<void>;
+  placeholder?: string;
 };
 
 export const EditableHeader = ({
   value,
   id,
   onChange,
+  placeholder,
 }: EditableHeaderProps) => {
   const [stateValue, setStateValue] = useState(value);
 
@@ -31,6 +33,7 @@ export const EditableHeader = ({
         debounceValueChange(e.target.value);
       }}
       inputClassName="bg-muted/60 px-4 py-2 font-mono text-sm uppercase"
+      placeholder={placeholder}
     />
   );
 };

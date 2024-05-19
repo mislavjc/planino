@@ -64,6 +64,13 @@
       "when": 1716116427351,
       "tag": "0008_silly_siren",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1716133357102,
+      "tag": "0009_perpetual_maggott",
+      "breakpoints": true
     }
   ]
 }
