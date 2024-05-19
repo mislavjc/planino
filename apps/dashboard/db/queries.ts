@@ -147,3 +147,92 @@ GROUP BY
 ORDER BY
     t.team_name, t.item_name;
 `;
+
+export const YEARLY_SALARY_AGREGATION = (organization_id: string) => sql`
+WITH MemberData AS (
+    SELECT
+        t.team_id,
+        m.member_id,
+        m.name AS member_name,
+        t.name AS team_name,
+        m.created_at,
+        EXTRACT(YEAR FROM m.starting_month) AS start_year,
+        EXTRACT(MONTH FROM m.starting_month) AS start_month,
+        m.ending_month,
+        m.salary AS amount,
+        m.raise_percentage
+    FROM
+        team t
+        INNER JOIN member m ON t.team_id = m.team_id
+    WHERE
+        t.organization_id = ${organization_id} AND
+        m.name IS NOT NULL AND
+        m.name <> ''
+),
+MinYear AS (
+    SELECT
+        MIN(start_year) AS min_year
+    FROM
+        MemberData
+),
+MaxYear AS (
+    SELECT
+        MAX(COALESCE(EXTRACT(YEAR FROM ending_month), EXTRACT(YEAR FROM CURRENT_DATE))) AS max_year
+    FROM
+        MemberData
+),
+MonthlySums AS (
+    SELECT
+        md.team_id,
+        md.member_id,
+        md.member_name,
+        md.team_name,
+        md.created_at,
+        md.start_year,
+        md.start_month,
+        md.ending_month,
+        md.amount,
+        md.raise_percentage,
+        gs.year,
+        CASE
+            WHEN gs.year = md.start_year AND gs.year = EXTRACT(YEAR FROM COALESCE(md.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) THEN EXTRACT(MONTH FROM COALESCE(md.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) - md.start_month + 1
+            WHEN gs.year = md.start_year THEN 12 - md.start_month + 1
+            WHEN gs.year = EXTRACT(YEAR FROM COALESCE(md.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) THEN EXTRACT(MONTH FROM COALESCE(md.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day'))
+            ELSE 12
+        END as months_in_year
+    FROM
+        MemberData md,
+        generate_series((SELECT min_year FROM MinYear), (SELECT max_year FROM MaxYear)) as gs(year)
+    WHERE
+        gs.year >= md.start_year AND 
+        (md.ending_month IS NULL OR gs.year <= EXTRACT(YEAR FROM md.ending_month))
+),
+AdjustedAmounts AS (
+    SELECT
+        ms.team_id,
+        ms.member_id,
+        ms.member_name,
+        ms.team_name,
+        ms.year,
+        ms.created_at,
+        ms.amount * ms.months_in_year * POWER(1 + COALESCE(ms.raise_percentage, 0) / 100, ms.year - ms.start_year) AS year_amount
+    FROM
+        MonthlySums ms
+)
+SELECT
+    md.team_name,
+    md.member_name AS item_name,
+    ARRAY(
+        SELECT COALESCE(aa.year_amount, NULL)
+        FROM generate_series((SELECT min_year FROM MinYear), (SELECT max_year FROM MaxYear)) AS gs(year)
+        LEFT JOIN AdjustedAmounts aa ON aa.year = gs.year AND aa.member_id = md.member_id
+        ORDER BY gs.year
+    ) AS yearly_values,
+    md.created_at
+FROM
+    MemberData md
+GROUP BY
+    md.team_id, md.member_id, md.team_name, md.member_name, md.created_at
+ORDER BY
+    md.team_name, md.member_name, md.created_at;
+`;

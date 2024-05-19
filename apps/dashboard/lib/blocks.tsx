@@ -7,6 +7,8 @@ import { Charts as InventoryBarCharts } from 'components/@inventory/charts';
 import { Overview as InventoryOverviewTable } from 'components/@inventory/overview';
 import { Charts as LoanBarCharts } from 'components/@loans/charts';
 import { Overview as LoanOverviewTable } from 'components/@loans/overview';
+import { Charts as TeamBarCharts } from 'components/@teams/charts';
+import { Overview as TeamOverviewTable } from 'components/@teams/overview';
 
 /**
  * Retrieves the block component from the provided options.
@@ -104,6 +106,25 @@ export const getBlockOptions = async (organization: string) => {
         },
       },
     },
+    teams: {
+      label: 'Odjeli',
+      charts: {
+        bar: {
+          icon: <BarChart />,
+          label: 'Stupičasti graf',
+          description: 'Prikazuje odjele po kategorijama',
+          component: <TeamBarCharts organization={organization} />,
+        },
+      },
+      tables: {
+        yearly: {
+          icon: <Table />,
+          label: 'Godišnji pregled',
+          description: 'Prikazuje godišnje odjele po kategorijama',
+          component: <TeamOverviewTable organization={organization} />,
+        },
+      },
+    },
   };
 };
 
@@ -127,6 +148,7 @@ export const blockOptionsSchema = z.object({
   expenses: categorySchema.optional(),
   loans: categorySchema.optional(),
   inventory: categorySchema.optional(),
+  teams: categorySchema.optional(),
 });
 
 export type DbBlockOptions = z.infer<typeof blockOptionsSchema>;
