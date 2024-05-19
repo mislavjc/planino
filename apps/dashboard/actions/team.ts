@@ -109,3 +109,9 @@ export const updateMember = async (payload: UpdateMember) => {
 
   revalidatePath('/[organization]/odjeli', 'page');
 };
+
+export const deleteMember = async (memberId: string) => {
+  await db.delete(members).where(eq(members.memberId, memberId));
+
+  revalidatePath('/[organization]/odjeli', 'page');
+};
