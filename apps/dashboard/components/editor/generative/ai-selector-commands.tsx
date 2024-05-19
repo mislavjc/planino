@@ -6,7 +6,7 @@ import {
   WrapText,
 } from 'lucide-react';
 import { useEditor } from 'novel';
-import { getPrevText } from 'novel/extensions';
+import { getPrevText } from 'novel/utils';
 
 import { CommandGroup, CommandItem, CommandSeparator } from 'ui/command';
 
@@ -66,7 +66,9 @@ export const AISelectorCommands = ({ onSelect }: AISelectorCommandsProps) => {
       <CommandGroup heading="Koristi AI za više">
         <CommandItem
           onSelect={() => {
-            const text = getPrevText(editor!, { chars: 5000 });
+            const pos = editor?.state.selection.from ?? 0;
+
+            const text = getPrevText(editor!, pos);
             onSelect(text, 'continue');
           }}
           value="continue"
