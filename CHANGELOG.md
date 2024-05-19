@@ -1,6 +1,26 @@
 # Changelog
 
 
+## v0.1.7
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.1.6...v0.1.7)
+
+### 🚀 Enhancements
+
+- Add noindex to storybook ([78b0f1c](https://github.com/mislavjc/planino/commit/78b0f1c))
+
+### 🏡 Chore
+
+- **release:** V0.1.6 ([6a19cb9](https://github.com/mislavjc/planino/commit/6a19cb9))
+
+### ✅ Tests
+
+- Add react to storybook top level ([b445879](https://github.com/mislavjc/planino/commit/b445879))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.1.6
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.1.5...v0.1.6)
