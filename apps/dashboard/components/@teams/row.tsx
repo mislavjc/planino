@@ -7,7 +7,12 @@ import { toast } from 'sonner';
 import { useDebouncedCallback } from 'use-debounce';
 import { z } from 'zod';
 
-import { clearMember, deleteMember, updateMember } from 'actions/team';
+import {
+  clearMember,
+  deleteMember,
+  duplicateMember,
+  updateMember,
+} from 'actions/team';
 
 import { RowWrapper } from 'components/row-wrapper';
 import { DatePicker } from 'components/table/date-picker';
@@ -104,7 +109,7 @@ export const Row = ({
       updatedAt={new Date(updatedAt ?? createdAt)}
       deleteAction={() => deleteMember(memberId)}
       clearAction={() => clearMember(memberId)}
-      duplicateAction={() => console.log(memberId)}
+      duplicateAction={() => duplicateMember(memberId)}
     >
       <div className="grid grid-cols-7">
         <TableInput

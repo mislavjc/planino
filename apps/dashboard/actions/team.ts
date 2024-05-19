@@ -131,3 +131,32 @@ export const clearMember = async (memberId: string) => {
 
   revalidatePath('/[organization]/odjeli', 'page');
 };
+
+export const duplicateMember = async (memberId: string) => {
+  const member = await db.query.members.findFirst({
+    where: eq(members.memberId, memberId),
+  });
+
+  if (!member) {
+    throw new Error('Član nije pronađen.');
+  }
+
+  const newMember = await db
+    .insert(members)
+    .values({
+      teamId: member.teamId,
+      name: member.name,
+      role: member.role,
+      salary: member.salary,
+      raisePercentage: member.raisePercentage,
+      startingMonth: member.startingMonth,
+      endingMonth: member.endingMonth,
+    })
+    .returning();
+
+  revalidatePath('/[organization]/odjeli', 'page');
+
+  return {
+    member: newMember[0],
+  };
+};
