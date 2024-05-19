@@ -51,6 +51,23 @@ export const createTeam = async (organization: string, name: string) => {
   };
 };
 
+export const updateTeamName = async ({
+  teamId,
+  name,
+}: {
+  teamId: string;
+  name: string;
+}) => {
+  await db
+    .update(teams)
+    .set({
+      name,
+    })
+    .where(eq(teams.teamId, teamId));
+
+  revalidatePath('/[organization]/odjeli', 'page');
+};
+
 export const createMember = async ({
   organization,
   teamId,
@@ -90,5 +107,5 @@ export const updateMember = async (payload: UpdateMember) => {
     .set(parsedPayload)
     .where(eq(members.memberId, parsedPayload.memberId));
 
-  revalidatePath('/[organization]/imovina-i-oprema', 'page');
+  revalidatePath('/[organization]/odjeli', 'page');
 };

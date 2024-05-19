@@ -1,4 +1,4 @@
-import { createMember, getTeams } from 'actions/team';
+import { createMember, getTeams, updateTeamName } from 'actions/team';
 
 import { Row } from 'components/@teams/row';
 import { AddRow } from 'components/add-row';
@@ -31,6 +31,14 @@ const TeamsPage = async ({
                 { title: 'Plaća', align: 'right' },
                 { title: 'Postotak rasta g/g', align: 'right' },
               ]}
+              onHeaderChange={async ({ id, value }) => {
+                'use server';
+
+                await updateTeamName({
+                  teamId: id,
+                  name: value,
+                });
+              }}
               teams={teams.map((team) => {
                 return {
                   teamId: team.teamId,

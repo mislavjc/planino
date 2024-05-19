@@ -1,6 +1,10 @@
+'use client';
+
 import { TypographyP } from 'components/ui/typography';
 
 import { cn } from 'lib/utils';
+
+import { EditableHeader } from './editable-header';
 
 type TeamInputTableProps = {
   header: Array<{
@@ -14,9 +18,14 @@ type TeamInputTableProps = {
     items: React.ReactNode;
     add: React.ReactNode;
   }>;
+  onHeaderChange?: (_value: { id: string; value: string }) => Promise<void>;
 };
 
-export const TeamInputTable = ({ header, teams }: TeamInputTableProps) => {
+export const TeamInputTable = ({
+  header,
+  teams,
+  onHeaderChange,
+}: TeamInputTableProps) => {
   const headerColumnWidth = header.reduce(
     (acc, column) => acc + (column.width || 1),
     0,
@@ -46,9 +55,17 @@ export const TeamInputTable = ({ header, teams }: TeamInputTableProps) => {
       <div className="flex flex-col gap-4">
         {teams.map((team) => (
           <div key={team.teamId}>
-            <div className="bg-muted px-4 py-2 font-mono text-sm uppercase">
-              {team.name}
-            </div>
+            {onHeaderChange ? (
+              <EditableHeader
+                onChange={onHeaderChange}
+                value={team.name}
+                id={team.teamId}
+              />
+            ) : (
+              <div className="bg-muted px-4 py-2 font-mono text-sm uppercase">
+                {team.name}
+              </div>
+            )}
             {team.items}
             {team.add}
           </div>
