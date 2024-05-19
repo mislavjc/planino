@@ -115,3 +115,19 @@ export const deleteMember = async (memberId: string) => {
 
   revalidatePath('/[organization]/odjeli', 'page');
 };
+
+export const clearMember = async (memberId: string) => {
+  await db
+    .update(members)
+    .set({
+      name: '',
+      role: '',
+      salary: null,
+      raisePercentage: null,
+      startingMonth: null,
+      endingMonth: null,
+    })
+    .where(eq(members.memberId, memberId));
+
+  revalidatePath('/[organization]/odjeli', 'page');
+};
