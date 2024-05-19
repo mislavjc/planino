@@ -14,7 +14,7 @@ type TeamInputTableProps = {
   }>;
   teams: Array<{
     teamId: string;
-    name: string;
+    name: string | null;
     items: React.ReactNode;
     add: React.ReactNode;
   }>;
@@ -60,7 +60,7 @@ export const TeamInputTable = ({
             {onHeaderChange ? (
               <EditableHeader
                 onChange={onHeaderChange}
-                value={team.name}
+                value={team.name || ''}
                 id={team.teamId}
                 placeholder={headerPlaceholder}
               />
