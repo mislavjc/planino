@@ -217,6 +217,9 @@ export const membersRelations = relations(members, ({ one }) => ({
   }),
 }));
 
+export const selectMemberSchema = createSelectSchema(members);
+export const insertMemberSchema = createInsertSchema(members);
+
 export const financialAttributes = pgTable('financial_attribute', {
   financialAttributeId: uuid('financial_attribute_id')
     .notNull()

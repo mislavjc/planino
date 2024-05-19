@@ -1,6 +1,11 @@
-import { getTeams } from 'actions/team';
+import { createMember, getTeams } from 'actions/team';
 
-import { TeamsForm } from 'components/@teams/form';
+import { Row } from 'components/@teams/row';
+import { AddRow } from 'components/add-row';
+import { TeamInputTable } from 'components/table/team-input-table';
+import { Card, CardContent, CardHeader } from 'components/ui/card';
+import { ScrollArea, ScrollBar } from 'components/ui/scroll-area';
+import { TypographyH3 } from 'components/ui/typography';
 
 const TeamsPage = async ({
   params: { organization },
@@ -10,15 +15,51 @@ const TeamsPage = async ({
   const teams = await getTeams(organization);
 
   return (
-    <div>
-      <div className="max-w-lg">
-        {teams.map((team) => (
-          <div key={team.teamId} className="border p-4">
-            {team.name}
-          </div>
-        ))}
-      </div>
-      <TeamsForm />
+    <div className="flex flex-col gap-4">
+      <Card className="max-w-screen-xl">
+        <CardHeader>
+          <TypographyH3>Odjeli</TypographyH3>
+        </CardHeader>
+        <CardContent className="overflow-auto">
+          <ScrollArea className="min-w-[40rem]">
+            <TeamInputTable
+              header={[
+                { title: 'Naziv', width: 2 },
+                { title: 'Rola' },
+                { title: 'Mjesec početka obračuna' },
+                { title: 'Mjesec kraja obračuna' },
+                { title: 'Plaća', align: 'right' },
+                { title: 'Postotak rasta g/g', align: 'right' },
+              ]}
+              teams={teams.map((team) => {
+                return {
+                  teamId: team.teamId,
+                  name: team.name,
+                  items: team.members.map((member) => (
+                    <Row
+                      key={`${member.memberId}-${member.updatedAt}`}
+                      member={member}
+                    />
+                  )),
+                  add: (
+                    <AddRow
+                      action={async () => {
+                        'use server';
+
+                        await createMember({
+                          organization,
+                          teamId: team.teamId,
+                        });
+                      }}
+                    />
+                  ),
+                };
+              })}
+            />
+            <ScrollBar />
+          </ScrollArea>
+        </CardContent>
+      </Card>
     </div>
   );
 };
