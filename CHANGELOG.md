@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v0.1.8
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.1.7...v0.1.8)
+
+### 🚀 Enhancements
+
+- Add storybook static dirs ([56b788f](https://github.com/mislavjc/planino/commit/56b788f))
+- Add public charts dir ([5498c55](https://github.com/mislavjc/planino/commit/5498c55))
+- Allow creating new teams ([a97e72e](https://github.com/mislavjc/planino/commit/a97e72e))
+
+### 🩹 Fixes
+
+- Build error ([e18d99d](https://github.com/mislavjc/planino/commit/e18d99d))
+
+### 🏡 Chore
+
+- **release:** V0.1.7 ([915580d](https://github.com/mislavjc/planino/commit/915580d))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.1.7
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.1.6...v0.1.7)
