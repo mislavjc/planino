@@ -6,7 +6,7 @@ const AuthLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div className="bg-muted grid min-h-screen place-items-center">
+    <div className="grid min-h-screen place-items-center bg-muted">
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-center gap-2">
           <Image src="/icon.png" alt="Planino" width={24} height={24} />

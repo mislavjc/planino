@@ -16,7 +16,7 @@ export const Hero = () => {
         <TypographyH1 className="max-w-lg">
           Poslovno planiranje pojednostavljeno
         </TypographyH1>
-        <TypographyP className="text-muted-foreground text-lg font-light lg:text-xl">
+        <TypographyP className="text-lg font-light text-muted-foreground lg:text-xl">
           Planino je aplikacija koja olakšava izradu poslovnih planova i
           praćenje troškova.
         </TypographyP>

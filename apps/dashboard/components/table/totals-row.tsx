@@ -20,7 +20,7 @@ export const TeamTotalsRow = ({
         gridTemplateColumns: `repeat(${numberOfYears + 1}, minmax(0, 1fr))`,
       }}
     >
-      <div className="bg-muted/60 flex items-center gap-2 p-2">
+      <div className="flex items-center gap-2 bg-muted/60 p-2">
         <Sigma size={16} />
       </div>
       {calculateTotals(teamName).map((total, idx) => (

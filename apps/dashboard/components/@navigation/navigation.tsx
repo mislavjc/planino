@@ -18,7 +18,7 @@ export const Navigation = () => {
           <Suspense
             fallback={
               <div className="flex items-center gap-3">
-                <div className="bg-muted h-10 w-24 animate-pulse rounded-lg" />
+                <div className="h-10 w-24 animate-pulse rounded-lg bg-muted" />
               </div>
             }
           >

@@ -7,7 +7,7 @@ const HomePage = async () => {
       <div className="mx-auto flex max-w-screen-lg flex-col gap-4 px-4">
         <Hero />
       </div>
-      <div className="bg-muted/40 py-16 px-4">
+      <div className="bg-muted/40 px-4 py-16">
         <div className="mx-auto max-w-screen-lg">
           <Features />
         </div>
