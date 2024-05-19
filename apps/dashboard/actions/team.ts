@@ -1,11 +1,12 @@
 'use server';
 
 import { insertMemberSchema, members, teams } from '@planino/database/schema';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 import { db } from 'db/drizzle';
+import { YEARLY_SALARY_AGREGATION } from 'db/queries';
 
 import { toUpdateSchema } from 'lib/zod';
 
@@ -158,5 +159,53 @@ export const duplicateMember = async (memberId: string) => {
 
   return {
     member: newMember[0],
+  };
+};
+
+const yearlyPayrollAggregationSchema = z.array(
+  z.object({
+    team_name: z.string(),
+    item_name: z.string(),
+    yearly_values: z.array(z.number().nullable()),
+  }),
+);
+
+export const getYearlyPayrollAggregation = async (organization: string) => {
+  const foundOrganization = await getOrganization(organization);
+
+  const ressult = (
+    await db.execute(YEARLY_SALARY_AGREGATION(foundOrganization.organizationId))
+  ).rows;
+
+  const startYear = await db
+    .select({
+      startYear: sql<string>`EXTRACT(YEAR FROM member.starting_month)`,
+    })
+    .from(members)
+    .innerJoin(teams, eq(teams.teamId, members.teamId))
+    .where(eq(teams.organizationId, foundOrganization.organizationId))
+    .orderBy(members.startingMonth)
+    .limit(1);
+
+  const parsedResult = yearlyPayrollAggregationSchema.parse(ressult);
+
+  if (!parsedResult.length) {
+    return {
+      values: [],
+      years: [],
+      numberOfYears: 0,
+    };
+  }
+
+  const numberOfYears = parsedResult[0].yearly_values.length;
+
+  const years = Array.from({ length: numberOfYears }, (_, i) => {
+    return String(Number(startYear[0].startYear) + i);
+  });
+
+  return {
+    values: parsedResult,
+    years,
+    numberOfYears,
   };
 };

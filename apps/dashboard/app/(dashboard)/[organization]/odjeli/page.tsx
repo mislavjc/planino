@@ -1,5 +1,8 @@
+import { Suspense } from 'react';
+
 import { createMember, getTeams, updateTeamName } from 'actions/team';
 
+import { Overview } from 'components/@teams/overview';
 import { Row } from 'components/@teams/row';
 import { AddRow } from 'components/add-row';
 import { TeamInputTable } from 'components/table/team-input-table';
@@ -65,6 +68,18 @@ const TeamsPage = async ({
               })}
             />
             <ScrollBar />
+          </ScrollArea>
+        </CardContent>
+      </Card>
+      <Card className="max-w-screen-xl">
+        <CardHeader>
+          <TypographyH3>Godišnje vrijednosti</TypographyH3>
+        </CardHeader>
+        <CardContent className="overflow-x-auto">
+          <ScrollArea className="w-max">
+            <Suspense fallback={null}>
+              <Overview organization={organization} />
+            </Suspense>
           </ScrollArea>
         </CardContent>
       </Card>
