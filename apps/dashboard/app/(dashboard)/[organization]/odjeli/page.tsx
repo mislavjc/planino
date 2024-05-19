@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { createMember, getTeams, updateTeamName } from 'actions/team';
 
+import { Charts } from 'components/@teams/charts';
 import { Overview } from 'components/@teams/overview';
 import { Row } from 'components/@teams/row';
 import { AddRow } from 'components/add-row';
@@ -69,6 +70,16 @@ const TeamsPage = async ({
             />
             <ScrollBar />
           </ScrollArea>
+        </CardContent>
+      </Card>
+      <Card className="max-w-screen-xl">
+        <CardHeader>
+          <TypographyH3>Amortizacija imovine i opreme</TypographyH3>
+        </CardHeader>
+        <CardContent className="overflow-x-auto">
+          <Suspense>
+            <Charts organization={organization} />
+          </Suspense>
         </CardContent>
       </Card>
       <Card className="max-w-screen-xl">
