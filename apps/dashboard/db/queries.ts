@@ -259,17 +259,43 @@ WITH ExpenseData AS (
         e.name IS NOT NULL AND
         e.name <> ''
 ),
+MemberData AS (
+    SELECT
+        t.team_id,
+        m.member_id,
+        m.name AS member_name,
+        t.name AS team_name,
+        m.created_at,
+        EXTRACT(YEAR FROM m.starting_month) AS start_year,
+        EXTRACT(MONTH FROM m.starting_month) AS start_month,
+        m.ending_month,
+        m.salary AS amount,
+        m.raise_percentage
+    FROM
+        team t
+        INNER JOIN member m ON t.team_id = m.team_id
+    WHERE
+        t.organization_id = ${organization_id} AND
+        m.name IS NOT NULL AND
+        m.name <> ''
+),
 MinYear AS (
     SELECT
         MIN(start_year) AS min_year
-    FROM
-        ExpenseData
+    FROM (
+        SELECT start_year FROM ExpenseData
+        UNION ALL
+        SELECT start_year FROM MemberData
+    ) AS combined_start_years
 ),
 MaxYear AS (
     SELECT
         MAX(COALESCE(EXTRACT(YEAR FROM ending_month), EXTRACT(YEAR FROM CURRENT_DATE))) AS max_year
-    FROM
-        ExpenseData
+    FROM (
+        SELECT ending_month FROM ExpenseData
+        UNION ALL
+        SELECT ending_month FROM MemberData
+    ) AS combined_ending_months
 ),
 YearSeries AS (
     SELECT
@@ -313,26 +339,6 @@ AdjustedAmounts AS (
         ms.amount * ms.months_in_year * POWER(1 + COALESCE(ms.raise_percentage, 0) / 100, ms.year - ms.start_year) AS year_amount
     FROM
         MonthlySums ms
-),
-MemberData AS (
-    SELECT
-        t.team_id,
-        m.member_id,
-        m.name AS member_name,
-        t.name AS team_name,
-        m.created_at,
-        EXTRACT(YEAR FROM m.starting_month) AS start_year,
-        EXTRACT(MONTH FROM m.starting_month) AS start_month,
-        m.ending_month,
-        m.salary AS amount,
-        m.raise_percentage
-    FROM
-        team t
-        INNER JOIN member m ON t.team_id = m.team_id
-    WHERE
-        t.organization_id = ${organization_id} AND
-        m.name IS NOT NULL AND
-        m.name <> ''
 ),
 MonthlySumsMember AS (
     SELECT
