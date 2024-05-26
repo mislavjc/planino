@@ -19,7 +19,7 @@ const ExpensesPage = async ({
         <BarStackChart data={expenses[0].values} domainKey="year" />
       </div>
       <TypographyH3>Troškovi po odjelima</TypographyH3>
-      <div className="grid grid-cols-2">
+      <div className="grid lg:grid-cols-2">
         {expensesByTeam.map((team) => (
           <div key={team.team_name}>
             <TypographyH4>{team.team_name}</TypographyH4>
