@@ -459,7 +459,7 @@ WITH ExpenseData AS (
         e.created_at,
         EXTRACT(YEAR FROM fa.starting_month) AS start_year,
         EXTRACT(MONTH FROM fa.starting_month) AS start_month,
-        fa.ending_month,
+        EXTRACT(YEAR FROM fa.ending_month) AS ending_year,
         fa.amount,
         fa.raise_percentage
     FROM
@@ -480,7 +480,7 @@ MemberData AS (
         m.created_at,
         EXTRACT(YEAR FROM m.starting_month) AS start_year,
         EXTRACT(MONTH FROM m.starting_month) AS start_month,
-        m.ending_month,
+        EXTRACT(YEAR FROM m.ending_month) AS ending_year,
         m.salary AS amount,
         m.raise_percentage
     FROM
@@ -491,6 +491,25 @@ MemberData AS (
         m.name IS NOT NULL AND
         m.name <> ''
 ),
+ProductData AS (
+    SELECT
+        pg.product_group_id,
+        pg.name AS product_group_name,
+        p.product_id,
+        p.name AS product_name,
+        EXTRACT(YEAR FROM pph.recorded_month) AS start_year,
+        SUM(pph.unit_count * pph.unit_expense) AS amount
+    FROM
+        product_group pg
+        INNER JOIN product p ON pg.product_group_id = p.product_group_id
+        INNER JOIN product_price_history pph ON p.product_id = pph.product_id
+    WHERE
+        pg.organization_id = ${organization_id} AND
+        p.name IS NOT NULL AND
+        p.name <> ''
+    GROUP BY
+        pg.product_group_id, pg.name, p.product_id, p.name, EXTRACT(YEAR FROM pph.recorded_month)
+),
 MinYear AS (
     SELECT
         MIN(start_year) AS min_year
@@ -498,16 +517,20 @@ MinYear AS (
         SELECT start_year FROM ExpenseData
         UNION
         SELECT start_year FROM MemberData
+        UNION
+        SELECT start_year FROM ProductData
     ) AS combined_start_years
 ),
 MaxYear AS (
     SELECT
-        MAX(COALESCE(EXTRACT(YEAR FROM ending_month), EXTRACT(YEAR FROM CURRENT_DATE))) AS max_year
+        MAX(COALESCE(ending_year, EXTRACT(YEAR FROM CURRENT_DATE))) AS max_year
     FROM (
-        SELECT ending_month FROM ExpenseData
+        SELECT ending_year FROM ExpenseData
         UNION
-        SELECT ending_month FROM MemberData
-    ) AS combined_ending_months
+        SELECT ending_year FROM MemberData
+        UNION
+        SELECT start_year AS ending_year FROM ProductData
+    ) AS combined_ending_years
 ),
 YearSeries AS (
     SELECT
@@ -522,14 +545,14 @@ MonthlySums AS (
         ed.created_at,
         ed.start_year,
         ed.start_month,
-        ed.ending_month,
+        ed.ending_year,
         ed.amount,
         ed.raise_percentage,
         ys.year,
         CASE
-            WHEN ys.year = ed.start_year AND ys.year = EXTRACT(YEAR FROM COALESCE(ed.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) THEN EXTRACT(MONTH FROM COALESCE(ed.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) - ed.start_month + 1
+            WHEN ys.year = ed.start_year AND ys.year = COALESCE(ed.ending_year, EXTRACT(YEAR FROM CURRENT_DATE)) THEN 12 - ed.start_month + 1
             WHEN ys.year = ed.start_year THEN 12 - ed.start_month + 1
-            WHEN ys.year = EXTRACT(YEAR FROM COALESCE(ed.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) THEN EXTRACT(MONTH FROM COALESCE(ed.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day'))
+            WHEN ys.year = COALESCE(ed.ending_year, EXTRACT(YEAR FROM CURRENT_DATE)) THEN 12
             ELSE 12
         END as months_in_year
     FROM
@@ -538,7 +561,7 @@ MonthlySums AS (
         YearSeries ys
     WHERE
         ys.year >= ed.start_year AND 
-        (ed.ending_month IS NULL OR ys.year <= EXTRACT(YEAR FROM ed.ending_month))
+        (ed.ending_year IS NULL OR ys.year <= ed.ending_year)
 ),
 AdjustedAmounts AS (
     SELECT
@@ -561,14 +584,14 @@ MonthlySumsMember AS (
         md.created_at,
         md.start_year,
         md.start_month,
-        md.ending_month,
+        md.ending_year,
         md.amount,
         md.raise_percentage,
         ys.year,
         CASE
-            WHEN ys.year = md.start_year AND ys.year = EXTRACT(YEAR FROM COALESCE(md.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) THEN EXTRACT(MONTH FROM COALESCE(md.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) - md.start_month + 1
+            WHEN ys.year = md.start_year AND ys.year = COALESCE(md.ending_year, EXTRACT(YEAR FROM CURRENT_DATE)) THEN 12 - md.start_month + 1
             WHEN ys.year = md.start_year THEN 12 - md.start_month + 1
-            WHEN ys.year = EXTRACT(YEAR FROM COALESCE(md.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) THEN EXTRACT(MONTH FROM COALESCE(md.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day'))
+            WHEN ys.year = COALESCE(md.ending_year, EXTRACT(YEAR FROM CURRENT_DATE)) THEN 12
             ELSE 12
         END as months_in_year
     FROM
@@ -577,7 +600,7 @@ MonthlySumsMember AS (
         YearSeries ys
     WHERE
         ys.year >= md.start_year AND 
-        (md.ending_month IS NULL OR ys.year <= EXTRACT(YEAR FROM md.ending_month))
+        (md.ending_year IS NULL OR ys.year <= md.ending_year)
 ),
 AdjustedAmountsMember AS (
     SELECT
@@ -590,6 +613,38 @@ AdjustedAmountsMember AS (
         msm.amount * msm.months_in_year * POWER(1 + COALESCE(msm.raise_percentage, 0) / 100, msm.year - msm.start_year) AS year_amount
     FROM
         MonthlySumsMember msm
+),
+MonthlySumsProduct AS (
+    SELECT
+        pd.product_group_id AS team_id,
+        pd.product_id AS expense_id,
+        pd.product_name AS item_name,
+        pd.product_group_name AS team_name,
+        pd.start_year,
+        1 AS start_month,
+        NULL AS ending_year,
+        pd.amount,
+        NULL AS raise_percentage,
+        ys.year,
+        12 as months_in_year
+    FROM
+        ProductData pd
+    CROSS JOIN
+        YearSeries ys
+    WHERE
+        ys.year = pd.start_year
+),
+AdjustedAmountsProduct AS (
+    SELECT
+        msp.team_id,
+        msp.expense_id,
+        msp.item_name,
+        msp.team_name,
+        msp.year,
+        NULL AS created_at,
+        msp.amount AS year_amount
+    FROM
+        MonthlySumsProduct msp
 ),
 CombinedData AS (
     SELECT
@@ -607,6 +662,14 @@ CombinedData AS (
         aam.year_amount
     FROM
         AdjustedAmountsMember aam
+    UNION ALL
+    SELECT
+        aap.team_name,
+        aap.item_name,
+        aap.year,
+        aap.year_amount
+    FROM
+        AdjustedAmountsProduct aap
 ),
 AllItemsPerYear AS (
     SELECT DISTINCT
