@@ -114,7 +114,7 @@ export const BarStackChart = <T extends DataRecord>({
       {(parent) => {
         const { width, height } = parent;
 
-        const margin = { top: 20, bottom: 40, left: 70, right: 20 };
+        const margin = { top: 40, bottom: 40, left: 70, right: 20 };
 
         const xMax = width - margin.left - margin.right;
         const yMax = height - margin.top - margin.bottom;
@@ -226,7 +226,7 @@ export const BarStackChart = <T extends DataRecord>({
               />
             </svg>
             <div
-              className="absolute flex  w-full justify-center text-sm"
+              className="absolute flex w-full justify-center text-smo overflow-auto"
               style={{
                 top: margin.top / 2 - 24,
               }}

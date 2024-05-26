@@ -236,3 +236,484 @@ GROUP BY
 ORDER BY
     md.team_name, md.member_name, md.created_at;
 `;
+
+export const YEARLY_AGGREGATE_TEAM_EXPENSES = (organization_id: string) => sql`
+WITH ExpenseData AS (
+    SELECT
+        t.team_id,
+        e.expense_id,
+        e.name AS expense_name,
+        t.name AS team_name,
+        e.created_at,
+        EXTRACT(YEAR FROM fa.starting_month) AS start_year,
+        EXTRACT(MONTH FROM fa.starting_month) AS start_month,
+        fa.ending_month,
+        fa.amount,
+        fa.raise_percentage
+    FROM
+        team t
+        INNER JOIN expense e ON t.team_id = e.team_id
+        INNER JOIN financial_attribute fa ON fa.financial_attribute_id = e.financial_attribute_id
+    WHERE
+        t.organization_id = ${organization_id} AND
+        e.name IS NOT NULL AND
+        e.name <> ''
+),
+MemberData AS (
+    SELECT
+        t.team_id,
+        m.member_id,
+        m.name AS member_name,
+        t.name AS team_name,
+        m.created_at,
+        EXTRACT(YEAR FROM m.starting_month) AS start_year,
+        EXTRACT(MONTH FROM m.starting_month) AS start_month,
+        m.ending_month,
+        m.salary AS amount,
+        m.raise_percentage
+    FROM
+        team t
+        INNER JOIN member m ON t.team_id = m.team_id
+    WHERE
+        t.organization_id = ${organization_id} AND
+        m.name IS NOT NULL AND
+        m.name <> ''
+),
+MinYear AS (
+    SELECT
+        MIN(start_year) AS min_year
+    FROM (
+        SELECT start_year FROM ExpenseData
+        UNION ALL
+        SELECT start_year FROM MemberData
+    ) AS combined_start_years
+),
+MaxYear AS (
+    SELECT
+        MAX(COALESCE(EXTRACT(YEAR FROM ending_month), EXTRACT(YEAR FROM CURRENT_DATE))) AS max_year
+    FROM (
+        SELECT ending_month FROM ExpenseData
+        UNION ALL
+        SELECT ending_month FROM MemberData
+    ) AS combined_ending_months
+),
+YearSeries AS (
+    SELECT
+        generate_series((SELECT min_year FROM MinYear), (SELECT max_year FROM MaxYear)) AS year
+),
+MonthlySums AS (
+    SELECT
+        ed.team_id,
+        ed.expense_id,
+        ed.expense_name,
+        ed.team_name,
+        ed.created_at,
+        ed.start_year,
+        ed.start_month,
+        ed.ending_month,
+        ed.amount,
+        ed.raise_percentage,
+        ys.year,
+        CASE
+            WHEN ys.year = ed.start_year AND ys.year = EXTRACT(YEAR FROM COALESCE(ed.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) THEN EXTRACT(MONTH FROM COALESCE(ed.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) - ed.start_month + 1
+            WHEN ys.year = ed.start_year THEN 12 - ed.start_month + 1
+            WHEN ys.year = EXTRACT(YEAR FROM COALESCE(ed.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) THEN EXTRACT(MONTH FROM COALESCE(ed.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day'))
+            ELSE 12
+        END as months_in_year
+    FROM
+        ExpenseData ed
+    CROSS JOIN
+        YearSeries ys
+    WHERE
+        ys.year >= ed.start_year AND 
+        (ed.ending_month IS NULL OR ys.year <= EXTRACT(YEAR FROM ed.ending_month))
+),
+AdjustedAmounts AS (
+    SELECT
+        ms.team_id,
+        ms.expense_id,
+        ms.expense_name AS item_name,
+        ms.team_name,
+        ms.year,
+        ms.created_at,
+        ms.amount * ms.months_in_year * POWER(1 + COALESCE(ms.raise_percentage, 0) / 100, ms.year - ms.start_year) AS year_amount
+    FROM
+        MonthlySums ms
+),
+MonthlySumsMember AS (
+    SELECT
+        md.team_id,
+        md.member_id,
+        md.member_name,
+        md.team_name,
+        md.created_at,
+        md.start_year,
+        md.start_month,
+        md.ending_month,
+        md.amount,
+        md.raise_percentage,
+        ys.year,
+        CASE
+            WHEN ys.year = md.start_year AND ys.year = EXTRACT(YEAR FROM COALESCE(md.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) THEN EXTRACT(MONTH FROM COALESCE(md.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) - md.start_month + 1
+            WHEN ys.year = md.start_year THEN 12 - md.start_month + 1
+            WHEN ys.year = EXTRACT(YEAR FROM COALESCE(md.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day')) THEN EXTRACT(MONTH FROM COALESCE(md.ending_month, DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year - 1 day'))
+            ELSE 12
+        END as months_in_year
+    FROM
+        MemberData md
+    CROSS JOIN
+        YearSeries ys
+    WHERE
+        ys.year >= md.start_year AND 
+        (md.ending_month IS NULL OR ys.year <= EXTRACT(YEAR FROM md.ending_month))
+),
+AdjustedAmountsMember AS (
+    SELECT
+        msm.team_id,
+        msm.member_id,
+        msm.member_name AS item_name,
+        msm.team_name,
+        msm.year,
+        msm.created_at,
+        msm.amount * msm.months_in_year * POWER(1 + COALESCE(msm.raise_percentage, 0) / 100, msm.year - msm.start_year) AS year_amount
+    FROM
+        MonthlySumsMember msm
+),
+CombinedData AS (
+    SELECT
+        team_name,
+        item_name,
+        year,
+        year_amount
+    FROM
+        AdjustedAmounts
+    UNION ALL
+    SELECT
+        aam.team_name,
+        aam.item_name,
+        aam.year,
+        aam.year_amount
+    FROM
+        AdjustedAmountsMember aam
+),
+AllItemsPerYear AS (
+    SELECT DISTINCT
+        cd.team_name,
+        cd.item_name,
+        ys.year
+    FROM
+        CombinedData cd
+    CROSS JOIN
+        YearSeries ys
+    WHERE
+        cd.team_name IS NOT NULL
+),
+FilledData AS (
+    SELECT
+        aipy.team_name,
+        aipy.item_name,
+        aipy.year,
+        COALESCE(cd.year_amount, 0) AS year_amount
+    FROM
+        AllItemsPerYear aipy
+    LEFT JOIN
+        CombinedData cd
+    ON
+        aipy.team_name = cd.team_name AND aipy.item_name = cd.item_name AND aipy.year = cd.year
+),
+YearlyAggregatedData AS (
+    SELECT
+        team_name,
+        year,
+        jsonb_object_agg(item_name, year_amount) AS items
+    FROM
+        FilledData
+    GROUP BY
+        team_name, year
+)
+SELECT
+    team_name,
+    jsonb_agg(
+        jsonb_strip_nulls(
+            jsonb_build_object(
+                'year', year
+            ) || items
+        )
+        ORDER BY year
+    ) AS values
+FROM
+    YearlyAggregatedData
+GROUP BY
+    team_name
+ORDER BY
+    team_name;
+`;
+
+export const YEARLY_AGGREGATE_EXPENSES = (organization_id: string) => sql`
+WITH ExpenseData AS (
+    SELECT
+        t.team_id,
+        e.expense_id,
+        e.name AS expense_name,
+        t.name AS team_name,
+        e.created_at,
+        EXTRACT(YEAR FROM fa.starting_month) AS start_year,
+        EXTRACT(MONTH FROM fa.starting_month) AS start_month,
+        EXTRACT(YEAR FROM fa.ending_month) AS ending_year,
+        fa.amount,
+        fa.raise_percentage
+    FROM
+        team t
+        INNER JOIN expense e ON t.team_id = e.team_id
+        INNER JOIN financial_attribute fa ON fa.financial_attribute_id = e.financial_attribute_id
+    WHERE
+        t.organization_id = ${organization_id} AND
+        e.name IS NOT NULL AND
+        e.name <> ''
+),
+MemberData AS (
+    SELECT
+        t.team_id,
+        m.member_id,
+        m.name AS member_name,
+        t.name AS team_name,
+        m.created_at,
+        EXTRACT(YEAR FROM m.starting_month) AS start_year,
+        EXTRACT(MONTH FROM m.starting_month) AS start_month,
+        EXTRACT(YEAR FROM m.ending_month) AS ending_year,
+        m.salary AS amount,
+        m.raise_percentage
+    FROM
+        team t
+        INNER JOIN member m ON t.team_id = m.team_id
+    WHERE
+        t.organization_id = ${organization_id} AND
+        m.name IS NOT NULL AND
+        m.name <> ''
+),
+ProductData AS (
+    SELECT
+        pg.product_group_id,
+        pg.name AS product_group_name,
+        p.product_id,
+        p.name AS product_name,
+        EXTRACT(YEAR FROM pph.recorded_month) AS start_year,
+        SUM(pph.unit_count * pph.unit_expense) AS amount
+    FROM
+        product_group pg
+        INNER JOIN product p ON pg.product_group_id = p.product_group_id
+        INNER JOIN product_price_history pph ON p.product_id = pph.product_id
+    WHERE
+        pg.organization_id = ${organization_id} AND
+        p.name IS NOT NULL AND
+        p.name <> ''
+    GROUP BY
+        pg.product_group_id, pg.name, p.product_id, p.name, EXTRACT(YEAR FROM pph.recorded_month)
+),
+MinYear AS (
+    SELECT
+        MIN(start_year) AS min_year
+    FROM (
+        SELECT start_year FROM ExpenseData
+        UNION
+        SELECT start_year FROM MemberData
+        UNION
+        SELECT start_year FROM ProductData
+    ) AS combined_start_years
+),
+MaxYear AS (
+    SELECT
+        MAX(COALESCE(ending_year, EXTRACT(YEAR FROM CURRENT_DATE))) AS max_year
+    FROM (
+        SELECT ending_year FROM ExpenseData
+        UNION
+        SELECT ending_year FROM MemberData
+        UNION
+        SELECT start_year AS ending_year FROM ProductData
+    ) AS combined_ending_years
+),
+YearSeries AS (
+    SELECT
+        generate_series((SELECT min_year FROM MinYear), (SELECT max_year FROM MaxYear)) AS year
+),
+MonthlySums AS (
+    SELECT
+        ed.team_id,
+        ed.expense_id,
+        ed.expense_name,
+        ed.team_name,
+        ed.created_at,
+        ed.start_year,
+        ed.start_month,
+        ed.ending_year,
+        ed.amount,
+        ed.raise_percentage,
+        ys.year,
+        CASE
+            WHEN ys.year = ed.start_year AND ys.year = COALESCE(ed.ending_year, EXTRACT(YEAR FROM CURRENT_DATE)) THEN 12 - ed.start_month + 1
+            WHEN ys.year = ed.start_year THEN 12 - ed.start_month + 1
+            WHEN ys.year = COALESCE(ed.ending_year, EXTRACT(YEAR FROM CURRENT_DATE)) THEN 12
+            ELSE 12
+        END as months_in_year
+    FROM
+        ExpenseData ed
+    CROSS JOIN
+        YearSeries ys
+    WHERE
+        ys.year >= ed.start_year AND 
+        (ed.ending_year IS NULL OR ys.year <= ed.ending_year)
+),
+AdjustedAmounts AS (
+    SELECT
+        ms.team_id,
+        ms.expense_id,
+        ms.expense_name AS item_name,
+        ms.team_name,
+        ms.year,
+        ms.created_at,
+        ms.amount * ms.months_in_year * POWER(1 + COALESCE(ms.raise_percentage, 0) / 100, ms.year - ms.start_year) AS year_amount
+    FROM
+        MonthlySums ms
+),
+MonthlySumsMember AS (
+    SELECT
+        md.team_id,
+        md.member_id,
+        md.member_name,
+        md.team_name,
+        md.created_at,
+        md.start_year,
+        md.start_month,
+        md.ending_year,
+        md.amount,
+        md.raise_percentage,
+        ys.year,
+        CASE
+            WHEN ys.year = md.start_year AND ys.year = COALESCE(md.ending_year, EXTRACT(YEAR FROM CURRENT_DATE)) THEN 12 - md.start_month + 1
+            WHEN ys.year = md.start_year THEN 12 - md.start_month + 1
+            WHEN ys.year = COALESCE(md.ending_year, EXTRACT(YEAR FROM CURRENT_DATE)) THEN 12
+            ELSE 12
+        END as months_in_year
+    FROM
+        MemberData md
+    CROSS JOIN
+        YearSeries ys
+    WHERE
+        ys.year >= md.start_year AND 
+        (md.ending_year IS NULL OR ys.year <= md.ending_year)
+),
+AdjustedAmountsMember AS (
+    SELECT
+        msm.team_id,
+        msm.member_id,
+        msm.member_name AS item_name,
+        msm.team_name,
+        msm.year,
+        msm.created_at,
+        msm.amount * msm.months_in_year * POWER(1 + COALESCE(msm.raise_percentage, 0) / 100, msm.year - msm.start_year) AS year_amount
+    FROM
+        MonthlySumsMember msm
+),
+MonthlySumsProduct AS (
+    SELECT
+        pd.product_group_id AS team_id,
+        pd.product_id AS expense_id,
+        pd.product_name AS item_name,
+        pd.product_group_name AS team_name,
+        pd.start_year,
+        1 AS start_month,
+        NULL AS ending_year,
+        pd.amount,
+        NULL AS raise_percentage,
+        ys.year,
+        12 as months_in_year
+    FROM
+        ProductData pd
+    CROSS JOIN
+        YearSeries ys
+    WHERE
+        ys.year = pd.start_year
+),
+AdjustedAmountsProduct AS (
+    SELECT
+        msp.team_id,
+        msp.expense_id,
+        msp.item_name,
+        msp.team_name,
+        msp.year,
+        NULL AS created_at,
+        msp.amount AS year_amount
+    FROM
+        MonthlySumsProduct msp
+),
+CombinedData AS (
+    SELECT
+        team_name,
+        item_name,
+        year,
+        year_amount
+    FROM
+        AdjustedAmounts
+    UNION ALL
+    SELECT
+        aam.team_name,
+        aam.item_name,
+        aam.year,
+        aam.year_amount
+    FROM
+        AdjustedAmountsMember aam
+    UNION ALL
+    SELECT
+        aap.team_name,
+        aap.item_name,
+        aap.year,
+        aap.year_amount
+    FROM
+        AdjustedAmountsProduct aap
+),
+AllItemsPerYear AS (
+    SELECT DISTINCT
+        cd.team_name,
+        cd.item_name,
+        ys.year
+    FROM
+        CombinedData cd
+    CROSS JOIN
+        YearSeries ys
+    WHERE
+        cd.team_name IS NOT NULL
+),
+FilledData AS (
+    SELECT
+        aipy.team_name,
+        aipy.item_name,
+        aipy.year,
+        COALESCE(cd.year_amount, 0) AS year_amount
+    FROM
+        AllItemsPerYear aipy
+    LEFT JOIN
+        CombinedData cd
+    ON
+        aipy.team_name = cd.team_name AND aipy.item_name = cd.item_name AND aipy.year = cd.year
+),
+YearlyAggregatedData AS (
+    SELECT
+        year,
+        jsonb_object_agg(item_name, year_amount) AS items
+    FROM
+        FilledData
+    GROUP BY
+        year
+)
+SELECT
+    jsonb_agg(
+        jsonb_strip_nulls(
+            jsonb_build_object(
+                'year', year
+            ) || items
+        )
+        ORDER BY year
+    ) AS values
+FROM
+    YearlyAggregatedData;
+`;
