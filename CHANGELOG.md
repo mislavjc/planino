@@ -1,6 +1,32 @@
 # Changelog
 
 
+## v0.1.9
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.1.8...v0.1.9)
+
+### 🚀 Enhancements
+
+- Add yearly aggregate team expenses ([9174595](https://github.com/mislavjc/planino/commit/9174595))
+- Add expenses per year ([24af617](https://github.com/mislavjc/planino/commit/24af617))
+- Take min and max year from member data too ([7144150](https://github.com/mislavjc/planino/commit/7144150))
+- Add min and max year from team overview ([c59e413](https://github.com/mislavjc/planino/commit/c59e413))
+- Make bar chart labels responsive ([2791c18](https://github.com/mislavjc/planino/commit/2791c18))
+- Add costs of products to expenses ([db9c646](https://github.com/mislavjc/planino/commit/db9c646))
+
+### 🩹 Fixes
+
+- Eslint issues in dashboard ([49bab13](https://github.com/mislavjc/planino/commit/49bab13))
+- Show one graph at the time on mobile ([65bea38](https://github.com/mislavjc/planino/commit/65bea38))
+
+### 🏡 Chore
+
+- **release:** V0.1.8 ([6fc9519](https://github.com/mislavjc/planino/commit/6fc9519))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.1.8
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.1.7...v0.1.8)
