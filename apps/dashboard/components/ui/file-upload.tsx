@@ -150,7 +150,6 @@ export const FileUploader = forwardRef<
           setActiveIndex(-1);
         }
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [value, activeIndex, removeFileFromSet],
     );
 
@@ -192,7 +191,6 @@ export const FileUploader = forwardRef<
           }
         }
       },
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [reSelectAll, value],
     );
 

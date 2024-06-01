@@ -1,5 +1,6 @@
 module.exports = {
   extends: ['next/core-web-vitals', 'plugin:tailwindcss/recommended'],
+  plugins: ['eslint-plugin-react-compiler'],
   rules: {
     'no-unused-vars': [
       'warn',
@@ -8,5 +9,6 @@ module.exports = {
         varsIgnorePattern: '^_',
       },
     ],
+    'react-compiler/react-compiler': 'error',
   },
 };

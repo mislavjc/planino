@@ -22,7 +22,6 @@ export const GenerativeMenuSwitch = ({
 
   useEffect(() => {
     if (!open) removeAIHighlight(editor!);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   return (
