@@ -1,7 +1,7 @@
+import { createOpenAI } from '@ai-sdk/openai';
 import { S3Client } from '@aws-sdk/client-s3';
 import { R2Bucket } from '@cloudflare/workers-types';
 import { OpenAPIHono } from '@hono/zod-openapi';
-import OpenAI from 'openai';
 
 type Env = {
   DATABASE_URL: string;
@@ -29,7 +29,7 @@ export const getR2Client = (env: Env) => {
 };
 
 export const getOpenAIClient = (env: Env) => {
-  const openai = new OpenAI({
+  const openai = createOpenAI({
     apiKey: env.OPENAI_API_KEY,
   });
 

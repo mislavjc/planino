@@ -1,6 +1,7 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createRoute, z } from '@hono/zod-openapi';
+import { generateText, tool } from 'ai';
 import * as XLSX from 'xlsx';
 
 import { app, getOpenAIClient, getR2Client } from 'utils/bindings';
@@ -9,7 +10,7 @@ import {
   extractTableFromCoordinates,
   getTransformerFunction,
 } from 'utils/importer';
-import { extractionTools, functionExtractionPrompt } from 'utils/prompts';
+import { functionExtractionPrompt } from 'utils/prompts';
 
 const importPayloadSchema = z.object({
   names: z.array(z.string()).min(1),
@@ -290,8 +291,8 @@ app.openapi(extractDataFromCoordinates, async (c) => {
 
   const openai = getOpenAIClient(c.env);
 
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4-turbo',
+  const result = await generateText({
+    model: openai('gpt-4o'),
     temperature: 0,
     messages: [
       {
@@ -299,52 +300,40 @@ app.openapi(extractDataFromCoordinates, async (c) => {
         content: functionExtractionPrompt(slicedData),
       },
     ],
-    tools: extractionTools,
+    tools: {
+      transformArrayToObjects: tool({
+        description:
+          "Extracts data from a 2D array and returns an object mapping each column index based on specified fields. The fields in the return object are 'name', 'quantity', 'price', and 'expenses'. Each field corresponds to a specific index in each sub-array of the input. The function checks if the data can be converted into the specified schema. If not, an empty object is returned.",
+        parameters: z.object({
+          name: z
+            .number()
+            .describe(
+              "The column index for the 'name' field, where the value should be a string.",
+            ),
+          quantity: z
+            .number()
+            .describe(
+              "The column index for the 'quantity' field, where the value should be a number.",
+            ),
+          price: z
+            .number()
+            .describe(
+              "The column index for the 'price' field, where the value should be a number.",
+            ),
+          expenses: z
+            .number()
+            .describe(
+              "The column index for the 'expenses' field, where the value should be a number.",
+            ),
+        }),
+        execute: async (args) => transformArrayToObjects(args),
+      }),
+    },
   });
 
-  const responseMessage = completion.choices[0].message;
+  messages.push(result);
 
-  messages.push(responseMessage);
-
-  const toolCalls = responseMessage.tool_calls;
-
-  if (toolCalls) {
-    const availableFunctions = {
-      transformArrayToObjects,
-    };
-
-    for (const toolCall of toolCalls) {
-      const calledFunction = toolCall.function;
-
-      if (calledFunction.name in availableFunctions) {
-        const args = JSON.parse(calledFunction.arguments || '{}');
-
-        const foundFunction =
-          availableFunctions[
-            calledFunction.name as keyof typeof availableFunctions
-          ];
-
-        const result = foundFunction(args);
-
-        messages.push({
-          tool_call_id: toolCall.id,
-          role: 'tool',
-          name: calledFunction.name,
-          content: result,
-        });
-      }
-    }
-  }
-
-  const toolResponses = messages.filter((message) => message.role === 'tool');
-
-  if (toolResponses.length === 0) {
-    return c.json({ error: 'Error extracting data' }, { status: 400 });
-  }
-
-  const data = toolResponses[0].content;
-
-  const parsedData = extractionSchema.parse(data);
+  const parsedData = extractionSchema.parse(result.toolResults[0]?.result);
 
   return c.json({ data: parsedData });
 });

@@ -38,6 +38,8 @@ export const ExcelTable = async ({ file }: { file: string }) => {
         },
       },
     );
+
+    console.log('Data extracted:', _extracted);
   };
 
   return (
