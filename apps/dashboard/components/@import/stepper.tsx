@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { CheckCheck } from 'lucide-react';
 import { useParams, usePathname } from 'next/navigation';
 
 import {
@@ -94,6 +95,6 @@ const StepIndex = ({
       },
     )}
   >
-    {index + 1}
+    {index < currentStep ? <CheckCheck size={14} /> : index + 1}
   </span>
 );
