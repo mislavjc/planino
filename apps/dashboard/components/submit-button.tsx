@@ -11,7 +11,7 @@ import { TypographyP } from './ui/typography';
 
 export const SubmitButton = ({
   className,
-  children = 'Dodaj redak',
+  children = 'Dodaj red',
   disabled,
   icon: Icon = Plus,
 }: {
