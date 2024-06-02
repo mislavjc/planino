@@ -20,6 +20,10 @@ const steps = [
     route: '/podatci/uvoz-podataka',
   },
   {
+    name: 'Odabir tablica',
+    route: '/podatci/odabir-tablica',
+  },
+  {
     name: 'Mapiranje stupaca',
     route: '/podatci/mapiranje-stupaca',
   },
