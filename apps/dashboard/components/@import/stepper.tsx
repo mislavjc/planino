@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 
 import {
   Breadcrumb,
@@ -11,6 +11,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from 'ui/breadcrumb';
+
+import { cn } from 'lib/utils';
 
 const steps = [
   {
@@ -31,8 +33,18 @@ const steps = [
   },
 ];
 
+const generateSteps = (organization: string | string[]) => {
+  return steps.map((step) => ({
+    ...step,
+    route: `/${organization}${step.route}`,
+  }));
+};
+
 export const Stepper = () => {
   const pathname = usePathname();
+  const { organization } = useParams();
+
+  const steps = generateSteps(organization);
 
   const currentStep = steps.findIndex((step) => step.route === pathname);
 
@@ -41,14 +53,15 @@ export const Stepper = () => {
       <BreadcrumbList>
         {steps.map((step, index) => (
           <React.Fragment key={index}>
-            <BreadcrumbItem key={index}>
+            <BreadcrumbItem>
               {index === currentStep ? (
-                <BreadcrumbPage>{step.name}</BreadcrumbPage>
+                <BreadcrumbPage className="flex gap-1">
+                  <StepIndex index={index} currentStep={currentStep} />
+                  {step.name}
+                </BreadcrumbPage>
               ) : (
                 <BreadcrumbLink href={step.route} className="flex gap-1">
-                  <span className="inline-flex size-5 items-center justify-center bg-black/90 text-white">
-                    {index + 1}
-                  </span>
+                  <StepIndex index={index} currentStep={currentStep} />
                   {step.name}
                 </BreadcrumbLink>
               )}
@@ -60,3 +73,23 @@ export const Stepper = () => {
     </Breadcrumb>
   );
 };
+
+const StepIndex = ({
+  index,
+  currentStep,
+}: {
+  index: number;
+  currentStep: number;
+}) => (
+  <span
+    className={cn(
+      'inline-flex size-5 items-center justify-center text-primary-foreground',
+      {
+        'bg-primary': index <= currentStep,
+        'bg-muted text-primary': index > currentStep,
+      },
+    )}
+  >
+    {index + 1}
+  </span>
+);
