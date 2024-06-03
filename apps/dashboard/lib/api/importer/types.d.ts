@@ -77,19 +77,14 @@ export interface paths {
       };
     };
   };
-  '/import/extract-data': {
-    post: {
-      requestBody: {
-        content: {
-          'application/json': {
-            worksheet: unknown[][];
-            coordinates: {
-              startRow: number;
-              startColumn: number;
-              endRow: number;
-              endColumn: number;
-            };
-          };
+  '/import/{file}/extract-data': {
+    get: {
+      parameters: {
+        query: {
+          coordinates: string;
+        };
+        path: {
+          file: string;
         };
       };
       responses: {
@@ -100,6 +95,21 @@ export interface paths {
               data: {
                 [key: string]: unknown;
               }[];
+              /** Arguments */
+              args: {
+                name: number;
+                quantity: number;
+                price: number;
+                expenses: number;
+              };
+            };
+          };
+        };
+        /** @description Error extracting data */
+        400: {
+          content: {
+            'application/json': {
+              error: string;
             };
           };
         };

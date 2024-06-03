@@ -29,12 +29,16 @@ export const ExcelTable = async ({ file }: { file: string }) => {
     const coordinates =
       data.tables[Number(formData.get('tableIndex'))].coordinates;
 
-    const { data: _extracted, error: _extractedError } = await importer.POST(
-      '/import/extract-data',
+    const { data: _extracted, error: _extractedError } = await importer.GET(
+      '/import/{file}/extract-data',
       {
-        body: {
-          worksheet: data.worksheet,
-          coordinates,
+        params: {
+          path: {
+            file: encodeURIComponent(file),
+          },
+          query: {
+            coordinates: JSON.stringify(coordinates),
+          },
         },
       },
     );

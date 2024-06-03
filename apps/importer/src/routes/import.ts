@@ -2,9 +2,9 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createRoute, z } from '@hono/zod-openapi';
 import { generateText, tool } from 'ai';
-import * as XLSX from 'xlsx';
 
 import { app, getOpenAIClient, getR2Client } from 'utils/bindings';
+import { openExcelFile } from 'utils/excel';
 import {
   extractMultipleTableCoordinates,
   extractTableFromCoordinates,
@@ -122,7 +122,7 @@ app.openapi(getAllExcelFiles, async (c) => {
 
 const baseCellSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 
-const excelFileSchema = z.array(
+export const excelFileSchema = z.array(
   z.array(z.union([baseCellSchema, z.undefined()])),
 );
 
@@ -201,15 +201,7 @@ app.openapi(getExcelFile, async (c) => {
     return c.json({ error: 'File not found' }, { status: 404 });
   }
 
-  const workbook = XLSX.read(objectData);
-  const sheetName = workbook.SheetNames[0];
-  const worksheet = workbook.Sheets[sheetName];
-  const excel = XLSX.utils.sheet_to_json(worksheet, {
-    header: 1,
-    blankrows: true,
-  });
-
-  const parsedExcel = excelFileSchema.parse(excel);
+  const { excel, parsedExcel } = openExcelFile(objectData);
 
   const tables = extractMultipleTableCoordinates(parsedExcel);
 
@@ -226,25 +218,23 @@ const extractionSchema = z.array(
 );
 
 const extractDataFromCoordinates = createRoute({
-  method: 'post',
+  method: 'get',
   tags: ['import'],
-  path: '/import/extract-data',
+  path: '/import/{file}/extract-data',
   request: {
-    body: {
-      content: {
-        'application/json': {
-          schema: z
-            .object({
-              worksheet: z.array(z.array(baseCellSchema)),
-              coordinates: coordinatesSchema,
-            })
-            .openapi({
-              title: 'Extract data from coordinates',
-            }),
+    params: z
+      .object({
+        file: z.string(),
+      })
+      .openapi({
+        param: {
+          name: 'file',
+          in: 'path',
         },
-      },
-      required: true,
-    },
+      }),
+    query: z.object({
+      coordinates: z.string(),
+    }),
   },
   responses: {
     200: {
@@ -253,6 +243,16 @@ const extractDataFromCoordinates = createRoute({
           schema: z
             .object({
               data: extractionSchema,
+              args: z
+                .object({
+                  name: z.number(),
+                  quantity: z.number(),
+                  price: z.number(),
+                  expenses: z.number(),
+                })
+                .openapi({
+                  title: 'Arguments',
+                }),
             })
             .openapi({
               title: 'Extracted data',
@@ -279,11 +279,28 @@ const extractDataFromCoordinates = createRoute({
 });
 
 app.openapi(extractDataFromCoordinates, async (c) => {
-  const { worksheet, coordinates } = c.req.valid('json');
+  const { file } = c.req.valid('param');
 
-  const messages = [];
+  const key = decodeURIComponent(file);
 
-  const extractedData = extractTableFromCoordinates(worksheet, coordinates);
+  const object = await c.env.BUCKET.get(key);
+
+  const objectData = await object?.arrayBuffer();
+
+  if (!objectData) {
+    return c.json({ error: 'File not found' }, { status: 404 });
+  }
+
+  const { parsedExcel } = openExcelFile(objectData);
+
+  const { coordinates } = c.req.valid('query');
+
+  const parsedCoordinates = coordinatesSchema.parse(JSON.parse(coordinates));
+
+  const extractedData = extractTableFromCoordinates(
+    parsedExcel,
+    parsedCoordinates,
+  );
 
   const transformArrayToObjects = getTransformerFunction(extractedData);
 
@@ -331,11 +348,10 @@ app.openapi(extractDataFromCoordinates, async (c) => {
     },
   });
 
-  messages.push(result);
-
-  const parsedData = extractionSchema.parse(result.toolResults[0]?.result);
-
-  return c.json({ data: parsedData });
+  return c.json({
+    data: result.toolResults[0]?.result,
+    args: result.toolResults[0]?.args,
+  });
 });
 
 export { app as importRoutes };
