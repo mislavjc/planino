@@ -72,7 +72,7 @@ export const FileDropzone = () => {
 
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    router.push(`/${organization}/podatci/pregled`);
+    router.push(`/${organization}/podatci/odabir-tablica`);
   };
 
   return (
