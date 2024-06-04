@@ -1,6 +1,13 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'components/ui/select';
 import { TypographyH4 } from 'components/ui/typography';
 
 import { importer } from 'api/importer/client';
@@ -95,7 +102,18 @@ const Mapper = async ({
           <div className="flex w-full border-y px-4 py-2">
             <ArrowRight className="size-4" />
           </div>
-          <div className="border-y border-r px-4 py-2">{key}</div>
+          <Select defaultValue={key}>
+            <SelectTrigger className="border-l-0">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.keys(mappedData.headersMapped).map((key) => (
+                <SelectItem key={key} value={key}>
+                  {key}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </React.Fragment>
       ))}
     </div>
