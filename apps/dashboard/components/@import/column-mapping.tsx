@@ -89,13 +89,13 @@ const Mapper = async ({
       <div className="bg-muted px-4 py-2 font-mono uppercase">Stavka</div>
       {Object.keys(mappedData.headersMapped).map((key) => (
         <React.Fragment key={key}>
-          <div className="border px-4 py-2">
+          <div className="border-y border-l px-4 py-2">
             {String(mappedData.headersMapped[key as keyof Args] ?? 'N/A')}
           </div>
-          <div className="flex w-full items-center justify-center border px-4 py-2">
+          <div className="flex w-full border-y px-4 py-2">
             <ArrowRight className="size-4" />
           </div>
-          <div className="border px-4 py-2">{key}</div>
+          <div className="border-y border-r px-4 py-2">{key}</div>
         </React.Fragment>
       ))}
     </div>
