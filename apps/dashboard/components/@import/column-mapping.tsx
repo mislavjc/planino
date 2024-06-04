@@ -90,7 +90,7 @@ const Mapper = async ({
       {Object.keys(mappedData.headersMapped).map((key) => (
         <React.Fragment key={key}>
           <div className="border px-4 py-2">
-            {String(mappedData.headersMapped[key as keyof Args])}
+            {String(mappedData.headersMapped[key as keyof Args] ?? 'N/A')}
           </div>
           <div className="flex w-full items-center justify-center border px-4 py-2">
             <ArrowRight />
