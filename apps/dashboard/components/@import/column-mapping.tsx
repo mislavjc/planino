@@ -81,7 +81,12 @@ const Mapper = async ({
   const mappedData = mapRow(data.args, data.table);
 
   return (
-    <div className="grid grid-cols-3">
+    <div className="grid grid-cols-3 text-sm">
+      <div className="bg-muted px-4 py-2 font-mono uppercase">
+        Stupac iz tablice
+      </div>
+      <div className="bg-muted px-4 py-2"></div>
+      <div className="bg-muted px-4 py-2 font-mono uppercase">Stavka</div>
       {Object.keys(mappedData.headersMapped).map((key) => (
         <React.Fragment key={key}>
           <div className="border px-4 py-2">
