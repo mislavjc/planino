@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ALargeSmall, ArrowRight, BadgeEuro, Binary } from 'lucide-react';
 
 import {
   Select,
@@ -33,6 +33,25 @@ const mapRow = (args: Args, table: TableRow) => {
   return {
     headersMapped,
   };
+};
+
+const expensesMap = {
+  name: {
+    name: 'Naziv',
+    icon: <ALargeSmall className="size-5" />,
+  },
+  quantity: {
+    name: 'Količina',
+    icon: <Binary className="size-5" />,
+  },
+  price: {
+    name: 'Cijena',
+    icon: <BadgeEuro className="size-5" />,
+  },
+  expenses: {
+    name: 'Jedinični trošak',
+    icon: <BadgeEuro className="size-5" />,
+  },
 };
 
 export const Mapper = async ({
@@ -86,7 +105,10 @@ export const Mapper = async ({
             <SelectContent>
               {Object.keys(mappedData.headersMapped).map((key) => (
                 <SelectItem key={key} value={key}>
-                  {key}
+                  <div className="flex items-center gap-2">
+                    {expensesMap[key as keyof Args].icon}
+                    <div>{expensesMap[key as keyof Args].name}</div>
+                  </div>
                 </SelectItem>
               ))}
             </SelectContent>
