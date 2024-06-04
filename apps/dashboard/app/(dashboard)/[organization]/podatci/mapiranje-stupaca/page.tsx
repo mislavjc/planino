@@ -1,18 +1,16 @@
-import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
-import { ScrollArea } from 'ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'ui/tabs';
 import { TypographyH3 } from 'ui/typography';
 
-import { ExcelTable } from 'components/@import/excel-table';
+import { ColumnMapping } from 'components/@import/column-mapping';
 
 import { importer } from 'api/importer/client';
 
 export const revalidate = 0;
 
-const DataOverviewPage = async ({
+const ColumnMappingPage = async ({
   params: { organization },
 }: {
   params: { organization: string };
@@ -54,11 +52,7 @@ const DataOverviewPage = async ({
                 key={file.key}
                 value={file.key}
               >
-                <ScrollArea className="w-max">
-                  <Suspense>
-                    <ExcelTable file={file.key} />
-                  </Suspense>
-                </ScrollArea>
+                <ColumnMapping file={file.key} />
               </TabsContent>
             ))}
           </Tabs>
@@ -68,4 +62,4 @@ const DataOverviewPage = async ({
   );
 };
 
-export default DataOverviewPage;
+export default ColumnMappingPage;

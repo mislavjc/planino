@@ -102,6 +102,7 @@ export interface paths {
                 price: number;
                 expenses: number;
               };
+              table: unknown[][];
             };
           };
         };

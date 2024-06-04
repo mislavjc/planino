@@ -1,6 +1,6 @@
 import { createOpenAI } from '@ai-sdk/openai';
 import { S3Client } from '@aws-sdk/client-s3';
-import { R2Bucket } from '@cloudflare/workers-types';
+import { KVNamespace, R2Bucket } from '@cloudflare/workers-types';
 import { OpenAPIHono } from '@hono/zod-openapi';
 
 type Env = {
@@ -11,6 +11,7 @@ type Env = {
   R2_SECRET_ACCESS_KEY: string;
   R2_ENDPOINT: string;
   R2_BUCKET_NAME: string;
+  KV: KVNamespace;
 };
 
 export const app = new OpenAPIHono<{ Bindings: Env }>();

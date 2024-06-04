@@ -253,6 +253,7 @@ const extractDataFromCoordinates = createRoute({
                 .openapi({
                   title: 'Arguments',
                 }),
+              table: z.array(z.array(baseCellSchema)),
             })
             .openapi({
               title: 'Extracted data',
@@ -280,6 +281,15 @@ const extractDataFromCoordinates = createRoute({
 
 app.openapi(extractDataFromCoordinates, async (c) => {
   const { file } = c.req.valid('param');
+  const { coordinates } = c.req.valid('query');
+
+  const kvITem = await c.env.KV.get(`${file}-${coordinates}`);
+
+  if (kvITem) {
+    return c.json(JSON.parse(kvITem));
+  }
+
+  const parsedCoordinates = coordinatesSchema.parse(JSON.parse(coordinates));
 
   const key = decodeURIComponent(file);
 
@@ -292,10 +302,6 @@ app.openapi(extractDataFromCoordinates, async (c) => {
   }
 
   const { parsedExcel } = openExcelFile(objectData);
-
-  const { coordinates } = c.req.valid('query');
-
-  const parsedCoordinates = coordinatesSchema.parse(JSON.parse(coordinates));
 
   const extractedData = extractTableFromCoordinates(
     parsedExcel,
@@ -348,9 +354,19 @@ app.openapi(extractDataFromCoordinates, async (c) => {
     },
   });
 
+  await c.env.KV.put(
+    `${file}-${coordinates}`,
+    JSON.stringify({
+      data: result.toolResults[0]?.result,
+      args: result.toolResults[0]?.args,
+      table: extractedData,
+    }),
+  );
+
   return c.json({
     data: result.toolResults[0]?.result,
     args: result.toolResults[0]?.args,
+    table: extractedData,
   });
 });
 
