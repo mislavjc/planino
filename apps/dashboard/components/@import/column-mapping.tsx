@@ -14,8 +14,6 @@ export const ColumnMapping = async ({ file }: { file: string }) => {
     },
   });
 
-  console.log(data);
-
   return (
     <div className="flex flex-col gap-4">
       {data?.tables.map((table, index) => {
