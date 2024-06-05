@@ -1,5 +1,7 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
+import { Button } from 'ui/button';
 import { Card, CardContent, CardHeader } from 'ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'ui/tabs';
 import { TypographyH3 } from 'ui/typography';
@@ -35,7 +37,17 @@ const ColumnMappingPage = async ({
     <div>
       <Card className="max-w-screen-xl">
         <CardHeader>
-          <TypographyH3>Pregled uvezenih podataka</TypographyH3>
+          <div className="flex justify-between">
+            <TypographyH3>Mapiranje stupaca</TypographyH3>
+            <div className="flex gap-4">
+              <Link href={`/${organization}/podatci/odabir-tablica`}>
+                <Button variant="secondary">Nazad</Button>
+              </Link>
+              <Link href={`/${organization}/podatci/pregled-vrijednosti`}>
+                <Button>Nastavi</Button>
+              </Link>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue={data?.objects[0].key}>
@@ -48,7 +60,7 @@ const ColumnMappingPage = async ({
             </TabsList>
             {data?.objects.map((file) => (
               <TabsContent
-                className="max-h-[80vh] max-w-screen-xl overflow-auto"
+                className="max-w-screen-xl overflow-auto"
                 key={file.key}
                 value={file.key}
               >

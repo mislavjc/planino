@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
@@ -7,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from 'ui/tabs';
 import { TypographyH3 } from 'ui/typography';
 
 import { ExcelTable } from 'components/@import/excel-table';
+import { Button } from 'components/ui/button';
 
 import { importer } from 'api/importer/client';
 
@@ -37,7 +39,17 @@ const DataOverviewPage = async ({
     <div>
       <Card className="max-w-screen-xl">
         <CardHeader>
-          <TypographyH3>Pregled uvezenih podataka</TypographyH3>
+          <div className="flex justify-between">
+            <TypographyH3>Pregled uvezenih podataka</TypographyH3>
+            <div className="flex gap-4">
+              <Link href={`/${organization}/podatci/uvoz-podataka`}>
+                <Button variant="secondary">Nazad</Button>
+              </Link>
+              <Link href={`/${organization}/podatci/mapiranje-stupaca`}>
+                <Button>Nastavi</Button>
+              </Link>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue={data?.objects[0].key}>
