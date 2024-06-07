@@ -127,6 +127,7 @@ export const organizationsRelations = relations(
     teams: many(teams),
     businessPlans: many(businessPlans),
     productGroups: many(productGroups),
+    importedFiles: many(importedFiles),
   }),
 );
 
@@ -528,3 +529,63 @@ export const productPriceHistoryRelations = relations(
     }),
   }),
 );
+
+export const importedFiles = pgTable(
+  'imported_file',
+  {
+    importedFileId: uuid('imported_file_id')
+      .notNull()
+      .primaryKey()
+      .defaultRandom(),
+    createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.organizationId, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      }),
+    name: text('name').notNull(),
+  },
+  (importedFile) => {
+    return {
+      importedFileNameIndex: uniqueIndex(
+        'imported_file_name_index',
+      ).on(importedFile.name),
+    };
+  },
+);
+
+export const importedFilesRelations = relations(
+  importedFiles,
+  ({ one, many }) => ({
+    organization: one(organizations, {
+      fields: [importedFiles.organizationId],
+      references: [organizations.organizationId],
+    }),
+    importedTables: many(importedTables),
+  }),
+);
+
+export const importedTables = pgTable('imported_table', {
+  importedTableId: uuid('imported_table_id')
+    .notNull()
+    .primaryKey()
+    .defaultRandom(),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  importedFileId: uuid('imported_file_id')
+    .notNull()
+    .references(() => importedFiles.importedFileId, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+  type: text('type').notNull(),
+  headers: jsonb('headers').notNull(),
+  mappedHeaders: jsonb('mapped_headers').notNull(),
+});
+
+export const importedTablesRelation = relations(importedTables, ({ one }) => ({
+  importedFile: one(importedFiles, {
+    fields: [importedTables.importedFileId],
+    references: [importedFiles.importedFileId],
+  }),
+}));

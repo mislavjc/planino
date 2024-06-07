@@ -71,6 +71,13 @@
       "when": 1716133357102,
       "tag": "0009_perpetual_maggott",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1717773081439,
+      "tag": "0010_mixed_kang",
+      "breakpoints": true
     }
   ]
 }
