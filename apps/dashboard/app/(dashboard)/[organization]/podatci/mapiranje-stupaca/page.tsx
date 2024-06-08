@@ -1,5 +1,11 @@
+import { importedFiles } from '@planino/database/schema';
+import { eq } from 'drizzle-orm';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+
+import { db } from 'db/drizzle';
+
+import { getOrganization } from 'actions/organization';
 
 import { Button } from 'ui/button';
 import { Card, CardContent, CardHeader } from 'ui/card';
@@ -8,8 +14,6 @@ import { TypographyH3 } from 'ui/typography';
 
 import { ColumnMapping } from 'components/@import/column-mapping';
 
-import { importer } from 'api/importer/client';
-
 export const revalidate = 0;
 
 const ColumnMappingPage = async ({
@@ -17,19 +21,16 @@ const ColumnMappingPage = async ({
 }: {
   params: { organization: string };
 }) => {
-  const { data, error } = await importer.GET('/import/{organization}/files', {
-    params: {
-      path: {
-        organization,
-      },
+  const foundOrganization = await getOrganization(organization);
+
+  const filesWithTables = await db.query.importedFiles.findMany({
+    where: eq(importedFiles.organizationId, foundOrganization.organizationId),
+    with: {
+      importedTables: true,
     },
   });
 
-  if (error) {
-    throw new Error(error);
-  }
-
-  if (!data.objects.length) {
+  if (!filesWithTables.length) {
     redirect(`/${organization}/podatci/uvoz-podataka`);
   }
 
@@ -50,21 +51,21 @@ const ColumnMappingPage = async ({
           </div>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue={data?.objects[0].key}>
+          <Tabs defaultValue={filesWithTables[0].name}>
             <TabsList>
-              {data?.objects.map((file) => (
-                <TabsTrigger key={file.key} value={file.key}>
-                  {file.key}
+              {filesWithTables.map((file) => (
+                <TabsTrigger key={file.name} value={file.name}>
+                  {file.name}
                 </TabsTrigger>
               ))}
             </TabsList>
-            {data?.objects.map((file) => (
+            {filesWithTables.map((file) => (
               <TabsContent
                 className="max-w-screen-xl overflow-auto"
-                key={file.key}
-                value={file.key}
+                key={file.name}
+                value={file.name}
               >
-                <ColumnMapping file={file.key} />
+                <ColumnMapping file={file} />
               </TabsContent>
             ))}
           </Tabs>

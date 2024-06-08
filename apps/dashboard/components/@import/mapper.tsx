@@ -1,4 +1,8 @@
 import React from 'react';
+import {
+  SelectImportedTable,
+  selectImportedTableSchema,
+} from '@planino/database/schema';
 import { ALargeSmall, ArrowRight, BadgeEuro, Binary } from 'lucide-react';
 
 import {
@@ -9,33 +13,7 @@ import {
   SelectValue,
 } from 'ui/select';
 
-import { importer } from 'api/importer/client';
-
-type Args = {
-  name: number;
-  quantity: number;
-  price: number;
-  expenses: number;
-};
-
-type TableRow = unknown[][];
-
-const mapRow = (args: Args, table: TableRow) => {
-  const headers = table[0];
-
-  const headersMapped = {
-    name: headers[args.name],
-    quantity: headers[args.quantity],
-    price: headers[args.price],
-    expenses: headers[args.expenses],
-  };
-
-  return {
-    headersMapped,
-  };
-};
-
-const expensesMap = {
+const expensesMap: { [key: string]: { name: string; icon: JSX.Element } } = {
   name: {
     name: 'Naziv',
     icon: <ALargeSmall className="size-5" />,
@@ -54,34 +32,10 @@ const expensesMap = {
   },
 };
 
-export const Mapper = async ({
-  coordinates,
-  file,
-}: {
-  coordinates: {
-    startRow: number;
-    startColumn: number;
-    endRow: number;
-    endColumn: number;
-  };
-  file: string;
-}) => {
-  const { data } = await importer.GET('/import/{file}/extract-data', {
-    params: {
-      path: {
-        file: encodeURIComponent(file),
-      },
-      query: {
-        coordinates: JSON.stringify(coordinates),
-      },
-    },
-  });
+export const Mapper = ({ table }: { table: SelectImportedTable }) => {
+  const parsedTable = selectImportedTableSchema.parse(table);
 
-  if (!data?.args) {
-    return null;
-  }
-
-  const mappedData = mapRow(data.args, data.table);
+  console.log(parsedTable);
 
   return (
     <div className="grid grid-cols-3 text-sm">
@@ -90,24 +44,28 @@ export const Mapper = async ({
       </div>
       <div className="bg-muted px-4 py-2"></div>
       <div className="bg-muted px-4 py-2 font-mono uppercase">Stavka</div>
-      {Object.keys(mappedData.headersMapped).map((key) => (
+      {Object.keys(parsedTable.headers ?? {}).map((key) => (
         <React.Fragment key={key}>
           <div className="border-y border-l px-4 py-2">
-            {String(mappedData.headersMapped[key as keyof Args] ?? 'N/A')}
+            {String(parsedTable.headers[key] ?? 'N/A')}
           </div>
           <div className="flex w-full border-y px-4 py-2">
             <ArrowRight className="size-4" />
           </div>
-          <Select defaultValue={key}>
+          <Select
+            defaultValue={Object.keys(expensesMap).find(
+              (selectKey) => selectKey === key,
+            )}
+          >
             <SelectTrigger className="border-l-0">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {Object.keys(mappedData.headersMapped).map((key) => (
-                <SelectItem key={key} value={key}>
+              {Object.keys(parsedTable.headers).map((selectKey) => (
+                <SelectItem key={selectKey} value={selectKey}>
                   <div className="flex items-center gap-2">
-                    {expensesMap[key as keyof Args].icon}
-                    <div>{expensesMap[key as keyof Args].name}</div>
+                    {expensesMap[selectKey].icon}
+                    <div>{expensesMap[selectKey].name}</div>
                   </div>
                 </SelectItem>
               ))}
