@@ -100,7 +100,7 @@ const extractTable = (worksheet: ExcelFile) => {
 };
 
 export const extractTableFromCoordinates = (
-  worksheet: ExcelFile,
+  worksheet: unknown[][],
   coordinates: Coordinates,
 ) => {
   const { startRow, startColumn, endRow, endColumn } = coordinates;
@@ -113,7 +113,7 @@ export const extractTableFromCoordinates = (
 type ColumnMap = { [key: string]: number };
 
 export const getTransformerFunction = (data: unknown[][]) => {
-  return (columns: ColumnMap) => {
+  const getData = (columns: ColumnMap) => {
     const filteredData = data.filter((row) =>
       row.some((cell) => cell !== null && cell !== undefined && cell !== ''),
     );
@@ -126,4 +126,17 @@ export const getTransformerFunction = (data: unknown[][]) => {
       return result;
     });
   };
+
+  const getHeaders = (columns: ColumnMap) => {
+    const headers = data[0];
+    const result: { [key: string]: unknown } = {};
+
+    for (const key in columns) {
+      const headerValue = headers[columns[key]];
+      result[key] = headerValue !== undefined ? headerValue : null;
+    }
+    return result;
+  };
+
+  return { getData, getHeaders };
 };

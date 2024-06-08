@@ -1,44 +1,31 @@
 import React from 'react';
+import { z } from 'zod';
 
-import { getColorByTableIndex, isCellInAnyTable } from 'lib/excel';
+import {
+  coordinatesSchema,
+  getColorByTableIndex,
+  isCellInAnyTable,
+} from 'lib/excel';
 
-import { importer } from 'api/importer/client';
-
+import { FileWithTables } from './column-mapping';
 import { ExcelTableCell } from './excel-table-cell';
 
 export const runtime = 'nodejs';
 
-export const ExcelTable = async ({ file }: { file: string }) => {
-  const { data, error } = await importer.GET('/import/{file}/coordinates', {
-    params: {
-      path: {
-        file: encodeURIComponent(file),
-      },
-    },
-  });
+const baseCellSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 
-  if (error) {
-    throw new Error(error.error);
-  }
+export const excelFileSchema = z.array(
+  z.array(z.union([baseCellSchema, z.undefined()])),
+);
 
-  const maxCols = Math.max(...data.worksheet.map((row) => row.length));
+export const ExcelTable = async ({ file }: { file: FileWithTables }) => {
+  const maxCols = Math.max(
+    ...((file.worksheet as Array<Array<unknown>>) ?? [[]]).map(
+      (row) => row.length,
+    ),
+  );
 
-  const sendDataForExtraction = async (formData: FormData) => {
-    'use server';
-
-    const coordinates =
-      data.tables[Number(formData.get('tableIndex'))].coordinates;
-
-    const { data: _extracted, error: _extractedError } = await importer.POST(
-      '/import/extract-data',
-      {
-        body: {
-          worksheet: data.worksheet,
-          coordinates,
-        },
-      },
-    );
-  };
+  const parsedWorksheet = excelFileSchema.parse(file.worksheet);
 
   return (
     <div
@@ -47,13 +34,13 @@ export const ExcelTable = async ({ file }: { file: string }) => {
         gridTemplateColumns: `repeat(${maxCols}, 6rem)`,
       }}
     >
-      {data.worksheet.map((row, rowIndex) => (
+      {parsedWorksheet.map((row, rowIndex) => (
         <React.Fragment key={rowIndex}>
           {row.map((cell, cellIndex) => {
             const [_isInTable, tableIndex] = isCellInAnyTable(
               rowIndex,
               cellIndex,
-              data.tables.map((table) => table.coordinates),
+              file.importedTables.map((table) => table.coordinates),
             );
 
             return (
@@ -71,7 +58,7 @@ export const ExcelTable = async ({ file }: { file: string }) => {
                 const [_isInTable, tableIndex] = isCellInAnyTable(
                   rowIndex,
                   row.length + emptyIndex,
-                  data.tables.map((table) => table.coordinates),
+                  file.importedTables.map((table) => table.coordinates),
                 );
 
                 return (
@@ -84,8 +71,11 @@ export const ExcelTable = async ({ file }: { file: string }) => {
             )}
         </React.Fragment>
       ))}
-      {data.tables.map((table, tableIndex) => {
-        const { startRow, startColumn } = table.coordinates;
+      {file.importedTables.map((table, tableIndex) => {
+        const { startRow, startColumn } = coordinatesSchema.parse(
+          table.coordinates,
+        );
+
         return (
           <form
             key={tableIndex}
@@ -94,7 +84,6 @@ export const ExcelTable = async ({ file }: { file: string }) => {
               gridRowStart: startRow,
               gridColumnStart: startColumn + 1,
             }}
-            action={sendDataForExtraction}
           >
             <input type="hidden" name="tableIndex" value={tableIndex} />
             <button className="h-6 p-1 font-mono text-xs uppercase text-white">

@@ -1,8 +1,14 @@
 'use server';
 
+import { importedFiles } from '@planino/database/schema';
+import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
+import { db } from 'db/drizzle';
+
 import { importer } from 'api/importer/client';
+
+import { getOrganization } from './organization';
 
 export const getPresignedUrls = async (names: string[]) => {
   const { data: r2Data, error } = await importer.POST('/import/presigned-url', {
@@ -18,6 +24,70 @@ export const getPresignedUrls = async (names: string[]) => {
   return r2Data.urls;
 };
 
-export const revalidateTableCache = async () => {
-  revalidatePath('/[organization]/podatci/pregled');
+export const saveFilesToDb = async ({
+  names,
+  organization,
+}: {
+  names: string[];
+  organization: string;
+}) => {
+  const foundOrganization = await getOrganization(organization);
+
+  const files = await db
+    .insert(importedFiles)
+    .values(
+      names.map((name) => ({
+        name,
+        organizationId: foundOrganization.organizationId,
+      })),
+    )
+    .onConflictDoNothing({
+      target: importedFiles.name,
+    })
+    .returning();
+
+  if (!files.length) {
+    throw new Error('Neuspješno spremanje datoteka u bazu podataka');
+  }
+
+  for (const file of files) {
+    const { error } = await importer.POST('/import/{file}/coordinates', {
+      params: {
+        path: {
+          file: encodeURIComponent(file.name),
+        },
+      },
+    });
+
+    if (error) {
+      throw new Error(error.error);
+    }
+  }
+
+  revalidatePath('/[organization]/podatci', 'layout');
+
+  return files;
+};
+
+export const getFiles = async (organization: string) => {
+  const foundOrganization = await getOrganization(organization);
+
+  const files = await db.query.importedFiles.findMany({
+    where: eq(importedFiles.organizationId, foundOrganization.organizationId),
+  });
+
+  return files;
+};
+
+export const getFilesWtihTables = async (organization: string) => {
+  const foundOrganization = await getOrganization(organization);
+
+  const filesWithTables = await db.query.importedFiles.findMany({
+    where: eq(importedFiles.organizationId, foundOrganization.organizationId),
+    with: {
+      importedTables: true,
+    },
+  });
+
+  return filesWithTables;
 };

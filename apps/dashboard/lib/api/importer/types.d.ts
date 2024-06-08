@@ -43,7 +43,7 @@ export interface paths {
     };
   };
   '/import/{file}/coordinates': {
-    get: {
+    post: {
       parameters: {
         path: {
           file: string;
@@ -71,35 +71,6 @@ export interface paths {
           content: {
             'application/json': {
               error: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  '/import/extract-data': {
-    post: {
-      requestBody: {
-        content: {
-          'application/json': {
-            worksheet: unknown[][];
-            coordinates: {
-              startRow: number;
-              startColumn: number;
-              endRow: number;
-              endColumn: number;
-            };
-          };
-        };
-      };
-      responses: {
-        /** @description Extract data from coordinates */
-        200: {
-          content: {
-            'application/json': {
-              data: {
-                [key: string]: unknown;
-              }[];
             };
           };
         };

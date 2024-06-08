@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { predefinedColors } from './utils';
 
 type TableCoordinates = {
@@ -26,6 +28,13 @@ const generateIndexArray = (coordinates: TableCoordinates) => {
   return indexArray;
 };
 
+export const coordinatesSchema = z.object({
+  startRow: z.number(),
+  startColumn: z.number(),
+  endRow: z.number(),
+  endColumn: z.number(),
+});
+
 /**
  * Checks if a cell is present in any table.
  * @param cellRow - The row index of the cell.
@@ -36,10 +45,12 @@ const generateIndexArray = (coordinates: TableCoordinates) => {
 export const isCellInAnyTable = (
   cellRow: number,
   cellColumn: number,
-  tables: TableCoordinates[],
+  tables: unknown[],
 ): [boolean, number] => {
   for (let i = 0; i < tables.length; i++) {
-    const indexes = generateIndexArray(tables[i]);
+    const parsedCoordinates = coordinatesSchema.parse(tables[i]);
+
+    const indexes = generateIndexArray(parsedCoordinates);
     if (indexes.some(([row, col]) => row === cellRow && col === cellColumn)) {
       return [true, i];
     }

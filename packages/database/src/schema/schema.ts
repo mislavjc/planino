@@ -14,6 +14,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { type InferSelectModel, type InferInsertModel } from 'drizzle-orm';
 
 export const users = pgTable('user', {
   id: text('id').notNull().primaryKey(),
@@ -127,6 +128,7 @@ export const organizationsRelations = relations(
     teams: many(teams),
     businessPlans: many(businessPlans),
     productGroups: many(productGroups),
+    importedFiles: many(importedFiles),
   }),
 );
 
@@ -528,3 +530,86 @@ export const productPriceHistoryRelations = relations(
     }),
   }),
 );
+
+export const importedFiles = pgTable(
+  'imported_file',
+  {
+    importedFileId: uuid('imported_file_id')
+      .notNull()
+      .primaryKey()
+      .defaultRandom(),
+    createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.organizationId, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+      }),
+    name: text('name').notNull(),
+    worksheet: jsonb('worksheet'),
+  },
+  (importedFile) => {
+    return {
+      importedFileNameIndex: uniqueIndex('imported_file_name_index').on(
+        importedFile.name,
+      ),
+    };
+  },
+);
+
+export type SelectImportedFile = InferSelectModel<typeof importedFiles>;
+export const insertImportedFileSchema = createInsertSchema(importedFiles);
+export const selectImportedFileSchema = createSelectSchema(importedFiles);
+
+export const importedFilesRelations = relations(
+  importedFiles,
+  ({ one, many }) => ({
+    organization: one(organizations, {
+      fields: [importedFiles.organizationId],
+      references: [organizations.organizationId],
+    }),
+    importedTables: many(importedTables),
+  }),
+);
+
+export const importedTables = pgTable('imported_table', {
+  importedTableId: uuid('imported_table_id')
+    .notNull()
+    .primaryKey()
+    .defaultRandom(),
+  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
+  importedFileId: uuid('imported_file_id')
+    .notNull()
+    .references(() => importedFiles.importedFileId, {
+      onDelete: 'cascade',
+      onUpdate: 'cascade',
+    }),
+  type: text('type').notNull(),
+  coordinates: jsonb('coordinates').notNull(),
+  args: jsonb('args').notNull(),
+  headers: jsonb('headers').notNull(),
+  values: jsonb('values').notNull(),
+  mappedHeaders: jsonb('mapped_headers').notNull(),
+});
+
+export type SelectImportedTable = InferSelectModel<typeof importedTables>;
+export const insertImportedTableSchema = createInsertSchema(importedTables);
+export const selectImportedTableSchema = createSelectSchema(importedTables, {
+  args: z.record(z.string(), z.number()),
+  headers: z.record(z.string(), z.string().nullable()),
+  mappedHeaders: z.record(z.string(), z.string().nullable()),
+  coordinates: z.object({
+    endRow: z.number(),
+    startRow: z.number(),
+    endColumn: z.number(),
+    startColumn: z.number(),
+  }),
+  values: z.array(z.array(z.unknown())),
+});
+
+export const importedTablesRelation = relations(importedTables, ({ one }) => ({
+  importedFile: one(importedFiles, {
+    fields: [importedTables.importedFileId],
+    references: [importedFiles.importedFileId],
+  }),
+}));

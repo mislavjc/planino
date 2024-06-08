@@ -173,7 +173,6 @@ export const BarGroupChart = <T extends DataRecord>({
                               const eventSvgCoords = localPoint(event);
                               const left = bar.x + bar.width / 2;
 
-                              console.log(bar);
                               showTooltip({
                                 tooltipData: bar,
                                 tooltipTop: eventSvgCoords?.y,

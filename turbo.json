@@ -1,11 +1,16 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "tasks": {
     "build": {
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ]
     },
     "lint": {},
-    "dev": {},
+    "dev": {
+      "persistent": true
+    },
     "start": {},
     "storybook": {},
     "deploy": {

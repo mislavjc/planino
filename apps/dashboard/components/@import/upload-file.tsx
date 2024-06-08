@@ -7,7 +7,7 @@ import { FileBarChart, Paperclip } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { z } from 'zod';
 
-import { getPresignedUrls, revalidateTableCache } from 'actions/importer';
+import { getPresignedUrls, saveFilesToDb } from 'actions/importer';
 
 import { Button } from 'ui/button';
 import {
@@ -68,11 +68,14 @@ export const FileDropzone = () => {
       });
     }
 
-    revalidateTableCache();
+    await saveFilesToDb({
+      names: data.files.map((file) => `${organization}/${file.name}`),
+      organization: organization as string,
+    });
 
     await new Promise((resolve) => setTimeout(resolve, 500));
 
-    router.push(`/${organization}/podatci/pregled`);
+    router.push(`/${organization}/podatci/odabir-tablica`);
   };
 
   return (

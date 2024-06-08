@@ -1,0 +1,1 @@
+ALTER TABLE "imported_file" ADD COLUMN "worksheet" jsonb;

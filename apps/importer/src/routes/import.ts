@@ -1,15 +1,20 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createRoute, z } from '@hono/zod-openapi';
-import * as XLSX from 'xlsx';
+import { importedFiles, importedTables } from '@planino/database/schema';
+import { generateText, tool } from 'ai';
+import { eq } from 'drizzle-orm';
+
+import { getDb } from 'db/drizzle';
 
 import { app, getOpenAIClient, getR2Client } from 'utils/bindings';
+import { openExcelFile } from 'utils/excel';
 import {
   extractMultipleTableCoordinates,
   extractTableFromCoordinates,
   getTransformerFunction,
 } from 'utils/importer';
-import { extractionTools, functionExtractionPrompt } from 'utils/prompts';
+import { functionExtractionPrompt } from 'utils/prompts';
 
 const importPayloadSchema = z.object({
   names: z.array(z.string()).min(1),
@@ -121,7 +126,7 @@ app.openapi(getAllExcelFiles, async (c) => {
 
 const baseCellSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 
-const excelFileSchema = z.array(
+export const excelFileSchema = z.array(
   z.array(z.union([baseCellSchema, z.undefined()])),
 );
 
@@ -134,8 +139,8 @@ const coordinatesSchema = z.object({
 
 export type Coordinates = z.infer<typeof coordinatesSchema>;
 
-const getExcelFile = createRoute({
-  method: 'get',
+const generateTableCoordinates = createRoute({
+  method: 'post',
   tags: ['import'],
   path: '/import/{file}/coordinates',
   request: {
@@ -187,7 +192,7 @@ const getExcelFile = createRoute({
   },
 });
 
-app.openapi(getExcelFile, async (c) => {
+app.openapi(generateTableCoordinates, async (c) => {
   const { file } = c.req.valid('param');
 
   const key = decodeURIComponent(file);
@@ -200,17 +205,89 @@ app.openapi(getExcelFile, async (c) => {
     return c.json({ error: 'File not found' }, { status: 404 });
   }
 
-  const workbook = XLSX.read(objectData);
-  const sheetName = workbook.SheetNames[0];
-  const worksheet = workbook.Sheets[sheetName];
-  const excel = XLSX.utils.sheet_to_json(worksheet, {
-    header: 1,
-    blankrows: true,
-  });
-
-  const parsedExcel = excelFileSchema.parse(excel);
+  const { excel, parsedExcel } = openExcelFile(objectData);
 
   const tables = extractMultipleTableCoordinates(parsedExcel);
+
+  const db = getDb(c.env.DATABASE_URL);
+
+  const foundFile = await db.query.importedFiles.findFirst({
+    where: eq(importedFiles.name, key),
+  });
+
+  if (!foundFile) {
+    throw new Error('File not found');
+  }
+
+  await db.update(importedFiles).set({
+    worksheet: excel,
+  });
+
+  for (const table of tables) {
+    const extractedData = extractTableFromCoordinates(
+      excel as unknown[][],
+      table.coordinates,
+    );
+
+    const { getData, getHeaders } = getTransformerFunction(extractedData);
+
+    const slicedData = extractedData.slice(0, 5);
+
+    const openai = getOpenAIClient(c.env);
+
+    const result = await generateText({
+      model: openai('gpt-4o'),
+      messages: [
+        {
+          role: 'system',
+          content: functionExtractionPrompt(slicedData),
+        },
+      ],
+      tools: {
+        transformArrayToObjects: tool({
+          description:
+            "Extracts data from a 2D array and returns an object mapping each column index based on specified fields. The fields in the return object are 'name', 'quantity', 'price', and 'expenses'. Each field corresponds to a specific index in each sub-array of the input. The function checks if the data can be converted into the specified schema. If not, an empty object is returned.",
+          parameters: z.object({
+            name: z
+              .number()
+              .describe(
+                "The column index for the 'name' field, where the value should be a string.",
+              ),
+            quantity: z
+              .number()
+              .describe(
+                "The column index for the 'quantity' field, where the value should be a number.",
+              ),
+            price: z
+              .number()
+              .describe(
+                "The column index for the 'price' field, where the value should be a number.",
+              ),
+            expenses: z
+              .number()
+              .describe(
+                "The column index for the 'expenses' field, where the value should be a number.",
+              ),
+          }),
+          execute: async (args) => getData(args),
+        }),
+      },
+    });
+
+    const args = result.toolResults[0]?.args;
+
+    const headers = getHeaders(args);
+
+    await db.insert(importedTables).values({
+      args,
+      coordinates: table.coordinates,
+      headers,
+      values: extractedData,
+      mappedHeaders: headers,
+      type: 'expenses',
+      importedFileId: foundFile.importedFileId,
+    });
+  }
 
   return c.json({
     worksheet: excel,
@@ -219,134 +296,5 @@ app.openapi(getExcelFile, async (c) => {
 });
 
 export type ExcelFile = z.infer<typeof excelFileSchema>;
-
-const extractionSchema = z.array(
-  z.record(z.string(), z.union([z.string(), z.number(), z.null()])),
-);
-
-const extractDataFromCoordinates = createRoute({
-  method: 'post',
-  tags: ['import'],
-  path: '/import/extract-data',
-  request: {
-    body: {
-      content: {
-        'application/json': {
-          schema: z
-            .object({
-              worksheet: z.array(z.array(baseCellSchema)),
-              coordinates: coordinatesSchema,
-            })
-            .openapi({
-              title: 'Extract data from coordinates',
-            }),
-        },
-      },
-      required: true,
-    },
-  },
-  responses: {
-    200: {
-      content: {
-        'application/json': {
-          schema: z
-            .object({
-              data: extractionSchema,
-            })
-            .openapi({
-              title: 'Extracted data',
-            }),
-        },
-      },
-      description: 'Extract data from coordinates',
-    },
-    400: {
-      content: {
-        'application/json': {
-          schema: z
-            .object({
-              error: z.string(),
-            })
-            .openapi({
-              title: 'Error',
-            }),
-        },
-      },
-      description: 'Error extracting data',
-    },
-  },
-});
-
-app.openapi(extractDataFromCoordinates, async (c) => {
-  const { worksheet, coordinates } = c.req.valid('json');
-
-  const messages = [];
-
-  const extractedData = extractTableFromCoordinates(worksheet, coordinates);
-
-  const transformArrayToObjects = getTransformerFunction(extractedData);
-
-  const slicedData = extractedData.slice(0, 5);
-
-  const openai = getOpenAIClient(c.env);
-
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4-turbo',
-    temperature: 0,
-    messages: [
-      {
-        role: 'system',
-        content: functionExtractionPrompt(slicedData),
-      },
-    ],
-    tools: extractionTools,
-  });
-
-  const responseMessage = completion.choices[0].message;
-
-  messages.push(responseMessage);
-
-  const toolCalls = responseMessage.tool_calls;
-
-  if (toolCalls) {
-    const availableFunctions = {
-      transformArrayToObjects,
-    };
-
-    for (const toolCall of toolCalls) {
-      const calledFunction = toolCall.function;
-
-      if (calledFunction.name in availableFunctions) {
-        const args = JSON.parse(calledFunction.arguments || '{}');
-
-        const foundFunction =
-          availableFunctions[
-            calledFunction.name as keyof typeof availableFunctions
-          ];
-
-        const result = foundFunction(args);
-
-        messages.push({
-          tool_call_id: toolCall.id,
-          role: 'tool',
-          name: calledFunction.name,
-          content: result,
-        });
-      }
-    }
-  }
-
-  const toolResponses = messages.filter((message) => message.role === 'tool');
-
-  if (toolResponses.length === 0) {
-    return c.json({ error: 'Error extracting data' }, { status: 400 });
-  }
-
-  const data = toolResponses[0].content;
-
-  const parsedData = extractionSchema.parse(data);
-
-  return c.json({ data: parsedData });
-});
 
 export { app as importRoutes };
