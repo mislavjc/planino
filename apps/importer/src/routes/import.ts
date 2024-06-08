@@ -229,12 +229,6 @@ app.openapi(generateTableCoordinates, async (c) => {
       table.coordinates,
     );
 
-    console.log({
-      extractedData,
-      parsedExcel,
-      table,
-    });
-
     const { getData, getHeaders } = getTransformerFunction(extractedData);
 
     const slicedData = extractedData.slice(0, 5);

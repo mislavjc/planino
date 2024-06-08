@@ -35,8 +35,6 @@ const expensesMap: { [key: string]: { name: string; icon: JSX.Element } } = {
 export const Mapper = ({ table }: { table: SelectImportedTable }) => {
   const parsedTable = selectImportedTableSchema.parse(table);
 
-  console.log(parsedTable);
-
   return (
     <div className="grid grid-cols-3 text-sm">
       <div className="bg-muted px-4 py-2 font-mono uppercase">
