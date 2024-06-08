@@ -50,7 +50,23 @@ export const saveFilesToDb = async ({
     throw new Error('Neuspješno spremanje datoteka u bazu podataka');
   }
 
-  revalidatePath('/[organization]/podatci/uvoz-podataka');
+  for (const file of files) {
+    const { error } = await importer.POST('/import/{file}/coordinates', {
+      params: {
+        path: {
+          file: encodeURIComponent(file.name),
+        },
+      },
+    });
+
+    if (error) {
+      throw new Error(error.error);
+    }
+  }
+
+  revalidatePath('/[organization]/podatci/mapiranje-stupaca', 'page');
+  revalidatePath('/[organization]/podatci/odabir-tablica', 'page');
+  revalidatePath('/[organization]/podatci/mapiranje-stupaca', 'page');
 
   return files;
 };
