@@ -1,6 +1,12 @@
 import { Suspense } from 'react';
+import { importedFiles } from '@planino/database/schema';
+import { eq } from 'drizzle-orm';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+
+import { db } from 'db/drizzle';
+
+import { getOrganization } from 'actions/organization';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
 import { ScrollArea } from 'ui/scroll-area';
@@ -10,8 +16,6 @@ import { TypographyH3 } from 'ui/typography';
 import { ExcelTable } from 'components/@import/excel-table';
 import { Button } from 'components/ui/button';
 
-import { importer } from 'api/importer/client';
-
 export const revalidate = 0;
 
 const DataOverviewPage = async ({
@@ -19,19 +23,16 @@ const DataOverviewPage = async ({
 }: {
   params: { organization: string };
 }) => {
-  const { data, error } = await importer.GET('/import/{organization}/files', {
-    params: {
-      path: {
-        organization,
-      },
+  const foundOrganization = await getOrganization(organization);
+
+  const filesWithTables = await db.query.importedFiles.findMany({
+    where: eq(importedFiles.organizationId, foundOrganization.organizationId),
+    with: {
+      importedTables: true,
     },
   });
 
-  if (error) {
-    throw new Error(error);
-  }
-
-  if (!data.objects.length) {
+  if (!filesWithTables.length) {
     redirect(`/${organization}/podatci/uvoz-podataka`);
   }
 
@@ -52,23 +53,23 @@ const DataOverviewPage = async ({
           </div>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue={data?.objects[0].key}>
+          <Tabs defaultValue={filesWithTables[0].name}>
             <TabsList>
-              {data?.objects.map((file) => (
-                <TabsTrigger key={file.key} value={file.key}>
-                  {file.key}
+              {filesWithTables.map((file) => (
+                <TabsTrigger key={file.name} value={file.name}>
+                  {file.name}
                 </TabsTrigger>
               ))}
             </TabsList>
-            {data?.objects.map((file) => (
+            {filesWithTables.map((file) => (
               <TabsContent
                 className="max-h-[80vh] max-w-screen-xl overflow-auto"
-                key={file.key}
-                value={file.key}
+                key={file.name}
+                value={file.name}
               >
                 <ScrollArea className="w-max">
                   <Suspense>
-                    <ExcelTable file={file.key} />
+                    <ExcelTable file={file} />
                   </Suspense>
                 </ScrollArea>
               </TabsContent>
