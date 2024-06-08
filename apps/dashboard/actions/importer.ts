@@ -64,9 +64,7 @@ export const saveFilesToDb = async ({
     }
   }
 
-  revalidatePath('/[organization]/podatci/mapiranje-stupaca', 'page');
-  revalidatePath('/[organization]/podatci/odabir-tablica', 'page');
-  revalidatePath('/[organization]/podatci/mapiranje-stupaca', 'page');
+  revalidatePath('/[organization]/podatci', 'layout');
 
   return files;
 };
