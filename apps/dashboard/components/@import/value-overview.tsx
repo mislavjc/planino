@@ -6,6 +6,8 @@ import {
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from 'ui/tabs';
 
+import { expensesMap } from './mapper';
+
 type ColumnMap = {
   [key: string]: number;
 };
@@ -52,7 +54,7 @@ export const ValueOverview = async ({
             transformData(parsedTable.values, parsedTable.args),
           ).map(([key]) => (
             <TabsTrigger key={key} value={key}>
-              {key}
+              {expensesMap[key].name}
             </TabsTrigger>
           ))}
         </TabsList>

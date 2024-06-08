@@ -13,7 +13,9 @@ import {
   SelectValue,
 } from 'ui/select';
 
-const expensesMap: { [key: string]: { name: string; icon: JSX.Element } } = {
+export const expensesMap: {
+  [key: string]: { name: string; icon: JSX.Element };
+} = {
   name: {
     name: 'Naziv',
     icon: <ALargeSmall className="size-5" />,
