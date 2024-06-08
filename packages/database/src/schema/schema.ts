@@ -588,6 +588,7 @@ export const importedTables = pgTable('imported_table', {
   coordinates: jsonb('coordinates').notNull(),
   args: jsonb('args').notNull(),
   headers: jsonb('headers').notNull(),
+  values: jsonb('values').notNull(),
   mappedHeaders: jsonb('mapped_headers').notNull(),
 });
 
@@ -603,6 +604,7 @@ export const selectImportedTableSchema = createSelectSchema(importedTables, {
     endColumn: z.number(),
     startColumn: z.number(),
   }),
+  values: z.array(z.array(z.unknown())),
 });
 
 export const importedTablesRelation = relations(importedTables, ({ one }) => ({

@@ -99,6 +99,13 @@
       "when": 1717846749568,
       "tag": "0013_giant_whiplash",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1717866017023,
+      "tag": "0014_stormy_vulcan",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,1 @@
+ALTER TABLE "imported_table" ADD COLUMN "values" jsonb NOT NULL;
