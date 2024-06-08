@@ -14,6 +14,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { type InferSelectModel, type InferInsertModel } from 'drizzle-orm';
 
 export const users = pgTable('user', {
   id: text('id').notNull().primaryKey(),
@@ -545,15 +546,20 @@ export const importedFiles = pgTable(
         onUpdate: 'cascade',
       }),
     name: text('name').notNull(),
+    worksheet: jsonb('worksheet'),
   },
   (importedFile) => {
     return {
-      importedFileNameIndex: uniqueIndex(
-        'imported_file_name_index',
-      ).on(importedFile.name),
+      importedFileNameIndex: uniqueIndex('imported_file_name_index').on(
+        importedFile.name,
+      ),
     };
   },
 );
+
+export type SelectImportedFile = InferSelectModel<typeof importedFiles>;
+export const insertImportedFileSchema = createInsertSchema(importedFiles);
+export const selectImportedFileSchema = createSelectSchema(importedFiles);
 
 export const importedFilesRelations = relations(
   importedFiles,
@@ -579,8 +585,24 @@ export const importedTables = pgTable('imported_table', {
       onUpdate: 'cascade',
     }),
   type: text('type').notNull(),
+  coordinates: jsonb('coordinates').notNull(),
+  args: jsonb('args').notNull(),
   headers: jsonb('headers').notNull(),
   mappedHeaders: jsonb('mapped_headers').notNull(),
+});
+
+export type SelectImportedTable = InferSelectModel<typeof importedTables>;
+export const insertImportedTableSchema = createInsertSchema(importedTables);
+export const selectImportedTableSchema = createSelectSchema(importedTables, {
+  args: z.record(z.string(), z.number()),
+  headers: z.record(z.string(), z.string().nullable()),
+  mappedHeaders: z.record(z.string(), z.string().nullable()),
+  coordinates: z.object({
+    endRow: z.number(),
+    startRow: z.number(),
+    endColumn: z.number(),
+    startColumn: z.number(),
+  }),
 });
 
 export const importedTablesRelation = relations(importedTables, ({ one }) => ({
