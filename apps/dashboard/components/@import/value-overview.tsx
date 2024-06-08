@@ -60,11 +60,13 @@ export const ValueOverview = async ({
           transformData(parsedTable.values, parsedTable.args),
         ).map(([key, value]) => (
           <TabsContent key={key} value={key}>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col border">
               {value
                 .filter((v) => v !== null && v !== undefined && v !== '')
                 .map((v, i) => (
-                  <div key={i}>{String(v)}</div>
+                  <div key={i} className="even:bg-muted px-4 py-2">
+                    {String(v)}
+                  </div>
                 ))}
             </div>
           </TabsContent>
