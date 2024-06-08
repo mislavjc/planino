@@ -80,3 +80,16 @@ export const getFiles = async (organization: string) => {
 
   return files;
 };
+
+export const getFilesWtihTables = async (organization: string) => {
+  const foundOrganization = await getOrganization(organization);
+
+  const filesWithTables = await db.query.importedFiles.findMany({
+    where: eq(importedFiles.organizationId, foundOrganization.organizationId),
+    with: {
+      importedTables: true,
+    },
+  });
+
+  return filesWithTables;
+};

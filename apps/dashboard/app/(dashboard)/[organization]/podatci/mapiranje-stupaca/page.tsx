@@ -1,11 +1,7 @@
-import { importedFiles } from '@planino/database/schema';
-import { eq } from 'drizzle-orm';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import { db } from 'db/drizzle';
-
-import { getOrganization } from 'actions/organization';
+import { getFilesWtihTables } from 'actions/importer';
 
 import { Button } from 'ui/button';
 import { Card, CardContent, CardHeader } from 'ui/card';
@@ -21,14 +17,7 @@ const ColumnMappingPage = async ({
 }: {
   params: { organization: string };
 }) => {
-  const foundOrganization = await getOrganization(organization);
-
-  const filesWithTables = await db.query.importedFiles.findMany({
-    where: eq(importedFiles.organizationId, foundOrganization.organizationId),
-    with: {
-      importedTables: true,
-    },
-  });
+  const filesWithTables = await getFilesWtihTables(organization);
 
   if (!filesWithTables.length) {
     redirect(`/${organization}/podatci/uvoz-podataka`);
