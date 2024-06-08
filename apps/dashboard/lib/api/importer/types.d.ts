@@ -43,7 +43,7 @@ export interface paths {
     };
   };
   '/import/{file}/coordinates': {
-    get: {
+    post: {
       parameters: {
         path: {
           file: string;
@@ -68,46 +68,6 @@ export interface paths {
         };
         /** @description File not found */
         404: {
-          content: {
-            'application/json': {
-              error: string;
-            };
-          };
-        };
-      };
-    };
-  };
-  '/import/{file}/extract-data': {
-    get: {
-      parameters: {
-        query: {
-          coordinates: string;
-        };
-        path: {
-          file: string;
-        };
-      };
-      responses: {
-        /** @description Extract data from coordinates */
-        200: {
-          content: {
-            'application/json': {
-              data: {
-                [key: string]: unknown;
-              }[];
-              /** Arguments */
-              args: {
-                name: number;
-                quantity: number;
-                price: number;
-                expenses: number;
-              };
-              table: unknown[][];
-            };
-          };
-        };
-        /** @description Error extracting data */
-        400: {
           content: {
             'application/json': {
               error: string;
