@@ -282,6 +282,7 @@ app.openapi(generateTableCoordinates, async (c) => {
       args,
       coordinates: table.coordinates,
       headers,
+      values: extractedData,
       mappedHeaders: headers,
       type: 'expenses',
       importedFileId: foundFile.importedFileId,
