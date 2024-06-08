@@ -17,6 +17,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { Separator } from '../ui/separator';
 
+import { ComponentExtension } from './elements/custom';
 import { GenerativeMenuSwitch } from './generative/generative-menu-switch';
 import { ColorSelector } from './selectors/color-selector';
 import { LinkSelector } from './selectors/link-selector';
@@ -54,7 +55,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
     <EditorRoot>
       <EditorContent
         {...(initialValue && { initialContent: initialValue })}
-        extensions={extensions}
+        extensions={[...extensions, ComponentExtension]}
         editorProps={{
           handleDOMEvents: {
             keydown: (_view, event) => handleCommandNavigation(event),
@@ -71,8 +72,8 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
         }}
         slotAfter={<ImageResizer />}
       >
-        <EditorCommand className="z-50 h-auto max-h-[330px] overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all">
-          <EditorCommandEmpty className="px-2 text-muted-foreground">
+        <EditorCommand className="border-muted bg-background z-50 h-auto max-h-[330px] overflow-y-auto rounded-md border px-1 py-2 shadow-md transition-all">
+          <EditorCommandEmpty className="text-muted-foreground px-2">
             Nema rezultata
           </EditorCommandEmpty>
           <EditorCommandList>
@@ -80,15 +81,15 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
               <EditorCommandItem
                 value={item.title}
                 onCommand={(val) => item.command?.(val)}
-                className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm hover:bg-accent aria-selected:bg-accent `}
+                className={`hover:bg-accent aria-selected:bg-accent flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm `}
                 key={item.title}
               >
-                <div className="flex size-10 items-center justify-center rounded-md border border-muted bg-background">
+                <div className="border-muted bg-background flex size-10 items-center justify-center rounded-md border">
                   {item.icon}
                 </div>
                 <div>
                   <p className="font-medium">{item.title}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-muted-foreground text-xs">
                     {item.description}
                   </p>
                 </div>
