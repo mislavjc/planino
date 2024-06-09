@@ -12,7 +12,13 @@ const InventoryBarChartExtension = createChartNode({
   elementName: elements.inventoryBarChart,
 });
 
+const TeamsBarChartExtension = createChartNode({
+  ChartComponent: () => <BarChart type="teams" />,
+  elementName: elements.teamsBarChart,
+});
+
 export const elementsExtensions = [
   OperationalExpensesBarChartExtension,
   InventoryBarChartExtension,
+  TeamsBarChartExtension,
 ];

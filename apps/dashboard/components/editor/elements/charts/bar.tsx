@@ -18,13 +18,13 @@ export const BarChart = ({ type }: { type: CategoryType }) => {
   return (
     <NodeViewWrapper>
       <div className="grid xl:grid-cols-2">
-        {chart?.values.map((team) => (
-          <div key={team.name}>
-            <TypographyH4>{team.name}</TypographyH4>
+        {chart?.values.map((item) => (
+          <div key={item.name}>
+            <TypographyH4>{item.name}</TypographyH4>
             <div className="h-[60vh]">
               <BarStackChart
-                key={team.name}
-                data={team.values}
+                key={item.name}
+                data={item.values}
                 domainKey="year"
               />
             </div>

@@ -1,6 +1,7 @@
 export const elements = {
   operationalExpensesBarChart: 'operationalExpensesBarChart',
   inventoryBarChart: 'inventoryBarChart',
+  teamsBarChart: 'teamsBarChart',
 } satisfies {
   [key: string]: string;
 };

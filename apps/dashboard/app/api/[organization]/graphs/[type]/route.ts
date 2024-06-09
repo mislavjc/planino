@@ -1,16 +1,25 @@
 import { getYearlyExpenseAggregation } from 'actions/expense';
 import { getInventoryValues } from 'actions/inventory';
+import { getYearlyPayrollAggregation } from 'actions/team';
 
 import { CategoryType, categoryTypeSchema } from 'hooks/charts';
 
 import { transformAggregateValues } from 'lib/charts';
-
 const fetchDataByType = async (type: CategoryType, organization: string) => {
   switch (type) {
     case 'operational-expenses':
-      return await getYearlyExpenseAggregation(organization);
+      const yearlyExpenses = await getYearlyExpenseAggregation(organization);
+
+      return transformAggregateValues(yearlyExpenses);
     case 'inventory':
-      return await getInventoryValues(organization);
+      const inventory = await getInventoryValues(organization);
+
+      return transformAggregateValues(inventory);
+
+    case 'teams':
+      const teams = await getYearlyPayrollAggregation(organization);
+
+      return transformAggregateValues(teams);
     default:
       throw new Error('Invalid data type');
   }
@@ -31,18 +40,9 @@ export const GET = async (
 
   const parsedType = categoryTypeSchema.parse(type);
 
-  const { values, years, numberOfYears } = await fetchDataByType(
-    parsedType,
-    organization,
-  );
-
-  const transformedData = transformAggregateValues({
-    values,
-    years,
-    numberOfYears,
-  });
+  const data = await fetchDataByType(parsedType, organization);
 
   return Response.json({
-    values: transformedData,
+    values: data,
   });
 };

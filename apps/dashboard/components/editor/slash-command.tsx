@@ -216,7 +216,7 @@ export const graphSuggestions = createSuggestionItems([
         .focus()
         .deleteRange(range)
         .insertContent({
-          type: 'teamBarChart',
+          type: elements.teamsBarChart,
         })
         .run();
     },
