@@ -1,4 +1,4 @@
-import { BarStackChart } from '@planino/charts';
+import { BarChart } from '@planino/charts';
 
 import { getProductAggregations } from 'actions/product';
 
@@ -13,7 +13,17 @@ export const Charts = async ({
 
   return (
     <div className="h-[50vh]">
-      <BarStackChart data={product} domainKey="month" />
+      <BarChart
+        data={product}
+        className="h-[50vh]"
+        index="month"
+        type="stacked"
+        categories={
+          product.length > 0
+            ? Object.keys(product[0]).filter((key) => key !== 'month')
+            : []
+        }
+      />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { BarStackChart } from '@planino/charts';
+import { BarChart, BarStackChart } from '@planino/charts';
 
 import { getLoansForCalulation } from 'actions/loan';
 
@@ -18,10 +18,19 @@ export const Charts = async ({ organization }: { organization: string }) => {
           <div key={loan.name}>
             <TypographyH4>{loan.name}</TypographyH4>
             <div className="h-[60vh]">
-              <BarStackChart
+              <BarChart
                 key={loan.name}
                 data={loan.values}
-                domainKey="year"
+                className="h-[50vh]"
+                index="year"
+                type="stacked"
+                categories={
+                  loan.values.length > 0
+                    ? Object.keys(loan.values[0]).filter(
+                        (key) => key !== 'year',
+                      )
+                    : []
+                }
               />
             </div>
           </div>
