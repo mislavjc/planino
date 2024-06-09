@@ -1,24 +1,24 @@
 import { BarChart } from './charts/bar';
-import { createChartNode } from './charts/factory';
+import { createChartNode } from './factory';
 import { elements } from './registry';
 
 const OperationalExpensesBarChartExtension = createChartNode({
-  ChartComponent: () => <BarChart type="operational-expenses" />,
+  Component: () => <BarChart type="operational-expenses" />,
   elementName: elements.operationalExpensesBarChart,
 });
 
 const InventoryBarChartExtension = createChartNode({
-  ChartComponent: () => <BarChart type="inventory" />,
+  Component: () => <BarChart type="inventory" />,
   elementName: elements.inventoryBarChart,
 });
 
 const TeamsBarChartExtension = createChartNode({
-  ChartComponent: () => <BarChart type="teams" />,
+  Component: () => <BarChart type="teams" />,
   elementName: elements.teamsBarChart,
 });
 
 const LoansBarChartExtension = createChartNode({
-  ChartComponent: () => <BarChart type="loans" />,
+  Component: () => <BarChart type="loans" />,
   elementName: elements.loansBarChart,
 });
 

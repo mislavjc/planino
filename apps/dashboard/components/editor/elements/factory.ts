@@ -3,10 +3,10 @@ import { ReactNodeViewRenderer } from '@tiptap/react';
 
 export const createChartNode = ({
   elementName,
-  ChartComponent,
+  Component,
 }: {
   elementName: string;
-  ChartComponent: React.ComponentType<unknown>;
+  Component: React.ComponentType<unknown>;
 }) => {
   const node = Node.create({
     name: elementName,
@@ -27,7 +27,7 @@ export const createChartNode = ({
     },
 
     addNodeView() {
-      return ReactNodeViewRenderer(ChartComponent);
+      return ReactNodeViewRenderer(Component);
     },
   });
 
