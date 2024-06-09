@@ -1,7 +1,6 @@
 import {
   BarChart,
   CheckSquare,
-  Component,
   Heading1,
   Heading2,
   Heading3,
