@@ -17,8 +17,14 @@ const TeamsBarChartExtension = createChartNode({
   elementName: elements.teamsBarChart,
 });
 
+const LoansBarChartExtension = createChartNode({
+  ChartComponent: () => <BarChart type="loans" />,
+  elementName: elements.loansBarChart,
+});
+
 export const elementsExtensions = [
   OperationalExpensesBarChartExtension,
   InventoryBarChartExtension,
   TeamsBarChartExtension,
+  LoansBarChartExtension,
 ];

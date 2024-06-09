@@ -184,7 +184,7 @@ export const graphSuggestions = createSuggestionItems([
         .focus()
         .deleteRange(range)
         .insertContent({
-          type: 'loansBarChart',
+          type: elements.loansBarChart,
         })
         .run();
     },

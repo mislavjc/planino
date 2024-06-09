@@ -2,6 +2,7 @@ export const elements = {
   operationalExpensesBarChart: 'operationalExpensesBarChart',
   inventoryBarChart: 'inventoryBarChart',
   teamsBarChart: 'teamsBarChart',
+  loansBarChart: 'loansBarChart',
 } satisfies {
   [key: string]: string;
 };
