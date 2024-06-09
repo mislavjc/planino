@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { db } from 'db/drizzle';
 import {
-  MONTHLY_AGGREGATE_FIXED_COSTS,
+  MONTHLY_AGGREGATE_FIXED_COSTS_AND_SALES,
   YEARLY_AGGREGATE_EXPENSES,
   YEARLY_AGGREGATE_TEAM_EXPENSES,
 } from 'db/queries';
@@ -80,6 +80,7 @@ const monthlyAggregateFixedCostsSchema = z.object({
           'Invalid month format, expected MM-YYYY',
         ),
       total_cost: z.number(),
+      total_sales: z.number(),
     }),
   ),
 });
@@ -89,7 +90,7 @@ export const getBreakEvenPoint = async (organization: string) => {
 
   const result = (
     await db.execute(
-      MONTHLY_AGGREGATE_FIXED_COSTS(foundOrganization.organizationId),
+      MONTHLY_AGGREGATE_FIXED_COSTS_AND_SALES(foundOrganization.organizationId),
     )
   ).rows;
 
@@ -101,7 +102,7 @@ export const getBreakEvenPoint = async (organization: string) => {
     result[0],
   );
 
-  console.log(monthlyAggregateFixedCosts);
+  console.log(result);
 
   return {};
 };

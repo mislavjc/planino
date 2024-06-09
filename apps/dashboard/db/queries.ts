@@ -718,7 +718,9 @@ FROM
     YearlyAggregatedData;
 `;
 
-export const MONTHLY_AGGREGATE_FIXED_COSTS = (organization_id: string) => sql`
+export const MONTHLY_AGGREGATE_FIXED_COSTS_AND_SALES = (
+  organization_id: string,
+) => sql`
 WITH ExpenseData AS (
     SELECT
         t.team_id,
@@ -758,6 +760,20 @@ MemberData AS (
         m.name IS NOT NULL AND
         m.name <> ''
 ),
+ProductSalesData AS (
+    SELECT
+        pph.product_id,
+        p.product_group_id,
+        pg.organization_id,
+        pph.recorded_month,
+        pph.unit_count * pph.unit_price AS total_sales
+    FROM
+        product_price_history pph
+        INNER JOIN product p ON p.product_id = pph.product_id
+        INNER JOIN product_group pg ON pg.product_group_id = p.product_group_id
+    WHERE
+        pg.organization_id = ${organization_id}
+),
 MinMonth AS (
     SELECT
         MIN(starting_month) AS min_month
@@ -765,6 +781,8 @@ MinMonth AS (
         SELECT starting_month FROM ExpenseData
         UNION
         SELECT starting_month FROM MemberData
+        UNION
+        SELECT recorded_month FROM ProductSalesData
     ) AS combined_start_months
 ),
 MaxMonth AS (
@@ -774,6 +792,8 @@ MaxMonth AS (
         SELECT ending_month FROM ExpenseData
         UNION
         SELECT ending_month FROM MemberData
+        UNION
+        SELECT recorded_month FROM ProductSalesData
     ) AS combined_ending_months
 ),
 MonthSeries AS (
@@ -792,8 +812,6 @@ MonthlySums AS (
         ed.amount,
         ed.raise_percentage,
         ms.month,
-        EXTRACT(YEAR FROM ms.month) AS year,
-        EXTRACT(MONTH FROM ms.month) AS month_number,
         CASE
             WHEN ms.month >= ed.starting_month AND (ed.ending_month IS NULL OR ms.month <= ed.ending_month) THEN 1
             ELSE 0
@@ -827,8 +845,6 @@ MonthlySumsMember AS (
         md.amount,
         md.raise_percentage,
         ms.month,
-        EXTRACT(YEAR FROM ms.month) AS year,
-        EXTRACT(MONTH FROM ms.month) AS month_number,
         CASE
             WHEN ms.month >= md.starting_month AND (md.ending_month IS NULL OR ms.month <= md.ending_month) THEN 1
             ELSE 0
@@ -875,15 +891,26 @@ MonthlyAggregatedData AS (
         CombinedData
     GROUP BY
         month
+),
+MonthlySales AS (
+    SELECT
+        TO_CHAR(recorded_month, 'MM-YYYY') AS month,
+        SUM(total_sales) AS total_sales
+    FROM
+        ProductSalesData
+    GROUP BY
+        recorded_month
 )
 SELECT
     jsonb_agg(
         jsonb_build_object(
-            'month', month,
-            'total_cost', total_cost
+            'month', COALESCE(mad.month, ms.month),
+            'total_cost', COALESCE(mad.total_cost, 0),
+            'total_sales', COALESCE(ms.total_sales, 0)
         )
-        ORDER BY to_date(month, 'MM-YYYY')
+        ORDER BY to_date(COALESCE(mad.month, ms.month), 'MM-YYYY')
     ) AS values
 FROM
-    MonthlyAggregatedData;
+    MonthlyAggregatedData mad
+    FULL JOIN MonthlySales ms ON mad.month = ms.month;
 `;
