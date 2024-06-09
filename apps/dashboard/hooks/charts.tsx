@@ -26,7 +26,7 @@ const fetcher: Fetcher<
     type: string;
   }
 > = ({ organization, type }: { organization: string; type: string }) =>
-  fetch(`/api/${organization}/graphs/${type}`).then((res) => res.json());
+  fetch(`/api/${organization}/graph/${type}`).then((res) => res.json());
 
 export const useChart = ({
   organization,
