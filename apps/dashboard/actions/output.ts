@@ -96,7 +96,9 @@ export const getBreakEvenPoint = async (organization: string) => {
   ).rows;
 
   if (!result.length) {
-    return {};
+    return {
+      values: [],
+    };
   }
 
   const monthlyAggregateFixedCosts = monthlyAggregateFixedCostsSchema.parse(
