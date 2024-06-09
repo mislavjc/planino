@@ -1,6 +1,51 @@
 # Changelog
 
 
+## v0.2.0
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.1.10...v0.2.0)
+
+### 🚀 Enhancements
+
+- Add demo react component as command ([2bb9f72](https://github.com/mislavjc/planino/commit/2bb9f72))
+- Add all commands for displaying graphs ([d2f582d](https://github.com/mislavjc/planino/commit/d2f582d))
+- Add expenses bar chart as a command ([d856095](https://github.com/mislavjc/planino/commit/d856095))
+- Make graphs route as reusable as possible ([35865a8](https://github.com/mislavjc/planino/commit/35865a8))
+- Extract fetching to a hook ([06657cd](https://github.com/mislavjc/planino/commit/06657cd))
+- Make charts reusuable ([dea87db](https://github.com/mislavjc/planino/commit/dea87db))
+- Add teams chart as command ([4ec802a](https://github.com/mislavjc/planino/commit/4ec802a))
+- Add loans as a component ([49a5f1a](https://github.com/mislavjc/planino/commit/49a5f1a))
+- Make factory even more reusable ([e7aa9bc](https://github.com/mislavjc/planino/commit/e7aa9bc))
+- Rename factory function ([4ac86fa](https://github.com/mislavjc/planino/commit/4ac86fa))
+- Add endpoint for table data ([652bc8e](https://github.com/mislavjc/planino/commit/652bc8e))
+- Add hook for tables ([7993f48](https://github.com/mislavjc/planino/commit/7993f48))
+- Add expenses table extension ([67b2248](https://github.com/mislavjc/planino/commit/67b2248))
+- Add inventory table ([17df470](https://github.com/mislavjc/planino/commit/17df470))
+- Add teams table ([80a3930](https://github.com/mislavjc/planino/commit/80a3930))
+- Update schema without blocks ([b6c0bec](https://github.com/mislavjc/planino/commit/b6c0bec))
+- Remove blocks logic ([cd98540](https://github.com/mislavjc/planino/commit/cd98540))
+- Extract loans table as component ([b1bf76b](https://github.com/mislavjc/planino/commit/b1bf76b))
+- Add api route for loans data ([a2d4415](https://github.com/mislavjc/planino/commit/a2d4415))
+- Add loans table extension ([3aac02c](https://github.com/mislavjc/planino/commit/3aac02c))
+
+### 🩹 Fixes
+
+- Remove unused import ([99a6122](https://github.com/mislavjc/planino/commit/99a6122))
+- Eslint issues ([6267122](https://github.com/mislavjc/planino/commit/6267122))
+
+### 🏡 Chore
+
+- Rename expenses and add more types ([e48e284](https://github.com/mislavjc/planino/commit/e48e284))
+- Rename graphs to graph ([954da38](https://github.com/mislavjc/planino/commit/954da38))
+- Remove dummy componet ([a471825](https://github.com/mislavjc/planino/commit/a471825))
+- Edit title of table commands ([b0ba2ed](https://github.com/mislavjc/planino/commit/b0ba2ed))
+- Code formatting foe schema ([e55931a](https://github.com/mislavjc/planino/commit/e55931a))
+- **release:** V0.1.10 ([3d68beb](https://github.com/mislavjc/planino/commit/3d68beb))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.1.10
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.1.9...v0.1.10)
