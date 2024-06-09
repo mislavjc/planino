@@ -1,23 +1,23 @@
 import { BarChart } from './charts/bar';
-import { createChartNode } from './factory';
+import { createNode } from './factory';
 import { elements } from './registry';
 
-const OperationalExpensesBarChartExtension = createChartNode({
+const OperationalExpensesBarChartExtension = createNode({
   Component: () => <BarChart type="operational-expenses" />,
   elementName: elements.operationalExpensesBarChart,
 });
 
-const InventoryBarChartExtension = createChartNode({
+const InventoryBarChartExtension = createNode({
   Component: () => <BarChart type="inventory" />,
   elementName: elements.inventoryBarChart,
 });
 
-const TeamsBarChartExtension = createChartNode({
+const TeamsBarChartExtension = createNode({
   Component: () => <BarChart type="teams" />,
   elementName: elements.teamsBarChart,
 });
 
-const LoansBarChartExtension = createChartNode({
+const LoansBarChartExtension = createNode({
   Component: () => <BarChart type="loans" />,
   elementName: elements.loansBarChart,
 });
