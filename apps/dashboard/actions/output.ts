@@ -86,7 +86,9 @@ const monthlyAggregateFixedCostsSchema = z.object({
   ),
 });
 
-export const getBreakEvenPoint = async (organization: string) => {
+export const getMonthlyAggregateCostsAndSales = async (
+  organization: string,
+) => {
   const foundOrganization = await getOrganization(organization);
 
   const result = (

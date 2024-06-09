@@ -1,6 +1,6 @@
 import { AreaChart } from '@planino/charts';
 
-import { getBreakEvenPoint } from 'actions/output';
+import { getMonthlyAggregateCostsAndSales } from 'actions/output';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
 import { TypographyH3 } from 'ui/typography';
@@ -10,7 +10,7 @@ const BreakEvenPointPage = async ({
 }: {
   params: { organization: string };
 }) => {
-  const data = await getBreakEvenPoint(organization);
+  const data = await getMonthlyAggregateCostsAndSales(organization);
 
   return (
     <div className="flex flex-col gap-2">
