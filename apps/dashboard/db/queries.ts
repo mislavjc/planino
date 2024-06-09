@@ -900,7 +900,8 @@ MonthlySales AS (
     SELECT
         TO_CHAR(recorded_month, 'MM-YYYY') AS month,
         SUM(total_sales) AS total_sales,
-        SUM(total_variable_cost) AS total_variable_cost
+        SUM(total_variable_cost) AS total_variable_cost,
+        SUM(unit_count) AS total_sold
     FROM
         ProductSalesData
     GROUP BY
@@ -912,7 +913,9 @@ SELECT
             'month', COALESCE(mad.month, ms.month),
             'total_cost', COALESCE(mad.total_cost, 0),
             'total_sales', COALESCE(ms.total_sales, 0),
-            'total_variable_cost', COALESCE(ms.total_variable_cost, 0)
+            'total_variable_cost', COALESCE(ms.total_variable_cost, 0),
+            'total_sold', COALESCE(ms.total_sold, 0),
+            'profit', COALESCE(ms.total_sales, 0) - COALESCE(mad.total_cost, 0)
         )
         ORDER BY to_date(COALESCE(mad.month, ms.month), 'MM-YYYY')
     ) AS values

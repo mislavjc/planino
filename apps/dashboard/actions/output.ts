@@ -82,6 +82,7 @@ const monthlyAggregateFixedCostsSchema = z.object({
       total_cost: z.number(),
       total_sales: z.number(),
       total_variable_cost: z.number(),
+      profit: z.number(),
     }),
   ),
 });
