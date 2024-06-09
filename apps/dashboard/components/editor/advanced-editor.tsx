@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   EditorCommand,
   EditorCommandEmpty,
-  EditorCommandItem,
   EditorCommandList,
   EditorContent,
   EditorInstance,
@@ -25,7 +24,13 @@ import { NodeSelector } from './selectors/node-selector';
 import { TextButtons } from './selectors/text-buttons';
 import { defaultExtensions } from './extensions';
 import { uploadFn } from './image-upload';
-import { slashCommand, suggestionItems } from './slash-command';
+import {
+  graphSuggestions,
+  slashCommand,
+  SlashItem,
+  suggestionItems,
+  tableSuggestions,
+} from './slash-command';
 
 import './styles.css';
 
@@ -35,6 +40,12 @@ interface EditorProp {
   initialValue?: JSONContent;
   onChange: (_value: JSONContent) => void;
 }
+
+const CommandHeader = ({ children }: { children: string }) => {
+  return (
+    <span className="text-muted-foreground ml-2 mb-2 text-sm">{children}</span>
+  );
+};
 
 const Editor = ({ initialValue, onChange }: EditorProp) => {
   const [openNode, setOpenNode] = useState(false);
@@ -77,24 +88,26 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
             Nema rezultata
           </EditorCommandEmpty>
           <EditorCommandList>
-            {suggestionItems.map((item) => (
-              <EditorCommandItem
-                value={item.title}
-                onCommand={(val) => item.command?.(val)}
-                className={`hover:bg-accent aria-selected:bg-accent flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm `}
-                key={item.title}
-              >
-                <div className="border-muted bg-background flex size-10 items-center justify-center rounded-md border">
-                  {item.icon}
-                </div>
-                <div>
-                  <p className="font-medium">{item.title}</p>
-                  <p className="text-muted-foreground text-xs">
-                    {item.description}
-                  </p>
-                </div>
-              </EditorCommandItem>
-            ))}
+            <div className="flex flex-col gap-2">
+              <div>
+                <CommandHeader>Tekst</CommandHeader>
+                {suggestionItems.map((item) => (
+                  <SlashItem key={item.title} item={item} />
+                ))}
+              </div>
+              <div>
+                <CommandHeader>Grafovi</CommandHeader>
+                {graphSuggestions.map((item) => (
+                  <SlashItem key={item.title} item={item} />
+                ))}
+              </div>
+              <div>
+                <CommandHeader>Tablice</CommandHeader>
+                {tableSuggestions.map((item) => (
+                  <SlashItem key={item.title} item={item} />
+                ))}
+              </div>
+            </div>
           </EditorCommandList>
         </EditorCommand>
 

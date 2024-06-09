@@ -1,4 +1,5 @@
 import {
+  BarChart,
   CheckSquare,
   Component,
   Heading1,
@@ -7,10 +8,12 @@ import {
   ImageIcon,
   List,
   ListOrdered,
+  Table,
   Text,
   TextQuote,
 } from 'lucide-react';
-import { createSuggestionItems } from 'novel/extensions';
+import { EditorCommandItem } from 'novel';
+import { createSuggestionItems, SuggestionItem } from 'novel/extensions';
 import { Command, renderItems } from 'novel/extensions';
 
 import { uploadFn } from './image-upload';
@@ -152,9 +155,162 @@ export const suggestionItems = createSuggestionItems([
   },
 ]);
 
+export const graphSuggestions = createSuggestionItems([
+  {
+    title: 'Troškovi',
+    description: 'Stupičasti graf troškova.',
+    searchTerms: ['graph', 'chart'],
+    icon: <BarChart size={18} />,
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .insertContent({
+          type: 'expensesBarChart',
+        })
+        .run();
+    },
+  },
+  {
+    title: 'Krediti',
+    description: 'Stupičasti graf kredita.',
+    searchTerms: ['graph', 'chart'],
+    icon: <BarChart size={18} />,
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .insertContent({
+          type: 'loansBarChart',
+        })
+        .run();
+    },
+  },
+  {
+    title: 'Inventar',
+    description: 'Stupičasti graf inventara.',
+    searchTerms: ['graph', 'chart'],
+    icon: <BarChart size={18} />,
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .insertContent({
+          type: 'inventoryBarChart',
+        })
+        .run();
+    },
+  },
+  {
+    title: 'Odjeli',
+    description: 'Stupičasti graf odjela.',
+    searchTerms: ['graph', 'chart'],
+    icon: <BarChart size={18} />,
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .insertContent({
+          type: 'teamBarChart',
+        })
+        .run();
+    },
+  },
+]);
+
+export const tableSuggestions = createSuggestionItems([
+  {
+    title: 'Troškovi - Godišnji pregled',
+    description: 'Prikazuje godišnje troškove po kategorijama',
+    searchTerms: ['table', 'overview'],
+    icon: <Table size={18} />,
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .insertContent({
+          type: 'expensesOverviewTable',
+        })
+        .run();
+    },
+  },
+  {
+    title: 'Krediti - Godišnji pregled',
+    description: 'Prikazuje godišnje kredite po kategorijama',
+    searchTerms: ['table', 'overview'],
+    icon: <Table size={18} />,
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .insertContent({
+          type: 'loansOverviewTable',
+        })
+        .run();
+    },
+  },
+  {
+    title: 'Inventar - Godišnji pregled',
+    description: 'Prikazuje godišnji inventar po kategorijama',
+    searchTerms: ['table', 'overview'],
+    icon: <Table size={18} />,
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .insertContent({
+          type: 'inventoryOverviewTable',
+        })
+        .run();
+    },
+  },
+  {
+    title: 'Odjeli - Godišnji pregled',
+    description: 'Prikazuje godišnje odjele po kategorijama',
+    searchTerms: ['table', 'overview'],
+    icon: <Table size={18} />,
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .insertContent({
+          type: 'teamOverviewTable',
+        })
+        .run();
+    },
+  },
+]);
+
 export const slashCommand = Command.configure({
   suggestion: {
     items: () => suggestionItems,
     render: renderItems,
   },
 });
+
+export const SlashItem = ({ item }: { item: SuggestionItem }) => {
+  return (
+    <EditorCommandItem
+      value={item.title}
+      onCommand={(val) => item.command?.(val)}
+      className={`hover:bg-accent aria-selected:bg-accent flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm `}
+      key={item.title}
+    >
+      <div className="border-muted bg-background flex size-10 items-center justify-center rounded-md border">
+        {item.icon}
+      </div>
+      <div>
+        <p className="font-medium">{item.title}</p>
+        <p className="text-muted-foreground text-xs">{item.description}</p>
+      </div>
+    </EditorCommandItem>
+  );
+};
