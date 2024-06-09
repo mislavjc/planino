@@ -1,4 +1,4 @@
-import { BarChart } from '@planino/charts';
+import { AreaChart } from '@planino/charts';
 
 import { getProductAggregations } from 'actions/product';
 
@@ -13,7 +13,7 @@ export const Charts = async ({
 
   return (
     <div className="h-[50vh]">
-      <BarChart
+      <AreaChart
         data={product}
         className="h-[50vh]"
         index="month"
