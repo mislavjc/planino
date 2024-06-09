@@ -17,7 +17,11 @@
     "@visx/responsive": "^3.10.2",
     "@visx/scale": "^3.5.0",
     "@visx/shape": "^3.5.0",
-    "@visx/tooltip": "^3.3.0"
+    "@visx/tooltip": "^3.3.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.378.0",
+    "recharts": "^2.12.7",
+    "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.4.0",
