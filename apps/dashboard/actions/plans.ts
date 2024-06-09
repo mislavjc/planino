@@ -1,7 +1,8 @@
 'use server';
 
-import { blocks, businessPlans } from '@planino/database/schema';
+import { businessPlans } from '@planino/database/schema';
 import { and, eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { db } from 'db/drizzle';
@@ -35,18 +36,6 @@ export const createBusinessPlan = async (formData: FormData) => {
     throw new Error('Neuspjelo kreiranje poslovnog plana');
   }
 
-  const initialBlock = await db
-    .insert(blocks)
-    .values({
-      businessPlanId: newPlan[0].businessPlanId,
-      type: 'text',
-    })
-    .returning();
-
-  if (!initialBlock.length) {
-    throw new Error('Neuspjelo kreiranje početnog bloka');
-  }
-
   redirect(`/${organization}/poslovni-planovi/${newPlan[0].businessPlanId}`);
 };
 
@@ -64,12 +53,28 @@ export const getBusinessPlan = async ({
       eq(businessPlans.organizationId, foundOrganization.organizationId),
       eq(businessPlans.businessPlanId, businessPlanId),
     ),
-    with: {
-      blocks: {
-        orderBy: (blocks, { asc }) => [asc(blocks.createdAt)],
-      },
-    },
   });
 
   return dbPlan;
+};
+
+export const updateBusinessPlan = async ({
+  businessPlanId,
+  content,
+  organization,
+}: {
+  businessPlanId: string;
+  content: unknown;
+  organization: string;
+}) => {
+  await getOrganization(organization);
+
+  await db
+    .update(businessPlans)
+    .set({
+      content: content,
+    })
+    .where(eq(businessPlans.businessPlanId, businessPlanId));
+
+  revalidatePath('/[organization]/poslovni-planovi/[businessPlanId]', 'page');
 };

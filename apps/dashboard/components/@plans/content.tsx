@@ -1,43 +1,46 @@
 'use client';
 
-import { updateBlock } from 'actions/block';
+import { SelectBusinessPlan } from '@planino/database/schema';
 
-import { BlockWrapper } from 'components/@block/wrapper';
+import { updateBusinessPlan } from 'actions/plans';
+
 import Editor from 'components/editor/advanced-editor';
 import { JSONContentSchema } from 'components/editor/schema';
 
 export const EditorBlock = ({
-  content,
-  blockId,
+  businessPlan,
   organization,
 }: {
-  content: unknown;
-  blockId: string;
+  businessPlan: SelectBusinessPlan;
   organization: string;
 }) => {
-  if (content === null) {
+  if (businessPlan.content === null) {
     return (
-      <BlockWrapper blockId={blockId} organization={organization}>
-        <Editor
-          initialValue={undefined}
-          onChange={(_value) => {
-            updateBlock({ blockId, content: JSON.stringify(_value) });
-          }}
-        />
-      </BlockWrapper>
+      <Editor
+        initialValue={undefined}
+        onChange={(_value) => {
+          updateBusinessPlan({
+            businessPlanId: businessPlan.businessPlanId,
+            content: JSON.stringify(_value),
+            organization,
+          });
+        }}
+      />
     );
   }
 
-  const parsedContent = JSONContentSchema.parse(content);
+  const parsedContent = JSONContentSchema.parse(businessPlan.content);
 
   return (
-    <BlockWrapper blockId={blockId} organization={organization}>
-      <Editor
-        initialValue={parsedContent}
-        onChange={(_value) => {
-          updateBlock({ blockId, content: JSON.stringify(_value) });
-        }}
-      />
-    </BlockWrapper>
+    <Editor
+      initialValue={parsedContent}
+      onChange={(_value) => {
+        updateBusinessPlan({
+          businessPlanId: businessPlan.businessPlanId,
+          content: JSON.stringify(_value),
+          organization,
+        });
+      }}
+    />
   );
 };
