@@ -1,6 +1,30 @@
 # Changelog
 
 
+## v0.3.0
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.2.0...v0.3.0)
+
+### 🚀 Enhancements
+
+- Add bar chart from tremor to charts lib ([3156e69](https://github.com/mislavjc/planino/commit/3156e69))
+- Migrate input data to tremor ([8bb6560](https://github.com/mislavjc/planino/commit/8bb6560))
+- Migrate expenses to tremor ([6499d39](https://github.com/mislavjc/planino/commit/6499d39))
+- Migrate business plan charts to tremor ([98bca1d](https://github.com/mislavjc/planino/commit/98bca1d))
+- Remove visx deps and old charts ([e74b173](https://github.com/mislavjc/planino/commit/e74b173))
+- Add stories for new charts ([3f92c18](https://github.com/mislavjc/planino/commit/3f92c18))
+- Add tailwind colors from shared libs ([ff665a7](https://github.com/mislavjc/planino/commit/ff665a7))
+- Add area chart ([c1861c9](https://github.com/mislavjc/planino/commit/c1861c9))
+- Use area chart in price and quantity ([d1da342](https://github.com/mislavjc/planino/commit/d1da342))
+
+### 🏡 Chore
+
+- **release:** V0.2.0 ([4e7c80a](https://github.com/mislavjc/planino/commit/4e7c80a))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.2.0
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.1.10...v0.2.0)
