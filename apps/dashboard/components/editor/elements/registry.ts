@@ -4,3 +4,7 @@ export const elements = {
 } satisfies {
   [key: string]: string;
 };
+
+type Elements = typeof elements;
+
+export type ElementValues = Elements[keyof Elements];

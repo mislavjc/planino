@@ -200,7 +200,7 @@ export const graphSuggestions = createSuggestionItems([
         .focus()
         .deleteRange(range)
         .insertContent({
-          type: 'inventoryBarChart',
+          type: elements.inventoryBarChart,
         })
         .run();
     },
