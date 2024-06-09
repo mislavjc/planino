@@ -14,7 +14,7 @@ const Component = () => {
 
   const chart = useChart({
     organization: organization as string,
-    type: 'yearly-expense',
+    type: 'inventory',
   });
 
   return (
@@ -37,8 +37,8 @@ const Component = () => {
   );
 };
 
-export const ExpensesBarChart = Node.create({
-  name: elements.expensesBarChart,
+export const InventoryBarChart = Node.create({
+  name: elements.inventoryBarChart,
 
   group: 'block',
 
@@ -55,13 +55,13 @@ export const ExpensesBarChart = Node.create({
   parseHTML() {
     return [
       {
-        tag: elements.expensesBarChart,
+        tag: elements.inventoryBarChart,
       },
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return [elements.expensesBarChart, mergeAttributes(HTMLAttributes)];
+    return [elements.inventoryBarChart, mergeAttributes(HTMLAttributes)];
   },
 
   addNodeView() {

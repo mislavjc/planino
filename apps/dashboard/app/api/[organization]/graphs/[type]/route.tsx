@@ -1,18 +1,11 @@
-import { z } from 'zod';
-
 import { getYearlyExpenseAggregation } from 'actions/expense';
 import { getInventoryValues } from 'actions/inventory';
 
+import { CategoryType, categoryTypeSchema } from 'hooks/charts';
+
 import { transformAggregateValues } from 'lib/charts';
 
-export const categoryTypeSchema = z.enum(['yearly-expense', 'inventory']);
-
-export type CategoryType = z.infer<typeof categoryTypeSchema>;
-
-export const fetchDataByType = async (
-  type: CategoryType,
-  organization: string,
-) => {
+const fetchDataByType = async (type: CategoryType, organization: string) => {
   switch (type) {
     case 'yearly-expense':
       return await getYearlyExpenseAggregation(organization);
