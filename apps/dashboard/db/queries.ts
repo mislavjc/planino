@@ -717,3 +717,173 @@ SELECT
 FROM
     YearlyAggregatedData;
 `;
+
+export const MONTHLY_AGGREGATE_FIXED_COSTS = (organization_id: string) => sql`
+WITH ExpenseData AS (
+    SELECT
+        t.team_id,
+        e.expense_id,
+        e.name AS expense_name,
+        t.name AS team_name,
+        e.created_at,
+        fa.starting_month,
+        fa.ending_month,
+        fa.amount,
+        fa.raise_percentage
+    FROM
+        team t
+        INNER JOIN expense e ON t.team_id = e.team_id
+        INNER JOIN financial_attribute fa ON fa.financial_attribute_id = e.financial_attribute_id
+    WHERE
+        t.organization_id = ${organization_id} AND
+        e.name IS NOT NULL AND
+        e.name <> ''
+),
+MemberData AS (
+    SELECT
+        t.team_id,
+        m.member_id,
+        m.name AS member_name,
+        t.name AS team_name,
+        m.created_at,
+        m.starting_month,
+        m.ending_month,
+        m.salary AS amount,
+        m.raise_percentage
+    FROM
+        team t
+        INNER JOIN member m ON t.team_id = m.team_id
+    WHERE
+        t.organization_id = ${organization_id} AND
+        m.name IS NOT NULL AND
+        m.name <> ''
+),
+MinMonth AS (
+    SELECT
+        MIN(starting_month) AS min_month
+    FROM (
+        SELECT starting_month FROM ExpenseData
+        UNION
+        SELECT starting_month FROM MemberData
+    ) AS combined_start_months
+),
+MaxMonth AS (
+    SELECT
+        MAX(COALESCE(ending_month, CURRENT_DATE)) AS max_month
+    FROM (
+        SELECT ending_month FROM ExpenseData
+        UNION
+        SELECT ending_month FROM MemberData
+    ) AS combined_ending_months
+),
+MonthSeries AS (
+    SELECT
+        generate_series((SELECT min_month FROM MinMonth), (SELECT max_month FROM MaxMonth), '1 month'::interval) AS month
+),
+MonthlySums AS (
+    SELECT
+        ed.team_id,
+        ed.expense_id,
+        ed.expense_name,
+        ed.team_name,
+        ed.created_at,
+        ed.starting_month,
+        ed.ending_month,
+        ed.amount,
+        ed.raise_percentage,
+        ms.month,
+        EXTRACT(YEAR FROM ms.month) AS year,
+        EXTRACT(MONTH FROM ms.month) AS month_number,
+        CASE
+            WHEN ms.month >= ed.starting_month AND (ed.ending_month IS NULL OR ms.month <= ed.ending_month) THEN 1
+            ELSE 0
+        END as months_in_range
+    FROM
+        ExpenseData ed
+    CROSS JOIN
+        MonthSeries ms
+),
+AdjustedAmounts AS (
+    SELECT
+        ms.team_id,
+        ms.expense_id,
+        ms.expense_name AS item_name,
+        ms.team_name,
+        ms.month,
+        ms.created_at,
+        ms.amount * ms.months_in_range * POWER(1 + COALESCE(ms.raise_percentage, 0) / 100, EXTRACT(YEAR FROM ms.month) - EXTRACT(YEAR FROM ms.starting_month)) AS month_amount
+    FROM
+        MonthlySums ms
+),
+MonthlySumsMember AS (
+    SELECT
+        md.team_id,
+        md.member_id,
+        md.member_name,
+        md.team_name,
+        md.created_at,
+        md.starting_month,
+        md.ending_month,
+        md.amount,
+        md.raise_percentage,
+        ms.month,
+        EXTRACT(YEAR FROM ms.month) AS year,
+        EXTRACT(MONTH FROM ms.month) AS month_number,
+        CASE
+            WHEN ms.month >= md.starting_month AND (md.ending_month IS NULL OR ms.month <= md.ending_month) THEN 1
+            ELSE 0
+        END as months_in_range
+    FROM
+        MemberData md
+    CROSS JOIN
+        MonthSeries ms
+),
+AdjustedAmountsMember AS (
+    SELECT
+        msm.team_id,
+        msm.member_id,
+        msm.member_name AS item_name,
+        msm.team_name,
+        msm.month,
+        msm.created_at,
+        msm.amount * msm.months_in_range * POWER(1 + COALESCE(msm.raise_percentage, 0) / 100, EXTRACT(YEAR FROM msm.month) - EXTRACT(YEAR FROM msm.starting_month)) AS month_amount
+    FROM
+        MonthlySumsMember msm
+),
+CombinedData AS (
+    SELECT
+        team_name,
+        item_name,
+        TO_CHAR(month, 'MM-YYYY') AS month,
+        month_amount
+    FROM
+        AdjustedAmounts
+    UNION ALL
+    SELECT
+        aam.team_name,
+        aam.item_name,
+        TO_CHAR(aam.month, 'MM-YYYY') AS month,
+        aam.month_amount
+    FROM
+        AdjustedAmountsMember aam
+),
+MonthlyAggregatedData AS (
+    SELECT
+        month,
+        SUM(month_amount) AS total_cost
+    FROM
+        CombinedData
+    GROUP BY
+        month
+)
+SELECT
+    jsonb_agg(
+        jsonb_build_object(
+            'month', month,
+            'total_cost', total_cost
+        )
+        ORDER BY to_date(month, 'MM-YYYY')
+    ) AS values
+FROM
+    MonthlyAggregatedData;
+`;
