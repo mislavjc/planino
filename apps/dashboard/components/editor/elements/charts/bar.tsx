@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarStackChart } from '@planino/charts';
+import { BarChart as BarChartComponent } from '@planino/charts';
 import { NodeViewWrapper } from '@tiptap/react';
 import { useParams } from 'next/navigation';
 
@@ -21,13 +21,18 @@ export const BarChart = ({ type }: { type: CategoryType }) => {
         {chart?.values.map((item) => (
           <div key={item.name}>
             <TypographyH4>{item.name}</TypographyH4>
-            <div className="h-[60vh]">
-              <BarStackChart
-                key={item.name}
-                data={item.values}
-                domainKey="year"
-              />
-            </div>
+            <BarChartComponent
+              key={item.name}
+              data={item.values}
+              index="year"
+              type="stacked"
+              className="h-[60vh]"
+              categories={
+                item.values.length > 0
+                  ? Object.keys(item.values[0]).filter((key) => key !== 'year')
+                  : []
+              }
+            />
           </div>
         ))}
       </div>
