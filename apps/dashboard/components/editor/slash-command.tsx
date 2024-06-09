@@ -137,23 +137,6 @@ export const suggestionItems = createSuggestionItems([
       input.click();
     },
   },
-  {
-    title: 'React Component',
-    description: 'Insert a custom React component.',
-    searchTerms: ['react', 'component'],
-    icon: <Component size={18} />,
-    command: ({ editor, range }) => {
-      editor
-        .chain()
-        .focus()
-        .deleteRange(range)
-        .insertContent({
-          type: 'reactComponent',
-          attrs: { count: 0 },
-        })
-        .run();
-    },
-  },
 ]);
 
 export const graphSuggestions = createSuggestionItems([
