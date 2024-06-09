@@ -535,7 +535,7 @@ type BaseEventProps = {
 
 type BarChartEventProps = BaseEventProps | null | undefined;
 
-interface BarChartProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface BarChartProps extends React.HTMLAttributes<HTMLDivElement> {
   data: Record<string, any>[];
   index: string;
   categories: string[];
