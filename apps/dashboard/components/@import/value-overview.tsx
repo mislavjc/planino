@@ -66,7 +66,7 @@ export const ValueOverview = async ({
               {value
                 .filter((v) => v !== null && v !== undefined && v !== '')
                 .map((v, i) => (
-                  <div key={i} className="even:bg-muted px-4 py-2">
+                  <div key={i} className="px-4 py-2 even:bg-muted">
                     {String(v)}
                   </div>
                 ))}

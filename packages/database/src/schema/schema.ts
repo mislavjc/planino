@@ -393,42 +393,15 @@ export const businessPlans = pgTable('business_plan', {
     }),
   name: text('name'),
   description: text('description'),
-});
-
-export const businessPlansRelations = relations(
-  businessPlans,
-  ({ one, many }) => ({
-    organization: one(organizations, {
-      fields: [businessPlans.organizationId],
-      references: [organizations.organizationId],
-    }),
-    blocks: many(blocks),
-  }),
-);
-
-export const blockTypeEnum = pgEnum('block_type', ['text', 'component']);
-
-export const blocks = pgTable('block', {
-  blockId: uuid('block_id').notNull().primaryKey().defaultRandom(),
-  createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
-  updatedAt: timestamp('updated_at', { mode: 'date' }).$onUpdate(
-    () => new Date(),
-  ),
-  businessPlanId: uuid('business_plan_id')
-    .notNull()
-    .references(() => businessPlans.businessPlanId, {
-      onDelete: 'cascade',
-      onUpdate: 'cascade',
-    }),
-  type: blockTypeEnum('type').notNull(),
-  order: integer('order'),
   content: jsonb('content'),
 });
 
-export const blocksRelations = relations(blocks, ({ one }) => ({
-  businessPlan: one(businessPlans, {
-    fields: [blocks.businessPlanId],
-    references: [businessPlans.businessPlanId],
+export type SelectBusinessPlan = InferSelectModel<typeof businessPlans>;
+
+export const businessPlansRelations = relations(businessPlans, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [businessPlans.organizationId],
+    references: [organizations.organizationId],
   }),
 }));
 

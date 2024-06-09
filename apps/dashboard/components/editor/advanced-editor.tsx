@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   EditorCommand,
   EditorCommandEmpty,
-  EditorCommandItem,
   EditorCommandList,
   EditorContent,
   EditorInstance,
@@ -22,9 +21,16 @@ import { ColorSelector } from './selectors/color-selector';
 import { LinkSelector } from './selectors/link-selector';
 import { NodeSelector } from './selectors/node-selector';
 import { TextButtons } from './selectors/text-buttons';
+import { elementsExtensions } from './elements';
 import { defaultExtensions } from './extensions';
 import { uploadFn } from './image-upload';
-import { slashCommand, suggestionItems } from './slash-command';
+import {
+  graphSuggestions,
+  slashCommand,
+  SlashItem,
+  suggestionItems,
+  tableSuggestions,
+} from './slash-command';
 
 import './styles.css';
 
@@ -34,6 +40,12 @@ interface EditorProp {
   initialValue?: JSONContent;
   onChange: (_value: JSONContent) => void;
 }
+
+const CommandHeader = ({ children }: { children: string }) => {
+  return (
+    <span className="mb-2 ml-2 text-sm text-muted-foreground">{children}</span>
+  );
+};
 
 const Editor = ({ initialValue, onChange }: EditorProp) => {
   const [openNode, setOpenNode] = useState(false);
@@ -54,7 +66,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
     <EditorRoot>
       <EditorContent
         {...(initialValue && { initialContent: initialValue })}
-        extensions={extensions}
+        extensions={[...extensions, ...elementsExtensions]}
         editorProps={{
           handleDOMEvents: {
             keydown: (_view, event) => handleCommandNavigation(event),
@@ -76,24 +88,26 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
             Nema rezultata
           </EditorCommandEmpty>
           <EditorCommandList>
-            {suggestionItems.map((item) => (
-              <EditorCommandItem
-                value={item.title}
-                onCommand={(val) => item.command?.(val)}
-                className={`flex w-full items-center space-x-2 rounded-md px-2 py-1 text-left text-sm hover:bg-accent aria-selected:bg-accent `}
-                key={item.title}
-              >
-                <div className="flex size-10 items-center justify-center rounded-md border border-muted bg-background">
-                  {item.icon}
-                </div>
-                <div>
-                  <p className="font-medium">{item.title}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {item.description}
-                  </p>
-                </div>
-              </EditorCommandItem>
-            ))}
+            <div className="flex flex-col gap-2">
+              <div>
+                <CommandHeader>Tekst</CommandHeader>
+                {suggestionItems.map((item) => (
+                  <SlashItem key={item.title} item={item} />
+                ))}
+              </div>
+              <div>
+                <CommandHeader>Grafovi</CommandHeader>
+                {graphSuggestions.map((item) => (
+                  <SlashItem key={item.title} item={item} />
+                ))}
+              </div>
+              <div>
+                <CommandHeader>Tablice</CommandHeader>
+                {tableSuggestions.map((item) => (
+                  <SlashItem key={item.title} item={item} />
+                ))}
+              </div>
+            </div>
           </EditorCommandList>
         </EditorCommand>
 

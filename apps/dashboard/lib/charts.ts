@@ -10,7 +10,7 @@ interface ExpenseAggregation {
   numberOfYears: number;
 }
 
-interface TransformedExpenseRecord {
+export interface TransformedExpenseRecord {
   year: string;
   [key: string]: string;
 }
