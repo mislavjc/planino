@@ -766,7 +766,11 @@ ProductSalesData AS (
         p.product_group_id,
         pg.organization_id,
         pph.recorded_month,
-        pph.unit_count * pph.unit_price AS total_sales
+        pph.unit_count,
+        pph.unit_price,
+        pph.unit_expense,
+        pph.unit_count * pph.unit_price AS total_sales,
+        pph.unit_count * pph.unit_expense AS total_variable_cost
     FROM
         product_price_history pph
         INNER JOIN product p ON p.product_id = pph.product_id
@@ -895,18 +899,20 @@ MonthlyAggregatedData AS (
 MonthlySales AS (
     SELECT
         TO_CHAR(recorded_month, 'MM-YYYY') AS month,
-        SUM(total_sales) AS total_sales
+        SUM(total_sales) AS total_sales,
+        SUM(total_variable_cost) AS total_variable_cost
     FROM
         ProductSalesData
     GROUP BY
-        recorded_month
+        TO_CHAR(recorded_month, 'MM-YYYY')
 )
 SELECT
     jsonb_agg(
         jsonb_build_object(
             'month', COALESCE(mad.month, ms.month),
             'total_cost', COALESCE(mad.total_cost, 0),
-            'total_sales', COALESCE(ms.total_sales, 0)
+            'total_sales', COALESCE(ms.total_sales, 0),
+            'total_variable_cost', COALESCE(ms.total_variable_cost, 0)
         )
         ORDER BY to_date(COALESCE(mad.month, ms.month), 'MM-YYYY')
     ) AS values

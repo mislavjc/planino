@@ -16,7 +16,9 @@ const BreakEvenPointPage = async ({
         <CardHeader>
           <TypographyH3>Točka pokrića</TypographyH3>
         </CardHeader>
-        <CardContent></CardContent>
+        <CardContent>
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </CardContent>
       </Card>
     </div>
   );

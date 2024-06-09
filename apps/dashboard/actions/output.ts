@@ -81,6 +81,7 @@ const monthlyAggregateFixedCostsSchema = z.object({
         ),
       total_cost: z.number(),
       total_sales: z.number(),
+      total_variable_cost: z.number(),
     }),
   ),
 });
@@ -104,5 +105,7 @@ export const getBreakEvenPoint = async (organization: string) => {
 
   console.log(result);
 
-  return {};
+  return {
+    monthlyAggregateFixedCosts,
+  };
 };
