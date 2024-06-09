@@ -235,7 +235,7 @@ export const tableSuggestions = createSuggestionItems([
         .focus()
         .deleteRange(range)
         .insertContent({
-          type: 'expensesOverviewTable',
+          type: elements.operationalExpensesTeamYearlyTable,
         })
         .run();
     },

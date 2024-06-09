@@ -1,10 +1,16 @@
 import { BarChart } from './charts/bar';
+import { TeamYearlyTable } from './tables/team-yearly-table';
 import { createNode } from './factory';
 import { elements } from './registry';
 
 const OperationalExpensesBarChartExtension = createNode({
   Component: () => <BarChart type="operational-expenses" />,
   elementName: elements.operationalExpensesBarChart,
+});
+
+const OperationalExpensesTeamYearlyTableExtension = createNode({
+  Component: () => <TeamYearlyTable type="operational-expenses" />,
+  elementName: elements.operationalExpensesTeamYearlyTable,
 });
 
 const InventoryBarChartExtension = createNode({
@@ -24,6 +30,7 @@ const LoansBarChartExtension = createNode({
 
 export const elementsExtensions = [
   OperationalExpensesBarChartExtension,
+  OperationalExpensesTeamYearlyTableExtension,
   InventoryBarChartExtension,
   TeamsBarChartExtension,
   LoansBarChartExtension,

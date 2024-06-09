@@ -1,5 +1,6 @@
 export const elements = {
   operationalExpensesBarChart: 'operationalExpensesBarChart',
+  operationalExpensesTeamYearlyTable: 'operationalExpensesTeamYearlyTable',
   inventoryBarChart: 'inventoryBarChart',
   teamsBarChart: 'teamsBarChart',
   loansBarChart: 'loansBarChart',
