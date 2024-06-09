@@ -1,2 +1,2 @@
-export * from './charts/bar-group';
-export * from './charts/bar-stack';
+export * from './charts/area';
+export * from './charts/bar';
