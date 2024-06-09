@@ -233,7 +233,7 @@ export const tableSuggestions = createSuggestionItems([
         .focus()
         .deleteRange(range)
         .insertContent({
-          type: 'loansOverviewTable',
+          type: elements.loansYearlyTable,
         })
         .run();
     },

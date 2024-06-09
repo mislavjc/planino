@@ -1,4 +1,5 @@
 import { BarChart } from './charts/bar';
+import { LoansTable } from './tables/loans-table';
 import { TeamYearlyTable } from './tables/team-yearly-table';
 import { createNode } from './factory';
 import { elements } from './registry';
@@ -38,6 +39,11 @@ const LoansBarChartExtension = createNode({
   elementName: elements.loansBarChart,
 });
 
+export const LoansYearlyTableExtension = createNode({
+  Component: () => <LoansTable />,
+  elementName: elements.loansYearlyTable,
+});
+
 export const elementsExtensions = [
   OperationalExpensesBarChartExtension,
   OperationalExpensesTeamYearlyTableExtension,
@@ -46,4 +52,5 @@ export const elementsExtensions = [
   TeamsBarChartExtension,
   TeamsYearlyTableExtension,
   LoansBarChartExtension,
+  LoansYearlyTableExtension,
 ];
