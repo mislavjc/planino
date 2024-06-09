@@ -28,6 +28,11 @@ const TeamsBarChartExtension = createNode({
   elementName: elements.teamsBarChart,
 });
 
+const TeamsYearlyTableExtension = createNode({
+  Component: () => <TeamYearlyTable type="teams" />,
+  elementName: elements.teamsYearlyTable,
+});
+
 const LoansBarChartExtension = createNode({
   Component: () => <BarChart type="loans" />,
   elementName: elements.loansBarChart,
@@ -39,5 +44,6 @@ export const elementsExtensions = [
   InventoryBarChartExtension,
   InventoryYearlyTableExtension,
   TeamsBarChartExtension,
+  TeamsYearlyTableExtension,
   LoansBarChartExtension,
 ];

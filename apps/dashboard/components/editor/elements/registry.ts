@@ -4,6 +4,7 @@ export const elements = {
   inventoryBarChart: 'inventoryBarChart',
   inventoryYearlyTable: 'inventoryYearlyTable',
   teamsBarChart: 'teamsBarChart',
+  teamsYearlyTable: 'teamsYearlyTable',
   loansBarChart: 'loansBarChart',
 } satisfies {
   [key: string]: string;

@@ -283,7 +283,7 @@ export const tableSuggestions = createSuggestionItems([
         .focus()
         .deleteRange(range)
         .insertContent({
-          type: 'teamOverviewTable',
+          type: elements.teamsYearlyTable,
         })
         .run();
     },
