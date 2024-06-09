@@ -398,15 +398,12 @@ export const businessPlans = pgTable('business_plan', {
 
 export type SelectBusinessPlan = InferSelectModel<typeof businessPlans>;
 
-export const businessPlansRelations = relations(
-  businessPlans,
-  ({ one }) => ({
-    organization: one(organizations, {
-      fields: [businessPlans.organizationId],
-      references: [organizations.organizationId],
-    }),
+export const businessPlansRelations = relations(businessPlans, ({ one }) => ({
+  organization: one(organizations, {
+    fields: [businessPlans.organizationId],
+    references: [organizations.organizationId],
   }),
-);
+}));
 
 export const productGroups = pgTable('product_group', {
   productGroupId: uuid('product_group_id')
