@@ -32,7 +32,7 @@ const ProfitAndLossPage = async ({
     <Table>
       <TableCaption>Račun dobiti i gubitka</TableCaption>
       <TableHeader>
-        <TableRow>
+        <TableRow className="[&>*]:text-right">
           <TableHead className="w-[100px]">Mjesec</TableHead>
           <TableHead>Ukupan fiksni trošak</TableHead>
           <TableHead>Ukupna prodaja</TableHead>
@@ -42,7 +42,7 @@ const ProfitAndLossPage = async ({
       </TableHeader>
       <TableBody>
         {data.map((row) => (
-          <TableRow key={row.month}>
+          <TableRow key={row.month} className="text-right font-mono">
             <TableCell className="font-medium">{row.month}</TableCell>
             <TableCell>{formatCurrency(row.total_cost)}</TableCell>
             <TableCell>{formatCurrency(row.total_sales)}</TableCell>
@@ -56,7 +56,7 @@ const ProfitAndLossPage = async ({
         ))}
       </TableBody>
       <TableFooter>
-        <TableRow>
+        <TableRow className="text-right font-mono">
           <TableCell colSpan={1}>Total</TableCell>
           <TableCell>{formatCurrency(totalCosts)}</TableCell>
           <TableCell>{formatCurrency(totalSales)}</TableCell>
