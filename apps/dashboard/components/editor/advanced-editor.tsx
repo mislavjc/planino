@@ -43,7 +43,7 @@ interface EditorProp {
 
 const CommandHeader = ({ children }: { children: string }) => {
   return (
-    <span className="text-muted-foreground mb-2 ml-2 text-sm">{children}</span>
+    <span className="mb-2 ml-2 text-sm text-muted-foreground">{children}</span>
   );
 };
 
@@ -83,8 +83,8 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
         }}
         slotAfter={<ImageResizer />}
       >
-        <EditorCommand className="border-muted bg-background z-50 h-auto max-h-[330px] overflow-y-auto rounded-md border px-1 py-2 shadow-md transition-all">
-          <EditorCommandEmpty className="text-muted-foreground px-2">
+        <EditorCommand className="z-50 h-auto max-h-[330px] overflow-y-auto rounded-md border border-muted bg-background px-1 py-2 shadow-md transition-all">
+          <EditorCommandEmpty className="px-2 text-muted-foreground">
             Nema rezultata
           </EditorCommandEmpty>
           <EditorCommandList>
