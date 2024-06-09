@@ -7,7 +7,7 @@ import { transformAggregateValues } from 'lib/charts';
 
 const fetchDataByType = async (type: CategoryType, organization: string) => {
   switch (type) {
-    case 'yearly-expense':
+    case 'operational-expenses':
       return await getYearlyExpenseAggregation(organization);
     case 'inventory':
       return await getInventoryValues(organization);

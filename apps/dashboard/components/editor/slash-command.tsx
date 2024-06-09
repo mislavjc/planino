@@ -168,7 +168,7 @@ export const graphSuggestions = createSuggestionItems([
         .focus()
         .deleteRange(range)
         .insertContent({
-          type: elements.expensesBarChart,
+          type: elements.operationalExpensesBarChart,
         })
         .run();
     },

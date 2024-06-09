@@ -1,5 +1,5 @@
 export const elements = {
-  expensesBarChart: 'expensesBarChart',
+  operationalExpensesBarChart: 'operationalExpensesBarChart',
   inventoryBarChart: 'inventoryBarChart',
 } satisfies {
   [key: string]: string;

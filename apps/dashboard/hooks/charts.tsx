@@ -3,7 +3,12 @@ import { z } from 'zod';
 
 import { TransformedExpenseRecord } from 'lib/charts';
 
-export const categoryTypeSchema = z.enum(['yearly-expense', 'inventory']);
+export const categoryTypeSchema = z.enum([
+  'operational-expenses',
+  'inventory',
+  'teams',
+  'loans',
+]);
 
 export type CategoryType = z.infer<typeof categoryTypeSchema>;
 
