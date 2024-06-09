@@ -103,9 +103,5 @@ export const getBreakEvenPoint = async (organization: string) => {
     result[0],
   );
 
-  console.log(result);
-
-  return {
-    monthlyAggregateFixedCosts,
-  };
+  return monthlyAggregateFixedCosts;
 };
