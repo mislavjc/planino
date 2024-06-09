@@ -88,3 +88,22 @@ export const getYAxisDomain = (
   const maxDomain = maxValue ?? 'auto';
   return [minDomain, maxDomain];
 };
+
+export function hasOnlyOneValueForKey(
+  array: unknown[],
+  keyToCheck: string,
+): boolean {
+  const val: unknown[] = [];
+
+  for (const obj of array) {
+    if (Object.prototype.hasOwnProperty.call(obj, keyToCheck)) {
+      // @ts-expect-error - TS doesn't know that obj[keyToCheck] is a value
+      val.push(obj[keyToCheck]);
+      if (val.length > 1) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+}
