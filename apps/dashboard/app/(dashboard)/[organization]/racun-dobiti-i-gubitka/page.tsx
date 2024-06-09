@@ -47,7 +47,11 @@ const ProfitAndLossPage = async ({
             <TableCell>{formatCurrency(row.total_cost)}</TableCell>
             <TableCell>{formatCurrency(row.total_sales)}</TableCell>
             <TableCell>{formatCurrency(row.total_variable_cost)}</TableCell>
-            <TableCell>{formatCurrency(row.profit)}</TableCell>
+            <TableCell
+              className={row.profit < 0 ? 'text-red-500' : 'text-green-500'}
+            >
+              {formatCurrency(row.profit)}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -57,7 +61,11 @@ const ProfitAndLossPage = async ({
           <TableCell>{formatCurrency(totalCosts)}</TableCell>
           <TableCell>{formatCurrency(totalSales)}</TableCell>
           <TableCell>{formatCurrency(totalVariableCosts)}</TableCell>
-          <TableCell>{formatCurrency(totalProfits)}</TableCell>
+          <TableCell
+            className={totalProfits < 0 ? 'text-red-500' : 'text-green-500'}
+          >
+            {formatCurrency(totalProfits)}
+          </TableCell>
         </TableRow>
       </TableFooter>
     </Table>
