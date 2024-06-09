@@ -1,6 +1,26 @@
 # Changelog
 
 
+## v0.3.2
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.3.1...v0.3.2)
+
+### 🚀 Enhancements
+
+- Format area chart values ([23ceced](https://github.com/mislavjc/planino/commit/23ceced))
+
+### 🩹 Fixes
+
+- Typo in changelog script ([30b0b9c](https://github.com/mislavjc/planino/commit/30b0b9c))
+
+### 🏡 Chore
+
+- **release:** V0.3.1 ([ced25cf](https://github.com/mislavjc/planino/commit/ced25cf))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.3.1
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.3.0...v0.3.1)
