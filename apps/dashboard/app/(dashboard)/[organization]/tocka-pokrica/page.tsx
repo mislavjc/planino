@@ -1,3 +1,5 @@
+import { AreaChart } from '@planino/charts';
+
 import { getBreakEvenPoint } from 'actions/output';
 
 import { Card, CardContent, CardHeader } from 'ui/card';
@@ -17,7 +19,12 @@ const BreakEvenPointPage = async ({
           <TypographyH3>Točka pokrića</TypographyH3>
         </CardHeader>
         <CardContent>
-          <pre>{JSON.stringify(data, null, 2)}</pre>
+          <AreaChart
+            data={data.values}
+            className="h-[50vh]"
+            index="month"
+            categories={['total_cost', 'total_sales', 'total_variable_cost']}
+          />
         </CardContent>
       </Card>
     </div>
