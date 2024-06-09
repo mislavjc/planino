@@ -16,6 +16,7 @@ import { EditorCommandItem } from 'novel';
 import { createSuggestionItems, SuggestionItem } from 'novel/extensions';
 import { Command, renderItems } from 'novel/extensions';
 
+import { elements } from './elements/registry';
 import { uploadFn } from './image-upload';
 
 export const suggestionItems = createSuggestionItems([
@@ -167,7 +168,7 @@ export const graphSuggestions = createSuggestionItems([
         .focus()
         .deleteRange(range)
         .insertContent({
-          type: 'expensesBarChart',
+          type: elements.expensesBarChart,
         })
         .run();
     },

@@ -16,12 +16,12 @@ import { useDebouncedCallback } from 'use-debounce';
 
 import { Separator } from '../ui/separator';
 
-import { ComponentExtension } from './elements/custom';
 import { GenerativeMenuSwitch } from './generative/generative-menu-switch';
 import { ColorSelector } from './selectors/color-selector';
 import { LinkSelector } from './selectors/link-selector';
 import { NodeSelector } from './selectors/node-selector';
 import { TextButtons } from './selectors/text-buttons';
+import { elementsExtensions } from './elements';
 import { defaultExtensions } from './extensions';
 import { uploadFn } from './image-upload';
 import {
@@ -43,7 +43,7 @@ interface EditorProp {
 
 const CommandHeader = ({ children }: { children: string }) => {
   return (
-    <span className="text-muted-foreground ml-2 mb-2 text-sm">{children}</span>
+    <span className="text-muted-foreground mb-2 ml-2 text-sm">{children}</span>
   );
 };
 
@@ -66,7 +66,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
     <EditorRoot>
       <EditorContent
         {...(initialValue && { initialContent: initialValue })}
-        extensions={[...extensions, ComponentExtension]}
+        extensions={[...extensions, ...elementsExtensions]}
         editorProps={{
           handleDOMEvents: {
             keydown: (_view, event) => handleCommandNavigation(event),
