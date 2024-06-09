@@ -1,4 +1,4 @@
-import { BarChart, BarStackChart } from '@planino/charts';
+import { BarChart } from '@planino/charts';
 
 import { getLoansForCalulation } from 'actions/loan';
 
