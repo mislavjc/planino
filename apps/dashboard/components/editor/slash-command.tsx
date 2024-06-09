@@ -207,7 +207,7 @@ export const graphSuggestions = createSuggestionItems([
 
 export const tableSuggestions = createSuggestionItems([
   {
-    title: 'Troškovi - Godišnji pregled',
+    title: 'Troškovi',
     description: 'Prikazuje godišnje troškove po kategorijama',
     searchTerms: ['table', 'overview'],
     icon: <Table size={18} />,
@@ -223,7 +223,7 @@ export const tableSuggestions = createSuggestionItems([
     },
   },
   {
-    title: 'Krediti - Godišnji pregled',
+    title: 'Krediti',
     description: 'Prikazuje godišnje kredite po kategorijama',
     searchTerms: ['table', 'overview'],
     icon: <Table size={18} />,
@@ -239,7 +239,7 @@ export const tableSuggestions = createSuggestionItems([
     },
   },
   {
-    title: 'Inventar - Godišnji pregled',
+    title: 'Inventar',
     description: 'Prikazuje godišnji inventar po kategorijama',
     searchTerms: ['table', 'overview'],
     icon: <Table size={18} />,
@@ -255,7 +255,7 @@ export const tableSuggestions = createSuggestionItems([
     },
   },
   {
-    title: 'Odjeli - Godišnji pregled',
+    title: 'Odjeli',
     description: 'Prikazuje godišnje odjele po kategorijama',
     searchTerms: ['table', 'overview'],
     icon: <Table size={18} />,
