@@ -25,7 +25,7 @@ import {
   getColorClassName,
   getYAxisDomain,
 } from '../lib/chart';
-import { cn } from '../lib/utils';
+import { cn, formatCurrency } from '../lib/utils';
 
 //#region Shape
 export function deepEqual(obj1: any, obj2: any) {
@@ -571,12 +571,12 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       categories = [],
       index,
       colors = AvailableChartColors,
-      valueFormatter = (value: number) => value.toString(),
+      valueFormatter = (value: number) => formatCurrency(value),
       startEndOnly = false,
       showXAxis = true,
       showYAxis = true,
       showGridLines = true,
-      yAxisWidth = 56,
+      yAxisWidth = 72,
       intervalType = 'equidistantPreserveStart',
       showTooltip = true,
       showLegend = true,
