@@ -267,7 +267,7 @@ export const tableSuggestions = createSuggestionItems([
         .focus()
         .deleteRange(range)
         .insertContent({
-          type: 'inventoryOverviewTable',
+          type: elements.inventoryYearlyTable,
         })
         .run();
     },

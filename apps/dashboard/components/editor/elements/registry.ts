@@ -2,6 +2,7 @@ export const elements = {
   operationalExpensesBarChart: 'operationalExpensesBarChart',
   operationalExpensesTeamYearlyTable: 'operationalExpensesTeamYearlyTable',
   inventoryBarChart: 'inventoryBarChart',
+  inventoryYearlyTable: 'inventoryYearlyTable',
   teamsBarChart: 'teamsBarChart',
   loansBarChart: 'loansBarChart',
 } satisfies {
