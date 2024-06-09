@@ -27,7 +27,7 @@ import {
   getYAxisDomain,
   hasOnlyOneValueForKey,
 } from '../lib/chart';
-import { cn } from '../lib/utils';
+import { cn, formatCurrency } from '../lib/utils';
 
 //#region Legend
 
@@ -517,7 +517,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       categories = [],
       index,
       colors = AvailableChartColors,
-      valueFormatter = (value: number) => value.toString(),
+      valueFormatter = (value: number) => formatCurrency(value),
       startEndOnly = false,
       showXAxis = true,
       showYAxis = true,
