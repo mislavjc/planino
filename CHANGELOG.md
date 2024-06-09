@@ -1,6 +1,69 @@
 # Changelog
 
 
+## v0.1.10
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.1.9...v0.1.10)
+
+### 🚀 Enhancements
+
+- Add bar group component ([7f888e9](https://github.com/mislavjc/planino/commit/7f888e9))
+- Add eslint-plugin-react-compiler ([5ce65cb](https://github.com/mislavjc/planino/commit/5ce65cb))
+- Add breadcrumb component ([05ac857](https://github.com/mislavjc/planino/commit/05ac857))
+- Add stepper for importer ([0c9e191](https://github.com/mislavjc/planino/commit/0c9e191))
+- Add step indicator ([c117b4f](https://github.com/mislavjc/planino/commit/c117b4f))
+- Rename first step ([c5ee271](https://github.com/mislavjc/planino/commit/c5ee271))
+- Add table picker step ([9c56874](https://github.com/mislavjc/planino/commit/9c56874))
+- Show checked on completed steps ([7c2db3e](https://github.com/mislavjc/planino/commit/7c2db3e))
+- Use vercel ai sdk on importer ([3adb9c0](https://github.com/mislavjc/planino/commit/3adb9c0))
+- Switch to GET for getting table shape ([542e2df](https://github.com/mislavjc/planino/commit/542e2df))
+- Show table values mapped to db values ([3db6a21](https://github.com/mislavjc/planino/commit/3db6a21))
+- Add header row ([f0efe95](https://github.com/mislavjc/planino/commit/f0efe95))
+- Add default value ([ad59b51](https://github.com/mislavjc/planino/commit/ad59b51))
+- Update size of arrow ([8d49713](https://github.com/mislavjc/planino/commit/8d49713))
+- Change style of border ([ecd8140](https://github.com/mislavjc/planino/commit/ecd8140))
+- Add select ([6302e4b](https://github.com/mislavjc/planino/commit/6302e4b))
+- Add select to mapper ([97306e1](https://github.com/mislavjc/planino/commit/97306e1))
+- Extract mapper into seperate component ([e5b16f2](https://github.com/mislavjc/planino/commit/e5b16f2))
+- Add values map to style select ([a76f22e](https://github.com/mislavjc/planino/commit/a76f22e))
+- Add back and next steps ([b5bf21c](https://github.com/mislavjc/planino/commit/b5bf21c))
+- Use turbo v2 ([6280319](https://github.com/mislavjc/planino/commit/6280319))
+- Use pnpm 9 ([427121c](https://github.com/mislavjc/planino/commit/427121c))
+- Add turbo as dev dep ([d78d21a](https://github.com/mislavjc/planino/commit/d78d21a))
+- Add schema for imported files to db ([959a9c5](https://github.com/mislavjc/planino/commit/959a9c5))
+- Save files to db when added to R2 ([51e45bb](https://github.com/mislavjc/planino/commit/51e45bb))
+- Add action for getting and setting files ([2daa292](https://github.com/mislavjc/planino/commit/2daa292))
+- Show files on first step ([599dc4e](https://github.com/mislavjc/planino/commit/599dc4e))
+- Adjust db to save importer data ([fd2b2ca](https://github.com/mislavjc/planino/commit/fd2b2ca))
+- Adjust importer to use post instead of get ([8b00901](https://github.com/mislavjc/planino/commit/8b00901))
+- Make table overview take data from db ([d0e902a](https://github.com/mislavjc/planino/commit/d0e902a))
+- Generate data in saveAction ([6babff0](https://github.com/mislavjc/planino/commit/6babff0))
+- Make column mapper use database data ([1ec329b](https://github.com/mislavjc/planino/commit/1ec329b))
+- Extract function to get files with tables ([5d07f44](https://github.com/mislavjc/planino/commit/5d07f44))
+- Add values to database ([df03e6e](https://github.com/mislavjc/planino/commit/df03e6e))
+- Revalidate root layout for data ([d0c3db7](https://github.com/mislavjc/planino/commit/d0c3db7))
+- Save values of tables to db ([4d449c4](https://github.com/mislavjc/planino/commit/4d449c4))
+- Display the values on overview step ([9d80a0f](https://github.com/mislavjc/planino/commit/9d80a0f))
+- Style the value overview ([d380075](https://github.com/mislavjc/planino/commit/d380075))
+- Use name from expenses map ([30ae04e](https://github.com/mislavjc/planino/commit/30ae04e))
+- Add simple data page ([0ad3512](https://github.com/mislavjc/planino/commit/0ad3512))
+
+### 🩹 Fixes
+
+- Change so copy for adding rows is always the same ([64ba1ec](https://github.com/mislavjc/planino/commit/64ba1ec))
+- File dropzone redirect url ([e43c4d8](https://github.com/mislavjc/planino/commit/e43c4d8))
+- Rename filter names in package.json ([3c78914](https://github.com/mislavjc/planino/commit/3c78914))
+- Remove clg ([0649998](https://github.com/mislavjc/planino/commit/0649998))
+
+### 🏡 Chore
+
+- **release:** V0.1.9 ([ae152ea](https://github.com/mislavjc/planino/commit/ae152ea))
+- Remove console logs ([c011ab6](https://github.com/mislavjc/planino/commit/c011ab6))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.1.9
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.1.8...v0.1.9)
