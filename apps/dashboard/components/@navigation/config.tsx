@@ -1,4 +1,5 @@
 import {
+  ArrowDownToDot,
   ArrowUpDown,
   Coins,
   Euro,
@@ -60,6 +61,11 @@ export const templateConfig: TemplateConfig = {
     },
   ],
   output: [
+    {
+      label: 'Točka pokrića',
+      href: '/tocka-pokrica',
+      icon: <ArrowDownToDot width={16} className="text-neutral-600" />,
+    },
     {
       label: 'Troškovi',
       href: '/troskovi',

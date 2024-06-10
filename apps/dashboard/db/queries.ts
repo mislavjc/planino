@@ -717,3 +717,209 @@ SELECT
 FROM
     YearlyAggregatedData;
 `;
+
+export const MONTHLY_AGGREGATE_FIXED_COSTS_AND_SALES = (
+  organization_id: string,
+) => sql`
+WITH ExpenseData AS (
+    SELECT
+        t.team_id,
+        e.expense_id,
+        e.name AS expense_name,
+        t.name AS team_name,
+        e.created_at,
+        fa.starting_month,
+        fa.ending_month,
+        fa.amount,
+        fa.raise_percentage
+    FROM
+        team t
+        INNER JOIN expense e ON t.team_id = e.team_id
+        INNER JOIN financial_attribute fa ON fa.financial_attribute_id = e.financial_attribute_id
+    WHERE
+        t.organization_id = ${organization_id} AND
+        e.name IS NOT NULL AND
+        e.name <> ''
+),
+MemberData AS (
+    SELECT
+        t.team_id,
+        m.member_id,
+        m.name AS member_name,
+        t.name AS team_name,
+        m.created_at,
+        m.starting_month,
+        m.ending_month,
+        m.salary AS amount,
+        m.raise_percentage
+    FROM
+        team t
+        INNER JOIN member m ON t.team_id = m.team_id
+    WHERE
+        t.organization_id = ${organization_id} AND
+        m.name IS NOT NULL AND
+        m.name <> ''
+),
+ProductSalesData AS (
+    SELECT
+        pph.product_id,
+        p.product_group_id,
+        pg.organization_id,
+        pph.recorded_month,
+        pph.unit_count,
+        pph.unit_price,
+        pph.unit_expense,
+        pph.unit_count * pph.unit_price AS total_sales,
+        pph.unit_count * pph.unit_expense AS total_variable_cost
+    FROM
+        product_price_history pph
+        INNER JOIN product p ON p.product_id = pph.product_id
+        INNER JOIN product_group pg ON pg.product_group_id = p.product_group_id
+    WHERE
+        pg.organization_id = ${organization_id}
+),
+MinMonth AS (
+    SELECT
+        MIN(starting_month) AS min_month
+    FROM (
+        SELECT starting_month FROM ExpenseData
+        UNION
+        SELECT starting_month FROM MemberData
+        UNION
+        SELECT recorded_month FROM ProductSalesData
+    ) AS combined_start_months
+),
+MaxMonth AS (
+    SELECT
+        MAX(COALESCE(ending_month, CURRENT_DATE)) AS max_month
+    FROM (
+        SELECT ending_month FROM ExpenseData
+        UNION
+        SELECT ending_month FROM MemberData
+        UNION
+        SELECT recorded_month FROM ProductSalesData
+    ) AS combined_ending_months
+),
+MonthSeries AS (
+    SELECT
+        generate_series((SELECT min_month FROM MinMonth), (SELECT max_month FROM MaxMonth), '1 month'::interval) AS month
+),
+MonthlySums AS (
+    SELECT
+        ed.team_id,
+        ed.expense_id,
+        ed.expense_name,
+        ed.team_name,
+        ed.created_at,
+        ed.starting_month,
+        ed.ending_month,
+        ed.amount,
+        ed.raise_percentage,
+        ms.month,
+        CASE
+            WHEN ms.month >= ed.starting_month AND (ed.ending_month IS NULL OR ms.month <= ed.ending_month) THEN 1
+            ELSE 0
+        END as months_in_range
+    FROM
+        ExpenseData ed
+    CROSS JOIN
+        MonthSeries ms
+),
+AdjustedAmounts AS (
+    SELECT
+        ms.team_id,
+        ms.expense_id,
+        ms.expense_name AS item_name,
+        ms.team_name,
+        ms.month,
+        ms.created_at,
+        ms.amount * ms.months_in_range * POWER(1 + COALESCE(ms.raise_percentage, 0) / 100, EXTRACT(YEAR FROM ms.month) - EXTRACT(YEAR FROM ms.starting_month)) AS month_amount
+    FROM
+        MonthlySums ms
+),
+MonthlySumsMember AS (
+    SELECT
+        md.team_id,
+        md.member_id,
+        md.member_name,
+        md.team_name,
+        md.created_at,
+        md.starting_month,
+        md.ending_month,
+        md.amount,
+        md.raise_percentage,
+        ms.month,
+        CASE
+            WHEN ms.month >= md.starting_month AND (md.ending_month IS NULL OR ms.month <= md.ending_month) THEN 1
+            ELSE 0
+        END as months_in_range
+    FROM
+        MemberData md
+    CROSS JOIN
+        MonthSeries ms
+),
+AdjustedAmountsMember AS (
+    SELECT
+        msm.team_id,
+        msm.member_id,
+        msm.member_name AS item_name,
+        msm.team_name,
+        msm.month,
+        msm.created_at,
+        msm.amount * msm.months_in_range * POWER(1 + COALESCE(msm.raise_percentage, 0) / 100, EXTRACT(YEAR FROM msm.month) - EXTRACT(YEAR FROM msm.starting_month)) AS month_amount
+    FROM
+        MonthlySumsMember msm
+),
+CombinedData AS (
+    SELECT
+        team_name,
+        item_name,
+        TO_CHAR(month, 'MM-YYYY') AS month,
+        month_amount
+    FROM
+        AdjustedAmounts
+    UNION ALL
+    SELECT
+        aam.team_name,
+        aam.item_name,
+        TO_CHAR(aam.month, 'MM-YYYY') AS month,
+        aam.month_amount
+    FROM
+        AdjustedAmountsMember aam
+),
+MonthlyAggregatedData AS (
+    SELECT
+        month,
+        SUM(month_amount) AS total_cost
+    FROM
+        CombinedData
+    GROUP BY
+        month
+),
+MonthlySales AS (
+    SELECT
+        TO_CHAR(recorded_month, 'MM-YYYY') AS month,
+        SUM(total_sales) AS total_sales,
+        SUM(total_variable_cost) AS total_variable_cost,
+        SUM(unit_count) AS total_sold
+    FROM
+        ProductSalesData
+    GROUP BY
+        TO_CHAR(recorded_month, 'MM-YYYY')
+)
+SELECT
+    jsonb_agg(
+        jsonb_build_object(
+            'month', COALESCE(mad.month, ms.month),
+            'total_cost', COALESCE(mad.total_cost, 0),
+            'total_sales', COALESCE(ms.total_sales, 0),
+            'total_variable_cost', COALESCE(ms.total_variable_cost, 0),
+            'total_sold', COALESCE(ms.total_sold, 0),
+            'profit', COALESCE(ms.total_sales, 0) - COALESCE(mad.total_cost, 0)
+        )
+        ORDER BY to_date(COALESCE(mad.month, ms.month), 'MM-YYYY')
+    ) AS values
+FROM
+    MonthlyAggregatedData mad
+    FULL JOIN MonthlySales ms ON mad.month = ms.month;
+`;
