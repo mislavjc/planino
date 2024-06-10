@@ -106,6 +106,7 @@ const ProfitAndLossPage = async ({
                     {formatCurrency(row.total_variable_cost)}
                   </div>
                   <div>Ukupna prodaja: {formatCurrency(row.total_sales)}</div>
+                  <div>Profit: {formatCurrency(row.profit)}</div>
                 </div>
               ),
             }))}
