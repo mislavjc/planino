@@ -83,3 +83,18 @@ export const getRandomColor = (text: string, opacity?: number) => {
 export const getLaterDate = (date1: Date, date2: Date) => {
   return date1 > date2 ? date1 : date2;
 };
+
+/**
+ * Calculates the percentage change between two numbers.
+ *
+ * @param current - The current number.
+ * @param previous - The previous number.
+ * @returns The percentage change between the current and previous numbers.
+ */
+export const calculatePercentageChange = (
+  current: number,
+  previous: number,
+) => {
+  if (previous === 0) return current === 0 ? 0 : 100;
+  return ((current - previous) / previous) * 100;
+};

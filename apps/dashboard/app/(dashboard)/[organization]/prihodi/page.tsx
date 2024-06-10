@@ -13,7 +13,7 @@ import {
 } from 'ui/table';
 import { TypographyH3 } from 'ui/typography';
 
-import { formatCurrency } from 'lib/utils';
+import { calculatePercentageChange, formatCurrency } from 'lib/utils';
 
 const EarningsPage = async ({
   params: { organization },
@@ -48,28 +48,71 @@ const EarningsPage = async ({
               {productNames.map((productName) => (
                 <TableRow key={productName}>
                   <TableCell className="font-medium">{productName}</TableCell>
-                  {earnings.values.map((value) => (
-                    <TableCell
-                      key={value.month}
-                      className="text-right font-mono"
-                    >
-                      {formatCurrency(value[productName])}
-                    </TableCell>
-                  ))}
+                  {earnings.values.map((value, index) => {
+                    const current = value[productName];
+                    const previous =
+                      index > 0 ? earnings.values[index - 1][productName] : 0;
+                    const percentageChange =
+                      index > 0
+                        ? calculatePercentageChange(current, previous)
+                        : null;
+
+                    return (
+                      <TableCell
+                        key={value.month}
+                        className="text-right font-mono"
+                      >
+                        {formatCurrency(current)}
+                        {percentageChange !== null && (
+                          <span
+                            className={`text-xs ${percentageChange >= 0 ? 'text-green-500' : 'text-red-500'}`}
+                          >
+                            {' '}
+                            ({percentageChange.toFixed(2)}%)
+                          </span>
+                        )}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               ))}
               <TableRow>
                 <TableCell className="font-medium">Ukupno</TableCell>
-                {earnings.values.map((value) => (
-                  <TableCell key={value.month} className="text-right font-mono">
-                    {formatCurrency(
-                      productNames.reduce(
-                        (sum, productName) => sum + (value[productName] || 0),
-                        0,
-                      ),
-                    )}
-                  </TableCell>
-                ))}
+                {earnings.values.map((value, index) => {
+                  const currentTotal = productNames.reduce(
+                    (sum, productName) => sum + (value[productName] || 0),
+                    0,
+                  );
+                  const previousTotal =
+                    index > 0
+                      ? productNames.reduce(
+                          (sum, productName) =>
+                            sum +
+                            (earnings.values[index - 1][productName] || 0),
+                          0,
+                        )
+                      : 0;
+                  const percentageChange =
+                    index > 0
+                      ? calculatePercentageChange(currentTotal, previousTotal)
+                      : null;
+                  return (
+                    <TableCell
+                      key={value.month}
+                      className="text-right font-mono"
+                    >
+                      {formatCurrency(currentTotal)}
+                      {percentageChange !== null && (
+                        <span
+                          className={`text-xs ${percentageChange >= 0 ? 'text-green-500' : 'text-red-500'}`}
+                        >
+                          {' '}
+                          ({percentageChange.toFixed(2)}%)
+                        </span>
+                      )}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             </TableBody>
           </Table>
