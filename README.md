@@ -1,5 +1,9 @@
 # Planino Application Documentation
 
+## About
+
+Planino Application is designed to help startups and SMEs create business plans and calculate breakeven points. The platform provides an accessible, user-friendly interface for visualizing financial data, importing Excel data, and generating business plans. Key features include detailed cost analysis, profit forecasting, AI-assisted projections, and scenario management. Target users include SMEs, students, consultants, and financial institutions. The application is available through a web app with a freemium model, offering advanced functionalities via subscription. Key milestones include app launch in January 2025, with ongoing marketing and partnerships to support growth and user adoption.
+
 ## Application Structure
 
 The project is organized as a "monorepo," a modern approach that allows centralized management of multiple projects within a single repository. This format simplifies development, maintenance, and scaling of applications.
