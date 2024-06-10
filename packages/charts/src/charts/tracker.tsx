@@ -56,7 +56,7 @@ const Block = ({
   );
 };
 
-interface TrackerProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface TrackerProps extends React.HTMLAttributes<HTMLDivElement> {
   data: TrackerBlockProps[];
   defaultBackgroundColor?: string;
 }
