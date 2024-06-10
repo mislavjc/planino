@@ -1,4 +1,5 @@
 import { BarChart } from '@planino/charts';
+import { MoveDownRight, MoveUpRight } from 'lucide-react';
 
 import { getMonthlyEarnings } from 'actions/output';
 
@@ -68,7 +69,13 @@ const EarningsPage = async ({
                             className={`text-xs ${percentageChange >= 0 ? 'text-green-500' : 'text-red-500'}`}
                           >
                             {' '}
-                            ({percentageChange.toFixed(2)}%)
+                            ({percentageChange.toFixed(2)}%
+                            {percentageChange >= 0 ? (
+                              <MoveUpRight className="inline-block size-3" />
+                            ) : (
+                              <MoveDownRight className="inline-block size-3" />
+                            )}
+                            )
                           </span>
                         )}
                       </TableCell>
@@ -107,7 +114,13 @@ const EarningsPage = async ({
                           className={`text-xs ${percentageChange >= 0 ? 'text-green-500' : 'text-red-500'}`}
                         >
                           {' '}
-                          ({percentageChange.toFixed(2)}%)
+                          ({percentageChange.toFixed(2)}%
+                          {percentageChange >= 0 ? (
+                            <MoveUpRight className="inline-block size-3" />
+                          ) : (
+                            <MoveDownRight className="inline-block size-3" />
+                          )}
+                          )
                         </span>
                       )}
                     </TableCell>
