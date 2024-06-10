@@ -923,3 +923,64 @@ FROM
     MonthlyAggregatedData mad
     FULL JOIN MonthlySales ms ON mad.month = ms.month;
 `;
+
+export const MONTHLY_AGGREGATE_EARNINGS = (organization_id: string) => sql`
+WITH monthly_earnings AS (
+    SELECT
+        to_char(pph.recorded_month, 'MM-YYYY') AS month,
+        p.name AS product_name,
+        SUM(pph.unit_count * pph.unit_price) AS earnings
+    FROM
+        product_price_history pph
+        JOIN product p ON pph.product_id = p.product_id
+        JOIN product_group pg ON p.product_group_id = pg.product_group_id
+    WHERE
+        pg.organization_id = ${organization_id}
+        AND p.name IS NOT NULL
+        AND p.name <> ''
+    GROUP BY
+        to_char(pph.recorded_month, 'MM-YYYY'), p.name
+),
+all_months AS (
+    SELECT DISTINCT to_char(pph.recorded_month, 'MM-YYYY') AS month
+    FROM product_price_history pph
+),
+all_products AS (
+    SELECT DISTINCT p.name AS product_name
+    FROM product p
+    WHERE p.name IS NOT NULL
+    AND p.name <> ''
+),
+expanded_data AS (
+    SELECT
+        am.month,
+        ap.product_name,
+        COALESCE(me.earnings, 0) AS earnings
+    FROM
+        all_months am
+        CROSS JOIN all_products ap
+        LEFT JOIN monthly_earnings me
+          ON am.month = me.month
+          AND ap.product_name = me.product_name
+),
+FilledData AS (
+    SELECT
+        ed.month,
+        jsonb_object_agg(ed.product_name, ed.earnings) AS earnings_by_product
+    FROM
+        expanded_data ed
+    GROUP BY
+        ed.month
+)
+SELECT
+    jsonb_agg(
+        jsonb_strip_nulls(
+            jsonb_build_object(
+                'month', fd.month
+            ) || fd.earnings_by_product
+        )
+        ORDER BY fd.month
+    ) AS values
+FROM
+    FilledData fd;
+`;
