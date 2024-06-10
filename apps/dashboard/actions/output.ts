@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { db } from 'db/drizzle';
 import {
+  MONTHLY_AGGREGATE_EARNINGS,
   MONTHLY_AGGREGATE_FIXED_COSTS_AND_SALES,
   YEARLY_AGGREGATE_EXPENSES,
   YEARLY_AGGREGATE_TEAM_EXPENSES,
@@ -109,4 +110,39 @@ export const getMonthlyAggregateCostsAndSales = async (
   );
 
   return monthlyAggregateFixedCosts;
+};
+
+const monthlyEarningsSchema = z.object({
+  values: z.array(
+    z
+      .object({
+        month: z
+          .string()
+          .regex(
+            /^(0[1-9]|1[0-2])-\d{4}$/,
+            'Invalid month format, expected MM-YYYY',
+          ),
+      })
+      .catchall(z.number()),
+  ),
+});
+
+export const getMonthlyEarnings = async (organization: string) => {
+  const foundOrganization = await getOrganization(organization);
+
+  const result = (
+    await db.execute(
+      MONTHLY_AGGREGATE_EARNINGS(foundOrganization.organizationId),
+    )
+  ).rows;
+
+  if (!result.length) {
+    return {
+      values: [],
+    };
+  }
+
+  const monthlyEarnings = monthlyEarningsSchema.parse(result[0]);
+
+  return monthlyEarnings;
 };
