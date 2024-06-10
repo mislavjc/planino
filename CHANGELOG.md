@@ -1,6 +1,24 @@
 # Changelog
 
 
+## v0.5.2
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.5.1...v0.5.2)
+
+### 🚀 Enhancements
+
+- Add all routes ([f24373e](https://github.com/mislavjc/planino/commit/f24373e))
+- Add about info ([43fc89c](https://github.com/mislavjc/planino/commit/43fc89c))
+- Add swot table ([4a7eac9](https://github.com/mislavjc/planino/commit/4a7eac9))
+
+### 🏡 Chore
+
+- **release:** V0.5.1 ([14a5e89](https://github.com/mislavjc/planino/commit/14a5e89))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.5.1
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.5.0...v0.5.1)
