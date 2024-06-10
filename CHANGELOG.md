@@ -1,6 +1,29 @@
 # Changelog
 
 
+## v0.5.0
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.4.0...v0.5.0)
+
+### 🚀 Enhancements
+
+- Add initial calculation ([e8a6e6b](https://github.com/mislavjc/planino/commit/e8a6e6b))
+- Add bar chart ([ac56290](https://github.com/mislavjc/planino/commit/ac56290))
+- Add card layout ([6575a6b](https://github.com/mislavjc/planino/commit/6575a6b))
+- Add earnings table ([5842a24](https://github.com/mislavjc/planino/commit/5842a24))
+- Add totals ([d6c2be8](https://github.com/mislavjc/planino/commit/d6c2be8))
+- Add percent changed ([c827738](https://github.com/mislavjc/planino/commit/c827738))
+- Add arrows ([e118ca0](https://github.com/mislavjc/planino/commit/e118ca0))
+
+### 🏡 Chore
+
+- **release:** V0.4.0 ([5b79e0c](https://github.com/mislavjc/planino/commit/5b79e0c))
+- Change order of elements in table ([122ec52](https://github.com/mislavjc/planino/commit/122ec52))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.4.0
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.3.2...v0.4.0)
