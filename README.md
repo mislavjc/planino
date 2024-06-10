@@ -79,12 +79,17 @@ graph TD;
 
 The root route is "/[organization]", which serves as the main entry point into the application for a specific organization. From this point, users can navigate through various sub-routes that provide specific functionalities or display certain data.
 
-- **/cijena-i-kolicina**: This route allows users to view and manage information about product prices and quantities. The sub-route /[productId] provides a detailed view of a specific product.
-- **/imovina-i-oprema**: This route provides an overview and management of information about the organization’s assets and equipment.
-- **/odjeli**: This route is intended for viewing and managing data about different departments within the organization.
-- **/operativni-troskovi**: This route allows users to access and manage information about the organization’s operational costs.
-- **/podatci**: The main route for managing various data sets within the organization, with sub-routes /pregled for data review and /uvoz for importing new data.
-- **/poslovni-planovi**: This route allows users to access and manage business plans, with the possibility of a detailed view of a specific plan through the sub-route /[businessPlanId].
+- **/cijena-i-kolicina**: View and manage information about product prices and quantities. The sub-route /[productId] provides a detailed view of a specific product.
+- **/imovina-i-oprema**: Overview and management of information about the organization’s assets and equipment.
+- **/odjeli**: Viewing and managing data about different departments within the organization.
+- **/operativni-troskovi**: Access and manage information about the organization’s operational costs.
+- **/podatci**: Main route for managing various data sets within the organization, with sub-routes /pregled for data review and /uvoz for importing new data.
+- **/poslovni-planovi**: Access and manage business plans, with a detailed view of a specific plan through the sub-route /[businessPlanId].
+- **/otplatni-planovi**: Manage repayment plans for loans and other financial commitments.
+- **/prihodi**: View and manage information about the organization's income.
+- **/racun-dobiti-i-gubitka**: Access the profit and loss account of the organization.
+- **/tocka-pokrica**: Manage and review the breakeven point analysis.
+- **/troskovi**: Access and manage various costs associated with the organization.
 
 ## API Documentation
 
