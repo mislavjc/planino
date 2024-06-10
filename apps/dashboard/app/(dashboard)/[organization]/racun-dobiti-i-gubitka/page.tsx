@@ -42,8 +42,8 @@ const ProfitAndLossPage = async ({
             <TableHeader>
               <TableRow className="[&>*]:text-right">
                 <TableHead className="w-[100px]">Mjesec</TableHead>
-                <TableHead>Ukupan fiksni trošak</TableHead>
                 <TableHead>Ukupna prodaja</TableHead>
+                <TableHead>Ukupan fiksni trošak</TableHead>
                 <TableHead>Ukupan varijabilni trošak</TableHead>
                 <TableHead>Profit</TableHead>
               </TableRow>
@@ -52,8 +52,8 @@ const ProfitAndLossPage = async ({
               {data.map((row) => (
                 <TableRow key={row.month} className="text-right font-mono">
                   <TableCell className="font-medium">{row.month}</TableCell>
-                  <TableCell>{formatCurrency(row.total_cost)}</TableCell>
                   <TableCell>{formatCurrency(row.total_sales)}</TableCell>
+                  <TableCell>{formatCurrency(row.total_cost)}</TableCell>
                   <TableCell>
                     {formatCurrency(row.total_variable_cost)}
                   </TableCell>
@@ -69,9 +69,9 @@ const ProfitAndLossPage = async ({
             </TableBody>
             <TableFooter>
               <TableRow className="text-right font-mono">
-                <TableCell colSpan={1}>Total</TableCell>
-                <TableCell>{formatCurrency(totalCosts)}</TableCell>
+                <TableCell colSpan={1}>Ukupno</TableCell>
                 <TableCell>{formatCurrency(totalSales)}</TableCell>
+                <TableCell>{formatCurrency(totalCosts)}</TableCell>
                 <TableCell>{formatCurrency(totalVariableCosts)}</TableCell>
                 <TableCell
                   className={
