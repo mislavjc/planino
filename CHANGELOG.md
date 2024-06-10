@@ -1,6 +1,43 @@
 # Changelog
 
 
+## v0.4.0
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.3.2...v0.4.0)
+
+### 🚀 Enhancements
+
+- Add initial route ([14298c7](https://github.com/mislavjc/planino/commit/14298c7))
+- Add initial fixed cost calculation ([1e0653d](https://github.com/mislavjc/planino/commit/1e0653d))
+- Add total sales to the calculation ([a649e77](https://github.com/mislavjc/planino/commit/a649e77))
+- Add variable cost to calculation ([d12b812](https://github.com/mislavjc/planino/commit/d12b812))
+- Add empty value ([2c47878](https://github.com/mislavjc/planino/commit/2c47878))
+- Add area chart ([6668967](https://github.com/mislavjc/planino/commit/6668967))
+- Add profit calculation ([cb5f258](https://github.com/mislavjc/planino/commit/cb5f258))
+- Add profit and loss table ([48b41c4](https://github.com/mislavjc/planino/commit/48b41c4))
+- Color the text for profit ([f08b8a7](https://github.com/mislavjc/planino/commit/f08b8a7))
+- Style the text ([77064c6](https://github.com/mislavjc/planino/commit/77064c6))
+- Add tracker component ([a092bc9](https://github.com/mislavjc/planino/commit/a092bc9))
+- Add tracker to profit and loss ([72dcd87](https://github.com/mislavjc/planino/commit/72dcd87))
+- Use cards ([4105356](https://github.com/mislavjc/planino/commit/4105356))
+- Add profit to tracker ([a80e53e](https://github.com/mislavjc/planino/commit/a80e53e))
+- Add tracker stories ([8164567](https://github.com/mislavjc/planino/commit/8164567))
+
+### 🩹 Fixes
+
+- Remove console log ([6f7e5e2](https://github.com/mislavjc/planino/commit/6f7e5e2))
+- Export tracker props ([089854c](https://github.com/mislavjc/planino/commit/089854c))
+- Remove tracker ([bdb0eb9](https://github.com/mislavjc/planino/commit/bdb0eb9))
+
+### 🏡 Chore
+
+- **release:** V0.3.2 ([383ded1](https://github.com/mislavjc/planino/commit/383ded1))
+- Rename function ([d564483](https://github.com/mislavjc/planino/commit/d564483))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.3.2
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.3.1...v0.3.2)
