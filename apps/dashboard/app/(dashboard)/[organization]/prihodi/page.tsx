@@ -58,6 +58,19 @@ const EarningsPage = async ({
                   ))}
                 </TableRow>
               ))}
+              <TableRow>
+                <TableCell className="font-medium">Ukupno</TableCell>
+                {earnings.values.map((value) => (
+                  <TableCell key={value.month} className="text-right font-mono">
+                    {formatCurrency(
+                      productNames.reduce(
+                        (sum, productName) => sum + (value[productName] || 0),
+                        0,
+                      ),
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
             </TableBody>
           </Table>
         </CardContent>
