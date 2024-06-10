@@ -13,8 +13,6 @@ import {
 } from 'ui/table';
 import { TypographyH3 } from 'ui/typography';
 
-import { ProfitLossTracker } from 'components/@output/profit-loss-tracker';
-
 import { formatCurrency } from 'lib/utils';
 
 const ProfitAndLossPage = async ({
@@ -85,32 +83,6 @@ const ProfitAndLossPage = async ({
               </TableRow>
             </TableFooter>
           </Table>
-        </CardContent>
-      </Card>
-      <Card className="max-w-sm">
-        <CardHeader>
-          <TypographyH3>Profit i gubitak</TypographyH3>
-        </CardHeader>
-        <CardContent>
-          <ProfitLossTracker
-            data={data.map((row) => ({
-              color: row.profit < 0 ? 'bg-red-500' : 'bg-green-500',
-              tooltip: (
-                <div>
-                  <div>Mjesec: {row.month}</div>
-                  <div>
-                    Ukupan fiksni trošak: {formatCurrency(row.total_cost)}
-                  </div>
-                  <div>
-                    Ukupan varijabilni trošak:{' '}
-                    {formatCurrency(row.total_variable_cost)}
-                  </div>
-                  <div>Ukupna prodaja: {formatCurrency(row.total_sales)}</div>
-                  <div>Profit: {formatCurrency(row.profit)}</div>
-                </div>
-              ),
-            }))}
-          />
         </CardContent>
       </Card>
     </div>
