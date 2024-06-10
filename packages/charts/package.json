@@ -9,6 +9,7 @@
     "build": "storybook build"
   },
   "dependencies": {
+    "@radix-ui/react-hover-card": "^1.0.7",
     "clsx": "^2.1.1",
     "lucide-react": "^0.378.0",
     "recharts": "^2.12.7",
