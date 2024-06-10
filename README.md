@@ -106,6 +106,12 @@ The Importer API is designed for efficient processing and management of data imp
 
 **Description**: Generate coordinates and tables for given file.
 
+## Storybook for Chart Components
+
+Storybook is used in the Planino application to develop and showcase chart components in isolation. It allows for interactive testing, immediate visualization of changes, and comprehensive documentation of each component.
+
+![Storybook Screenshot](./assets/storybook.png)
+
 ## Database
 
 The database contains a series of tables that are interconnected to enable efficient data management within the organization. Each table has its specific role and is connected to other tables to ensure integration and consolidation of information.

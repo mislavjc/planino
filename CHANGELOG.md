@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v0.5.1
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.5.0...v0.5.1)
+
+### 🚀 Enhancements
+
+- Update README ([9d07fce](https://github.com/mislavjc/planino/commit/9d07fce))
+- Add screenshot of documentation ([b964f8d](https://github.com/mislavjc/planino/commit/b964f8d))
+
+### 🏡 Chore
+
+- **release:** V0.5.0 ([6efb92d](https://github.com/mislavjc/planino/commit/6efb92d))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.5.0
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.4.0...v0.5.0)
