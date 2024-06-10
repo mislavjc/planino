@@ -90,6 +90,8 @@ The root route is "/[organization]", which serves as the main entry point into t
 
 The Importer API is designed for efficient processing and management of data imports for various organizations. It enables secure transfer and manipulation of files, as well as access to specific information within those files. Full documentation can be found at [importer.planino.co/reference](https://importer.planino.co/reference).
 
+![scalar](./assets/scalar.png)
+
 ### Endpoints
 
 #### POST /import/presigned-url
