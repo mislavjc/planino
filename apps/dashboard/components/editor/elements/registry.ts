@@ -7,6 +7,7 @@ export const elements = {
   teamsYearlyTable: 'teamsYearlyTable',
   loansBarChart: 'loansBarChart',
   loansYearlyTable: 'loansYearlyTable',
+  monthlyEarningsTable: 'monthlyEarningsTable',
 } satisfies {
   [key: string]: string;
 };

@@ -1,3 +1,5 @@
+'use server';
+
 import { z } from 'zod';
 
 import { db } from 'db/drizzle';
@@ -126,6 +128,8 @@ const monthlyEarningsSchema = z.object({
       .catchall(z.number()),
   ),
 });
+
+export type MonthlyEarnings = z.infer<typeof monthlyEarningsSchema>;
 
 export const getMonthlyEarnings = async (organization: string) => {
   const foundOrganization = await getOrganization(organization);

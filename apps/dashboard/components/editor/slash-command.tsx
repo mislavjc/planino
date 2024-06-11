@@ -270,6 +270,22 @@ export const tableSuggestions = createSuggestionItems([
         .run();
     },
   },
+  {
+    title: 'Prihodi',
+    description: 'Prikazuje mjesečne prihode po kategorijama',
+    searchTerms: ['table', 'overview'],
+    icon: <Table size={18} />,
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .insertContent({
+          type: elements.monthlyEarningsTable,
+        })
+        .run();
+    },
+  },
 ]);
 
 export const slashCommand = Command.configure({
