@@ -4,6 +4,7 @@ import {
   insertOrganzationSchema,
   organizations,
   organizationUsers,
+  users,
 } from '@planino/database/schema';
 import { auth } from 'auth';
 import { and, eq } from 'drizzle-orm';
@@ -115,4 +116,23 @@ export const getOrganization = async (slug: string) => {
   }
 
   return organization[0];
+};
+
+export const getOrganizationUsers = async (organization: string) => {
+  const foundOrganization = await getOrganization(organization);
+
+  const foundUsers = await db
+    .select({
+      id: users.id,
+      email: users.email,
+      emailVerified: users.emailVerified,
+      image: users.image,
+    })
+    .from(users)
+    .innerJoin(organizationUsers, eq(organizationUsers.userId, users.id))
+    .where(
+      eq(organizationUsers.organizationId, foundOrganization.organizationId),
+    );
+
+  return foundUsers;
 };
