@@ -1,6 +1,26 @@
 # Changelog
 
 
+## v0.5.3
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.5.2...v0.5.3)
+
+### 🚀 Enhancements
+
+- Add table of contents ([ae10e4f](https://github.com/mislavjc/planino/commit/ae10e4f))
+
+### 🩹 Fixes
+
+- Min and max years for amortization calculation ([c97b398](https://github.com/mislavjc/planino/commit/c97b398))
+
+### 🏡 Chore
+
+- **release:** V0.5.2 ([5c0f889](https://github.com/mislavjc/planino/commit/5c0f889))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.5.2
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.5.1...v0.5.2)
