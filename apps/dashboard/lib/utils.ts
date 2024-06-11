@@ -34,6 +34,10 @@ export const formatCurrency = (
   amount: number,
   currency: string = 'EUR',
 ): string => {
+  if (typeof amount !== 'number' || isNaN(amount)) {
+    return '';
+  }
+
   return amount.toLocaleString('hr-HR', {
     style: 'currency',
     currency,
