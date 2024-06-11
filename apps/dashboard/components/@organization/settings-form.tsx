@@ -21,7 +21,15 @@ import {
   FormMessage,
 } from 'ui/form';
 import { Input } from 'ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from 'ui/select';
 
+import { industries } from 'lib/organization';
 import { toUpdateSchema } from 'lib/zod';
 
 const updateOrganizationSchema = toUpdateSchema(insertOrganzationSchema);
@@ -86,7 +94,21 @@ export const SettingsFrom = ({
             <FormItem>
               <FormLabel>Djelatnost</FormLabel>
               <FormControl>
-                <Input {...field} value={field.value ?? ''} />
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value ?? undefined}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {industries.map((industry) => (
+                      <SelectItem key={industry} value={industry}>
+                        {industry}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
