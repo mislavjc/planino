@@ -286,6 +286,22 @@ export const tableSuggestions = createSuggestionItems([
         .run();
     },
   },
+  {
+    title: 'Račun dobiti i gubitka',
+    description: 'Prikazuje mjesečne troškove i prihode',
+    searchTerms: ['table', 'overview'],
+    icon: <Table size={18} />,
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .insertContent({
+          type: elements.profitAndLossTable,
+        })
+        .run();
+    },
+  },
 ]);
 
 export const slashCommand = Command.configure({

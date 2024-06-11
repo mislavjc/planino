@@ -8,6 +8,7 @@ export const elements = {
   loansBarChart: 'loansBarChart',
   loansYearlyTable: 'loansYearlyTable',
   monthlyEarningsTable: 'monthlyEarningsTable',
+  profitAndLossTable: 'profitAndLossTable',
 } satisfies {
   [key: string]: string;
 };
