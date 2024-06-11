@@ -34,7 +34,11 @@ import {
 
 import './styles.css';
 
-const extensions = [...defaultExtensions, slashCommand];
+export const extensions = [
+  slashCommand,
+  ...defaultExtensions,
+  ...elementsExtensions,
+];
 
 interface EditorProp {
   initialValue?: JSONContent;
@@ -66,7 +70,7 @@ const Editor = ({ initialValue, onChange }: EditorProp) => {
     <EditorRoot>
       <EditorContent
         {...(initialValue && { initialContent: initialValue })}
-        extensions={[...extensions, ...elementsExtensions]}
+        extensions={extensions}
         editorProps={{
           handleDOMEvents: {
             keydown: (_view, event) => handleCommandNavigation(event),
