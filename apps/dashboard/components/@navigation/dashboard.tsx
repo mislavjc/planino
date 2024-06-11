@@ -72,7 +72,16 @@ export const Navigation = ({
       pathname.includes(item.href.replace(/\/$/, '')),
     );
 
-  if (!isInConfig && pathname !== '/' + organization) {
+  const organizationPath = '/' + organization;
+  const allowedPathsSuffixes = ['', '/postavke'];
+
+  const allowedPaths = allowedPathsSuffixes.map(
+    (suffix) => organizationPath + suffix,
+  );
+
+  const isNotInConfig = !isInConfig && !allowedPaths.includes(pathname);
+
+  if (isNotInConfig) {
     redirect('/' + organization);
   }
 
