@@ -101,6 +101,12 @@ export const organizations = pgTable(
       .defaultRandom(),
     createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
     name: text('name').notNull(),
+    personalIdentificationNumber: text('personal_identification_number'),
+    address: text('address'),
+    industry: text('industry'),
+    street_address: text('street_address'),
+    city: text('city'),
+    country: text('country'),
     slug: text('slug').notNull().unique(),
     userId: text('user_id')
       .notNull()
@@ -111,6 +117,9 @@ export const organizations = pgTable(
       organizationsSlugKey: uniqueIndex('organizations_slug_key').on(
         organizations.slug,
       ),
+      personalIdentificationNumberIndex: uniqueIndex(
+        'personal_identification_number_index',
+      ).on(organizations.personalIdentificationNumber),
     };
   },
 );
