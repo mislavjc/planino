@@ -10,13 +10,9 @@ const fetcher: Fetcher<
     organization: string;
   }
 > = ({ organization }: { organization: string }) =>
-  fetch(`/api/${organization}/table/earnings`).then((res) => res.json());
+  fetch(`/api/${organization}/earnings`).then((res) => res.json());
 
-export const useEarningsTable = ({
-  organization,
-}: {
-  organization: string;
-}) => {
+export const useEarnings = ({ organization }: { organization: string }) => {
   const { data } = useSWR(
     {
       organization: organization as string,

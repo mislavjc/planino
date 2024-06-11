@@ -203,6 +203,22 @@ export const graphSuggestions = createSuggestionItems([
         .run();
     },
   },
+  {
+    title: 'Prihodi',
+    description: 'Stupičasti graf prihoda.',
+    searchTerms: ['graph', 'chart'],
+    icon: <BarChart size={18} />,
+    command: ({ editor, range }) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .insertContent({
+          type: elements.monthlyEarningsChart,
+        })
+        .run();
+    },
+  },
 ]);
 
 export const tableSuggestions = createSuggestionItems([

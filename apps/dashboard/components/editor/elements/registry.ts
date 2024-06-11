@@ -7,6 +7,7 @@ export const elements = {
   teamsYearlyTable: 'teamsYearlyTable',
   loansBarChart: 'loansBarChart',
   loansYearlyTable: 'loansYearlyTable',
+  monthlyEarningsChart: 'monthlyEarningsChart',
   monthlyEarningsTable: 'monthlyEarningsTable',
   profitAndLossTable: 'profitAndLossTable',
 } satisfies {

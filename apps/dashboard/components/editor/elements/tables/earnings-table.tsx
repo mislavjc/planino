@@ -4,12 +4,12 @@ import { useParams } from 'next/navigation';
 
 import { EarningsTable as EarningsTableComponent } from 'components/@output/earnings-table';
 
-import { useEarningsTable } from 'hooks/earnings';
+import { useEarnings } from 'hooks/earnings';
 
 export const EarningsTable = () => {
   const { organization } = useParams();
 
-  const monthlyEarnings = useEarningsTable({
+  const monthlyEarnings = useEarnings({
     organization: organization as string,
   });
 
