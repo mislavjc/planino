@@ -90,7 +90,7 @@ ORDER BY
     ed.team_name, ed.expense_name, ed.created_at;
 `;
 
-export const INVENTORY_VALUES = (organzation_id: string) => sql`
+export const INVENTORY_VALUES = (organization_id: string) => sql`
 WITH YearValues AS (
     SELECT 
         i.inventory_item_id,
@@ -103,15 +103,18 @@ WITH YearValues AS (
         inventory_item i
         JOIN team t ON i.team_id = t.team_id
     WHERE
-        t.organization_id = ${organzation_id}
+        t.organization_id = ${organization_id}
     AND i.name <> ''
 ),
 MinMaxYears AS (
     SELECT 
-        MIN(EXTRACT(YEAR FROM starting_month)) AS min_year,
-        MAX(EXTRACT(YEAR FROM starting_month) + amortization_length - 1) AS max_year
+        MIN(EXTRACT(YEAR FROM i.starting_month)) AS min_year,
+        MAX(EXTRACT(YEAR FROM i.starting_month) + i.amortization_length - 1) AS max_year
     FROM 
-        inventory_item
+        inventory_item i
+        JOIN team t ON i.team_id = t.team_id
+    WHERE
+        t.organization_id = ${organization_id}
 ),
 TeamItems AS (
     SELECT
@@ -127,8 +130,8 @@ TeamItems AS (
         team t
         JOIN YearValues y ON t.team_id = y.team_id
         CROSS JOIN MinMaxYears m
-        WHERE
-            t.organization_id = ${organzation_id}
+    WHERE
+        t.organization_id = ${organization_id}
 )
 SELECT
     t.team_name,
@@ -141,9 +144,9 @@ SELECT
     ) FILTER (WHERE y BETWEEN t.min_year AND t.max_year) AS yearly_values
 FROM
     TeamItems t,
-    generate_series(t.min_year, t.max_year) AS y
+    generate_series((SELECT min_year FROM MinMaxYears), (SELECT max_year FROM MinMaxYears)) AS y
 GROUP BY
-    t.team_name, t.item_name
+    t.team_name, t.item_name, t.min_year, t.max_year
 ORDER BY
     t.team_name, t.item_name;
 `;
