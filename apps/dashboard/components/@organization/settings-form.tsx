@@ -6,6 +6,7 @@ import {
   insertOrganzationSchema,
   SelectOrganization,
 } from '@planino/database/schema';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { updateOrganization } from 'actions/organization';
@@ -38,7 +39,15 @@ export const SettingsFrom = ({
   });
 
   const onSubmit = async (data: UpdateOrganization) => {
-    await updateOrganization(organization.organizationId, data);
+    try {
+      await updateOrganization(organization.organizationId, data);
+    } catch (error) {
+      return toast.error(
+        'Došlo je do greške prilikom ažuriranja organizacije.',
+      );
+    }
+
+    toast.success('Organizacija je uspješno ažurirana.');
   };
 
   return (

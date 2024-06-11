@@ -63,11 +63,15 @@ export const updateOrganization = async (
     throw new Error('Organizacija nije pronađena.');
   }
 
-  await db
-    .update(organizations)
-    .set(data)
-    .where(eq(organizations.organizationId, organization.organizationId))
-    .execute();
+  try {
+    await db
+      .update(organizations)
+      .set(data)
+      .where(eq(organizations.organizationId, organization.organizationId))
+      .execute();
+  } catch (error) {
+    throw new Error('Neuspjelo ažuriranje organizacije.');
+  }
 };
 
 export const getOrganization = async (slug: string) => {
