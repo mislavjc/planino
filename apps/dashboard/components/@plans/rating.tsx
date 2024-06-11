@@ -56,18 +56,49 @@ export const Rating = ({
   );
 };
 
-const sectionTitles = {
-  radnoIskustvo: 'Radno Iskustvo',
-  obrazovanjeIliDodatnaEdukacija: 'Obrazovanje Ili Dodatna Edukacija',
-  prvoPoduzetničkoIskustvo: 'Prvo Poduzetničko Iskustvo',
-  popunjenostISadržajPoslovnogPlana: 'Popunjenost i Sadržaj Poslovnog Plana',
-  indeksRazvijenosti: 'Indeks Razvijenosti',
-  procjenaPrihodaITroškova: 'Procjena Prihoda i Troškova',
-  dodatnePrednostiINedostatci: 'Dodatne Prednosti i Nedostatci',
-  inovativnostProjekta: 'Inovativnost Projekta',
-  ulaganjeUNedovoljnoRazvijenuDjelatnost:
-    'Ulaganje u Nedovoljno Razvijenu Djelatnost',
-} satisfies { [_key in keyof GradeBusinessPlan]: string };
+const sectionMap = {
+  radnoIskustvo: {
+    title: 'Radno Iskustvo',
+    max: 15,
+  },
+  obrazovanjeIliDodatnaEdukacija: {
+    title: 'Obrazovanje Ili Dodatna Edukacija',
+    max: 15,
+  },
+  prvoPoduzetničkoIskustvo: {
+    title: 'Prvo Poduzetničko Iskustvo',
+    max: 5,
+  },
+  popunjenostISadržajPoslovnogPlana: {
+    title: 'Popunjenost i Sadržaj Poslovnog Plana',
+    max: 15,
+  },
+  indeksRazvijenosti: {
+    title: 'Indeks Razvijenosti',
+    max: 10,
+  },
+  procjenaPrihodaITroškova: {
+    title: 'Procjena Prihoda i Troškova',
+    max: 15,
+  },
+  dodatnePrednostiINedostatci: {
+    title: 'Dodatne Prednosti i Nedostatci',
+    max: 10,
+  },
+  inovativnostProjekta: {
+    title: 'Inovativnost Projekta',
+    max: 5,
+  },
+  ulaganjeUNedovoljnoRazvijenuDjelatnost: {
+    title: 'Ulaganje u Nedovoljno Razvijenu Djelatnost',
+    max: 5,
+  },
+} satisfies {
+  [_key in keyof GradeBusinessPlan]: {
+    title: string;
+    max: number;
+  };
+};
 
 type SectionReview = {
   ocjena: number;
@@ -77,43 +108,41 @@ type SectionReview = {
 
 const SectionDisplay = ({
   title,
+  max,
   section,
 }: {
   title: string;
+  max: number;
   section: SectionReview;
-}) => (
-  <div>
-    <div className="flex items-center gap-4">
-      <div className="flex justify-center">
-        <ProgressCircle
-          value={section.ocjena}
-          max={15}
-          variant={
-            section.ocjena >= 10
-              ? 'success'
-              : section.ocjena >= 5
-                ? 'warning'
-                : 'error'
-          }
-        >
-          <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
-            {section.ocjena}/15
-          </span>
-        </ProgressCircle>
-      </div>
-      <div>
-        <TypographyH4>{title}</TypographyH4>
-      </div>
-    </div>
+}) => {
+  const percent = (section.ocjena / max) * 100;
+  const variant =
+    percent >= 80 ? 'success' : percent >= 50 ? 'warning' : 'error';
 
-    <TypographyP>
-      <strong>Povratna Informacija:</strong> {section.povratnaInformacija}
-    </TypographyP>
-    <TypographyP>
-      <strong>Savjeti za Poboljšanje:</strong> {section.savjetiZaPoboljšanje}
-    </TypographyP>
-  </div>
-);
+  return (
+    <div>
+      <div className="flex items-center gap-4">
+        <div className="flex justify-center">
+          <ProgressCircle value={percent} max={100} variant={variant}>
+            <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
+              {section.ocjena}/{max}
+            </span>
+          </ProgressCircle>
+        </div>
+        <div>
+          <TypographyH4>{title}</TypographyH4>
+        </div>
+      </div>
+
+      <TypographyP>
+        <strong>Povratna Informacija:</strong> {section.povratnaInformacija}
+      </TypographyP>
+      <TypographyP>
+        <strong>Savjeti za Poboljšanje:</strong> {section.savjetiZaPoboljšanje}
+      </TypographyP>
+    </div>
+  );
+};
 
 const BusinessPlanReviewComponent = ({
   review,
@@ -125,7 +154,8 @@ const BusinessPlanReviewComponent = ({
     {Object.keys(review).map((key) => (
       <SectionDisplay
         key={key}
-        title={sectionTitles[key as keyof GradeBusinessPlan]}
+        title={sectionMap[key as keyof GradeBusinessPlan].title}
+        max={sectionMap[key as keyof GradeBusinessPlan].max}
         section={review[key as keyof GradeBusinessPlan]}
       />
     ))}
