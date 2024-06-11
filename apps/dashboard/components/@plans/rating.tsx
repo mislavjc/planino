@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { ProgressCircle } from '@planino/charts';
 import { SelectBusinessPlan } from '@planino/database/schema';
 import { generateText, JSONContent } from '@tiptap/core';
 
@@ -82,10 +83,29 @@ const SectionDisplay = ({
   section: SectionReview;
 }) => (
   <div>
-    <TypographyH4>{title}</TypographyH4>
-    <TypographyP>
-      <strong>Ocjena:</strong> {section.ocjena}
-    </TypographyP>
+    <div className="flex items-center gap-4">
+      <div className="flex justify-center">
+        <ProgressCircle
+          value={section.ocjena}
+          max={15}
+          variant={
+            section.ocjena >= 10
+              ? 'success'
+              : section.ocjena >= 5
+                ? 'warning'
+                : 'error'
+          }
+        >
+          <span className="text-sm font-medium text-gray-900 dark:text-gray-50">
+            {section.ocjena}/15
+          </span>
+        </ProgressCircle>
+      </div>
+      <div>
+        <TypographyH4>{title}</TypographyH4>
+      </div>
+    </div>
+
     <TypographyP>
       <strong>Povratna Informacija:</strong> {section.povratnaInformacija}
     </TypographyP>
