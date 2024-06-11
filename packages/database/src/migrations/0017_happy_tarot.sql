@@ -1,0 +1,1 @@
+ALTER TABLE "organization" DROP COLUMN IF EXISTS "address";

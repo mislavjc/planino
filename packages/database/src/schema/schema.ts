@@ -101,8 +101,9 @@ export const organizations = pgTable(
       .defaultRandom(),
     createdAt: timestamp('created_at', { mode: 'date' }).notNull().defaultNow(),
     name: text('name').notNull(),
-    personalIdentificationNumber: text('personal_identification_number'),
-    address: text('address'),
+    personalIdentificationNumber: text(
+      'personal_identification_number',
+    ).unique(),
     industry: text('industry'),
     street_address: text('street_address'),
     city: text('city'),
