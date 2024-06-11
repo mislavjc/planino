@@ -11,6 +11,8 @@ import { z } from 'zod';
 
 import { db } from 'db/drizzle';
 
+import { UpdateOrganization } from 'components/@organization/settings-form';
+
 type OrganizationInsertInput = Omit<
   z.infer<typeof insertOrganzationSchema>,
   'userId'
@@ -43,6 +45,31 @@ export const createOrganization = async (data: OrganizationInsertInput) => {
   };
 };
 
+export const updateOrganization = async (
+  organization_id: string,
+  data: UpdateOrganization,
+) => {
+  const session = await auth();
+
+  if (!session?.user || !session.user.id) {
+    throw new Error('Unauthorized');
+  }
+
+  const organization = await db.query.organizations.findFirst({
+    where: eq(organizations.organizationId, organization_id),
+  });
+
+  if (!organization) {
+    throw new Error('Organizacija nije pronađena.');
+  }
+
+  await db
+    .update(organizations)
+    .set(data)
+    .where(eq(organizations.organizationId, organization.organizationId))
+    .execute();
+};
+
 export const getOrganization = async (slug: string) => {
   const session = await auth();
 
@@ -55,10 +82,6 @@ export const getOrganization = async (slug: string) => {
       eq(organizations.slug, slug),
       eq(organizations.userId, session.user.id),
     ),
-    columns: {
-      name: true,
-      organizationId: true,
-    },
   });
 
   if (!organization) {

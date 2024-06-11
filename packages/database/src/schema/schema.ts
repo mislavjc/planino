@@ -115,6 +115,7 @@ export const organizations = pgTable(
   },
 );
 
+export type SelectOrganization = InferSelectModel<typeof organizations>;
 export const insertOrganzationSchema = createInsertSchema(organizations);
 
 export const organizationsRelations = relations(
