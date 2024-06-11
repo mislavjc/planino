@@ -127,6 +127,13 @@
       "when": 1718130135701,
       "tag": "0017_happy_tarot",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "6",
+      "when": 1718132507542,
+      "tag": "0018_aromatic_tinkerer",
+      "breakpoints": true
     }
   ]
 }

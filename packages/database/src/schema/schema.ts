@@ -4,7 +4,6 @@ import {
   integer,
   jsonb,
   numeric,
-  pgEnum,
   pgTable,
   primaryKey,
   text,
@@ -14,7 +13,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { type InferSelectModel, type InferInsertModel } from 'drizzle-orm';
+import { type InferSelectModel } from 'drizzle-orm';
 
 export const users = pgTable('user', {
   id: text('id').notNull().primaryKey(),
@@ -31,7 +30,7 @@ export const selectUserSchema = createSelectSchema(users, {
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
-  organizations: many(organizations),
+  organizationUsers: many(organizationUsers),
 }));
 
 export const accounts = pgTable(
@@ -109,9 +108,6 @@ export const organizations = pgTable(
     city: text('city'),
     country: text('country'),
     slug: text('slug').notNull().unique(),
-    userId: text('user_id')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
   },
   (organizations) => {
     return {
@@ -128,18 +124,43 @@ export const organizations = pgTable(
 export type SelectOrganization = InferSelectModel<typeof organizations>;
 export const insertOrganzationSchema = createInsertSchema(organizations);
 
-export const organizationsRelations = relations(
-  organizations,
-  ({ one, many }) => ({
+export const organizationsRelations = relations(organizations, ({ many }) => ({
+  organizationUsers: many(organizationUsers),
+  loans: many(loans),
+  teams: many(teams),
+  businessPlans: many(businessPlans),
+  productGroups: many(productGroups),
+  importedFiles: many(importedFiles),
+}));
+
+export const organizationUsers = pgTable(
+  'organization_user',
+  {
+    organizationId: uuid('organization_id')
+      .notNull()
+      .references(() => organizations.organizationId, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+  },
+  (organizationUser) => ({
+    compoundKey: primaryKey({
+      columns: [organizationUser.organizationId, organizationUser.userId],
+    }),
+  }),
+);
+
+export const organizationUsersRelations = relations(
+  organizationUsers,
+  ({ one }) => ({
+    organization: one(organizations, {
+      fields: [organizationUsers.organizationId],
+      references: [organizations.organizationId],
+    }),
     user: one(users, {
-      fields: [organizations.userId],
+      fields: [organizationUsers.userId],
       references: [users.id],
     }),
-    loans: many(loans),
-    teams: many(teams),
-    businessPlans: many(businessPlans),
-    productGroups: many(productGroups),
-    importedFiles: many(importedFiles),
   }),
 );
 

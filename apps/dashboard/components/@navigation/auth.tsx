@@ -1,4 +1,8 @@
-import { organizations } from '@planino/database/schema';
+import {
+  organizations,
+  organizationUsers,
+  users,
+} from '@planino/database/schema';
 import { auth } from 'auth';
 import { eq } from 'drizzle-orm';
 import { ArrowRight } from 'lucide-react';
@@ -24,14 +28,16 @@ export const Auth = async () => {
     );
   }
 
-  const organization = await db.query.organizations.findFirst({
-    where: eq(organizations.userId, session.user?.id ?? ''),
-    columns: {
-      slug: true,
-    },
-  });
+  const result = await db
+    .select()
+    .from(organizations)
+    .innerJoin(
+      organizationUsers,
+      eq(organizations.organizationId, organizationUsers.organizationId),
+    )
+    .innerJoin(users, eq(users.id, organizationUsers.userId));
 
-  if (!organization) {
+  if (!result.length || !result[0].organization) {
     return (
       <Link href="/new">
         <Button>
@@ -43,7 +49,7 @@ export const Auth = async () => {
   }
 
   return (
-    <Link href={`/${organization?.slug}`}>
+    <Link href={`/${result[0].organization?.slug}`}>
       <Button>
         U aplikaciju
         <ArrowRight size={16} className="ml-2" />

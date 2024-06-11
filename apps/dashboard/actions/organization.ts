@@ -3,6 +3,7 @@
 import {
   insertOrganzationSchema,
   organizations,
+  organizationUsers,
 } from '@planino/database/schema';
 import { auth } from 'auth';
 import { and, eq } from 'drizzle-orm';
@@ -29,7 +30,6 @@ export const createOrganization = async (data: OrganizationInsertInput) => {
     .insert(organizations)
     .values({
       ...data,
-      userId: session.user.id,
     })
     .onConflictDoNothing()
     .returning();
@@ -39,6 +39,11 @@ export const createOrganization = async (data: OrganizationInsertInput) => {
       error: 'Organizacija već postoji.',
     };
   }
+
+  await db.insert(organizationUsers).values({
+    organizationId: organization[0].organizationId,
+    userId: session.user.id,
+  });
 
   return {
     organization: organization[0],
@@ -78,19 +83,36 @@ export const getOrganization = async (slug: string) => {
   const session = await auth();
 
   if (!session?.user || !session.user.id) {
-    redirect('/login');
+    redirect('/prijava');
   }
 
-  const organization = await db.query.organizations.findFirst({
-    where: and(
-      eq(organizations.slug, slug),
-      eq(organizations.userId, session.user.id),
-    ),
-  });
+  const organization = await db
+    .select({
+      organizationId: organizations.organizationId,
+      name: organizations.name,
+      slug: organizations.slug,
+      industry: organizations.industry,
+      personalIdentificationNumber: organizations.personalIdentificationNumber,
+      createdAt: organizations.createdAt,
+      street_address: organizations.street_address,
+      city: organizations.city,
+      country: organizations.country,
+    })
+    .from(organizations)
+    .innerJoin(
+      organizationUsers,
+      eq(organizationUsers.organizationId, organizations.organizationId),
+    )
+    .where(
+      and(
+        eq(organizations.slug, slug),
+        eq(organizationUsers.userId, session.user.id),
+      ),
+    );
 
-  if (!organization) {
+  if (!organization.length) {
     notFound();
   }
 
-  return organization;
+  return organization[0];
 };
