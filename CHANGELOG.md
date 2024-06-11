@@ -1,6 +1,30 @@
 # Changelog
 
 
+## v0.5.5
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.5.4...v0.5.5)
+
+### 🚀 Enhancements
+
+- Extract earnings table ([43b0f0d](https://github.com/mislavjc/planino/commit/43b0f0d))
+- Use earnings table in plan editor ([af27d2d](https://github.com/mislavjc/planino/commit/af27d2d))
+- Extract proft and loss table ([13d8d21](https://github.com/mislavjc/planino/commit/13d8d21))
+- Add profit and loss to plan editor ([458eec0](https://github.com/mislavjc/planino/commit/458eec0))
+- Add earnings bar chart ([047d6e3](https://github.com/mislavjc/planino/commit/047d6e3))
+
+### 🩹 Fixes
+
+- Check if number is valid ([78cbf61](https://github.com/mislavjc/planino/commit/78cbf61))
+
+### 🏡 Chore
+
+- **release:** V0.5.4 ([3ed225d](https://github.com/mislavjc/planino/commit/3ed225d))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.5.4
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.5.3...v0.5.4)
