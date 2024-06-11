@@ -1,6 +1,30 @@
 # Changelog
 
 
+## v0.5.4
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.5.3...v0.5.4)
+
+### 🚀 Enhancements
+
+- Add organization settings page ([a711c54](https://github.com/mislavjc/planino/commit/a711c54))
+- Add update organization form ([d6f4aec](https://github.com/mislavjc/planino/commit/d6f4aec))
+- Add more fields for organization data ([12132a6](https://github.com/mislavjc/planino/commit/12132a6))
+- Make pin unique ([bdb77ce](https://github.com/mislavjc/planino/commit/bdb77ce))
+- Add all new fields ([4a8ad31](https://github.com/mislavjc/planino/commit/4a8ad31))
+- Add confirmation toast ([4dbf480](https://github.com/mislavjc/planino/commit/4dbf480))
+- Add industry select ([bfd216c](https://github.com/mislavjc/planino/commit/bfd216c))
+- Convert db to support multi user orgs ([6875aa4](https://github.com/mislavjc/planino/commit/6875aa4))
+- Show all users in orgnization ([3fc25ee](https://github.com/mislavjc/planino/commit/3fc25ee))
+
+### 🏡 Chore
+
+- **release:** V0.5.3 ([9240585](https://github.com/mislavjc/planino/commit/9240585))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.5.3
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.5.2...v0.5.3)
