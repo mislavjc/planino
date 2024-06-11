@@ -90,6 +90,10 @@ const monthlyAggregateFixedCostsSchema = z.object({
   ),
 });
 
+export type MonthlyAggregateFixedCosts = z.infer<
+  typeof monthlyAggregateFixedCostsSchema
+>;
+
 export const getMonthlyAggregateCostsAndSales = async (
   organization: string,
 ) => {
