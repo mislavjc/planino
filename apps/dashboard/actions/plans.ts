@@ -2,7 +2,8 @@
 
 import { openai } from '@ai-sdk/openai';
 import { businessPlans } from '@planino/database/schema';
-import { generateObject } from 'ai';
+import { DeepPartial, streamObject } from 'ai';
+import { createStreamableValue } from 'ai/rsc';
 import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -83,63 +84,40 @@ export const updateBusinessPlan = async ({
 };
 
 const gradeSchema = z.object({
-  radnoIskustvo: z.object({
-    ocjena: z.number().min(5).max(15),
-    povratnaInformacija: z.string(),
-    savjetiZaPoboljšanje: z.string(),
-  }),
-  obrazovanjeIliDodatnaEdukacija: z.object({
-    ocjena: z.number().min(10).max(15),
-    povratnaInformacija: z.string(),
-    savjetiZaPoboljšanje: z.string(),
-  }),
-  prvoPoduzetničkoIskustvo: z.object({
-    ocjena: z.number().min(5).max(5),
-    povratnaInformacija: z.string(),
-    savjetiZaPoboljšanje: z.string(),
-  }),
-  popunjenostISadržajPoslovnogPlana: z.object({
-    ocjena: z.number().min(5).max(15),
-    povratnaInformacija: z.string(),
-    savjetiZaPoboljšanje: z.string(),
-  }),
-  indeksRazvijenosti: z.object({
-    ocjena: z.number().min(0).max(10),
-    povratnaInformacija: z.string(),
-    savjetiZaPoboljšanje: z.string(),
-  }),
-  procjenaPrihodaITroškova: z.object({
-    ocjena: z.number().min(0).max(10),
-    povratnaInformacija: z.string(),
-    savjetiZaPoboljšanje: z.string(),
-  }),
-  dodatnePrednostiINedostatci: z.object({
-    ocjena: z.number().min(0).max(10),
-    povratnaInformacija: z.string(),
-    savjetiZaPoboljšanje: z.string(),
-  }),
-  inovativnostProjekta: z.object({
-    ocjena: z.number().min(0).max(5),
-    povratnaInformacija: z.string(),
-    savjetiZaPoboljšanje: z.string(),
-  }),
-  ulaganjeUNedovoljnoRazvijenuDjelatnost: z.object({
-    ocjena: z.number().min(0).max(5),
-    povratnaInformacija: z.string(),
-    savjetiZaPoboljšanje: z.string(),
-  }),
+  grades: z.array(
+    z.object({
+      name: z.union([
+        z.literal('Radno iskustvo'),
+        z.literal('Obrazovanje ili dodatna edukacija'),
+        z.literal('Prvo poduzetničko iskustvo'),
+        z.literal('Popunjenost i sadržaj poslovnog plana'),
+        z.literal('Indeks razvijenosti'),
+        z.literal('Procjena prihoda i troškova'),
+        z.literal('Dodatne prednosti i nedostatci'),
+        z.literal('Inovativnost projekta'),
+        z.literal('Ulaganje u nedovoljno razvijenu djelatnost'),
+      ]),
+      grade: z.number().int().min(0).max(15),
+      max: z.number().int().min(0).max(15),
+      feedback: z.string(),
+      improvements: z.string(),
+    }),
+  ),
 });
 
 export type GradeBusinessPlan = z.infer<typeof gradeSchema>;
+export type PartialGradeBusinessPlan = DeepPartial<typeof gradeSchema>;
 
 export const gradeBusinessPlan = async ({ plan }: { plan: string }) => {
-  const { object } = await generateObject({
-    model: openai('gpt-3.5-turbo'),
-    temperature: 0,
-    messages: [
-      {
-        role: 'system',
-        content: `
+  const stream = createStreamableValue();
+
+  (async () => {
+    const { partialObjectStream } = await streamObject({
+      model: openai('gpt-3.5-turbo'),
+      messages: [
+        {
+          role: 'system',
+          content: `
         WRITE IN CROATIAN.
 
         You will receive a business plan and you need to rate it based on the following criteria:
@@ -159,14 +137,21 @@ export const gradeBusinessPlan = async ({ plan }: { plan: string }) => {
 
         DO IT IN CROATIAN.
         `,
-      },
-      {
-        role: 'user',
-        content: `Please review the above business plan and rate each section based on the provided criteria, giving detailed feedback for each.`,
-      },
-    ],
-    schema: gradeSchema,
-  });
+        },
+        {
+          role: 'user',
+          content: `Please review the above business plan and rate each section based on the provided criteria, giving detailed feedback for each.`,
+        },
+      ],
+      schema: gradeSchema,
+    });
 
-  return object;
+    for await (const partialObject of partialObjectStream) {
+      stream.update(partialObject);
+    }
+
+    stream.done();
+  })();
+
+  return { object: stream.value };
 };
