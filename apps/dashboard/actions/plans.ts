@@ -113,7 +113,8 @@ export const gradeBusinessPlan = async ({ plan }: { plan: string }) => {
 
   (async () => {
     const { partialObjectStream } = await streamObject({
-      model: openai('gpt-3.5-turbo'),
+      model: openai('gpt-4-turbo'),
+      temperature: 0,
       messages: [
         {
           role: 'system',
