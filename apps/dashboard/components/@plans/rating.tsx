@@ -19,11 +19,14 @@ export const Rating = ({
 }) => {
   const text = generateText(businessPlan.content as JSONContent, extensions);
   const [generation, setGeneration] = useState<PartialGradeBusinessPlan>();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   return (
     <div>
       <Button
         onClick={async () => {
+          setIsGenerating(true);
+
           const { object } = await gradeBusinessPlan({
             plan: text,
           });
@@ -35,7 +38,10 @@ export const Rating = ({
               setGeneration(partialObject);
             }
           }
+
+          setIsGenerating(false);
         }}
+        disabled={isGenerating}
       >
         Ocjeni plan
       </Button>
