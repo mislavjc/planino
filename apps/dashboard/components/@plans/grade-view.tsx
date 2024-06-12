@@ -6,7 +6,7 @@ import { GradeBusinessPlan, PartialGradeBusinessPlan } from 'actions/plans';
 import { TypographyH4, TypographyP } from 'ui/typography';
 
 export const GradeView = ({ grade }: { grade?: PartialGradeBusinessPlan }) => (
-  <div className="mt-8">
+  <div className="mt-8 flex flex-col gap-4">
     {grade?.grades &&
       grade.grades.map(
         (section, index) =>
