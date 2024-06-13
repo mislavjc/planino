@@ -44,9 +44,9 @@ export const TeamYearlyTable = ({
   };
 
   return (
-    <div className="grid grid-cols-1 divide-y divide-gray-200 border">
+    <div className="grid grid-cols-1 divide-y border">
       <div
-        className="grid bg-gray-100"
+        className="grid bg-muted"
         style={{
           gridTemplateColumns: `repeat(${numberOfYears + 1}, minmax(0, 1fr))`,
         }}
@@ -80,12 +80,12 @@ export const TeamYearlyTable = ({
             </>
           )}
           <div
-            className="grid items-end"
+            className="hover:bg-muted/60 grid items-end transition-all duration-200 ease-in-out"
             style={{
               gridTemplateColumns: `repeat(${numberOfYears + 1}, minmax(0, 1fr))`,
             }}
           >
-            <div className="p-2">{item.item_name}</div>
+            <div className="p-2 pl-6">{item.item_name}</div>
             {item.yearly_values.map((value, valueIndex) => (
               <div key={valueIndex} className="min-w-56 p-2 text-end font-mono">
                 {value ? (
