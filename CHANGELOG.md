@@ -1,6 +1,32 @@
 # Changelog
 
 
+## v0.6.0
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.5.5...v0.6.0)
+
+### 🚀 Enhancements
+
+- Add drawer component ([c766b94](https://github.com/mislavjc/planino/commit/c766b94))
+- Add grading function ([ad65b93](https://github.com/mislavjc/planino/commit/ad65b93))
+- Use grading function inside drawer ([cbdd16e](https://github.com/mislavjc/planino/commit/cbdd16e))
+- Add progress circle ([872eaa1](https://github.com/mislavjc/planino/commit/872eaa1))
+- Use progress circle ([87e5d51](https://github.com/mislavjc/planino/commit/87e5d51))
+- Add max value of grades ([6c2afb1](https://github.com/mislavjc/planino/commit/6c2afb1))
+- Make code streamable for realtime updates ([cc37c6a](https://github.com/mislavjc/planino/commit/cc37c6a))
+- Set gap for sections ([809c81d](https://github.com/mislavjc/planino/commit/809c81d))
+- Use gpt-4-turbo ([e838594](https://github.com/mislavjc/planino/commit/e838594))
+- Block button while streaming ([23d9089](https://github.com/mislavjc/planino/commit/23d9089))
+- Adjust layout of the drawer ([62e6332](https://github.com/mislavjc/planino/commit/62e6332))
+
+### 🏡 Chore
+
+- **release:** V0.5.5 ([640643f](https://github.com/mislavjc/planino/commit/640643f))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.5.5
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.5.4...v0.5.5)
