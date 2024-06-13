@@ -35,25 +35,6 @@ export const TeamInputTable = ({
 
   return (
     <div>
-      <div
-        className="grid text-sm"
-        style={{
-          gridTemplateColumns: `repeat(${headerColumnWidth}, minmax(0, 1fr))`,
-        }}
-      >
-        {header.map((column, index) => (
-          <TypographyP
-            key={index}
-            className={cn({
-              'text-left': column.align === 'left',
-              'text-right': column.align === 'right',
-              'col-span-2': column.width === 2,
-            })}
-          >
-            {column.title}
-          </TypographyP>
-        ))}
-      </div>
       <div className="flex flex-col gap-4">
         {teams.map((team) => (
           <div key={team.teamId}>
@@ -65,10 +46,28 @@ export const TeamInputTable = ({
                 placeholder={headerPlaceholder}
               />
             ) : (
-              <div className="bg-muted px-4 py-2 font-mono text-sm uppercase">
+              <div className="bg-muted border px-4 py-2 font-mono text-sm uppercase">
                 {team.name}
               </div>
             )}
+            <div
+              className="grid text-sm"
+              style={{
+                gridTemplateColumns: `repeat(${headerColumnWidth}, minmax(0, 1fr))`,
+              }}
+            >
+              {header.map((column, index) => (
+                <TypographyP
+                  key={index}
+                  className={cn('border p-2 pl-6 pr-6 text-sm bg-muted', {
+                    'text-left': column.align === 'left',
+                    'col-span-2': column.width === 2,
+                  })}
+                >
+                  {column.title}
+                </TypographyP>
+              ))}
+            </div>
             {team.items}
             {team.add}
           </div>

@@ -24,7 +24,7 @@ export const DatePicker = ({
         <Button
           variant={'outline'}
           className={cn(
-            'justify-start text-left font-normal relative group',
+            'justify-start text-left font-normal relative group px-6',
             !date && 'text-muted-foreground',
             className,
           )}
