@@ -32,7 +32,7 @@ const NavItem = ({ href, icon, children, active = false }: NavItemProps) => (
   </Link>
 );
 
-const generateConfig = (name: string, config: TemplateConfig) => {
+export const generateConfig = (name: string, config: TemplateConfig) => {
   return {
     input: config.input.map((item) => ({
       ...item,
