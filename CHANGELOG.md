@@ -1,6 +1,24 @@
 # Changelog
 
 
+## v0.6.2
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.6.1...v0.6.2)
+
+### 🚀 Enhancements
+
+- Add indent to team yearly table and hover styles ([9ee0711](https://github.com/mislavjc/planino/commit/9ee0711))
+- Add gap to the expenses graphs ([ba6eef4](https://github.com/mislavjc/planino/commit/ba6eef4))
+- Add basic home page ([daff860](https://github.com/mislavjc/planino/commit/daff860))
+
+### 🏡 Chore
+
+- **release:** V0.6.1 ([d84d371](https://github.com/mislavjc/planino/commit/d84d371))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.6.1
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.6.0...v0.6.1)
