@@ -76,7 +76,7 @@ export const renderYearlyData = (
     return (
       <td
         key={year}
-        className="whitespace-nowrap px-6 py-4 text-sm text-muted/60"
+        className="text-muted/60 space-y-1 whitespace-nowrap px-6 py-4 text-sm"
       >
         <div className="flex justify-between">
           Kamata:
