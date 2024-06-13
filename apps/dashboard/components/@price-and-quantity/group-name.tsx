@@ -17,7 +17,7 @@ export const GroupName = ({ productGroup }: { productGroup: ProductGroup }) => {
     <TableInput
       value={name || ''}
       placeholder="Naziv grupe"
-      inputClassName="bg-muted/60"
+      inputClassName="bg-muted/60 border"
       onChange={(e) => setName(e.target.value)}
       onBlur={() => {
         updateProductGroup({

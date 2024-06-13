@@ -12,6 +12,8 @@ import { Overview } from 'components/@loans/overview';
 import { Row } from 'components/@loans/row';
 import { AddRow } from 'components/add-row';
 
+import { cn } from 'lib/utils';
+
 export const metadata: Metadata = {
   title: 'Otplatni plan - Planino',
 };
@@ -34,16 +36,21 @@ const PaymentPlanPage = async ({
         <CardContent className="overflow-x-auto">
           <ScrollArea className="min-w-[40rem]">
             <div>
-              <div className="grid grid-cols-7 text-sm">
-                <TypographyP className="col-span-2">Naziv</TypographyP>
-                <TypographyP className="text-right">Kamata</TypographyP>
-                <TypographyP className="text-right">Broj rata</TypographyP>
-                <TypographyP className="text-right">Iznos</TypographyP>
-                <TypographyP className="col-span-2 text-right">
-                  Prvi mjesec
-                </TypographyP>
+              <div className="grid grid-cols-7 divide-x-[1px] border bg-muted">
+                {['Naziv', 'Kamata', 'Broj rata', 'Iznos', 'Prvi mjesec'].map(
+                  (title, index) => (
+                    <TypographyP
+                      key={title}
+                      className={cn('p-2 pl-6 pr-6 text-sm', {
+                        'col-span-2': title === 'Naziv',
+                      })}
+                    >
+                      {title}
+                    </TypographyP>
+                  ),
+                )}
               </div>
-              <div>
+              <div className="divide-y-[1px]">
                 {loans.map((loan) => (
                   <Row key={`${loan.loanId}-${loan.updatedAt}`} {...loan} />
                 ))}

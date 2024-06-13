@@ -1,3 +1,4 @@
+/* eslint-disable tailwindcss/classnames-order */
 'use client';
 
 import React, { useState } from 'react';
@@ -49,10 +50,10 @@ export const Entry = ({ product }: EntryProps) => {
   }, 1_000);
 
   return (
-    <div className="grid grid-cols-4">
+    <div className="grid grid-cols-4 [&>*]:border-0 divide-y-[1px] border-x border-b">
       <TableInput
         placeholder="Naziv"
-        inputClassName="bg-muted/60"
+        inputClassName="bg-muted/60 border-t"
         className="col-span-3"
         value={productState.name ?? ''}
         onChange={(e) => {
@@ -97,6 +98,7 @@ export const Entry = ({ product }: EntryProps) => {
               !lastPrice.unitCount ||
               !lastPrice.unitExpense
             }
+            className="border-0"
           />
         </form>
         <form action={deleteProductPriceHistory} className="col-span-1">
@@ -105,7 +107,9 @@ export const Entry = ({ product }: EntryProps) => {
             value={lastPrice.productPriceId}
             name="productPriceId"
           />
-          <SubmitButton icon={Trash}>Obriši cijenu</SubmitButton>
+          <SubmitButton icon={Trash} className="border-0">
+            Obriši cijenu
+          </SubmitButton>
         </form>
       </div>
     </div>

@@ -46,12 +46,12 @@ export const TeamInputTable = ({
                 placeholder={headerPlaceholder}
               />
             ) : (
-              <div className="bg-muted border px-4 py-2 font-mono text-sm uppercase">
+              <div className="bg-muted border-x border-t px-4 py-2 font-mono text-sm uppercase">
                 {team.name}
               </div>
             )}
             <div
-              className="grid text-sm"
+              className="grid divide-x-[1px] border text-sm"
               style={{
                 gridTemplateColumns: `repeat(${headerColumnWidth}, minmax(0, 1fr))`,
               }}
@@ -59,7 +59,7 @@ export const TeamInputTable = ({
               {header.map((column, index) => (
                 <TypographyP
                   key={index}
-                  className={cn('border p-2 pl-6 pr-6 text-sm bg-muted', {
+                  className={cn('p-2 pl-6 pr-6 text-sm bg-muted', {
                     'text-left': column.align === 'left',
                     'col-span-2': column.width === 2,
                   })}
@@ -68,7 +68,7 @@ export const TeamInputTable = ({
                 </TypographyP>
               ))}
             </div>
-            {team.items}
+            <div className="divide-y-[1px]">{team.items}</div>
             {team.add}
           </div>
         ))}

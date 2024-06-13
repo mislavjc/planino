@@ -73,7 +73,7 @@ export const Row = ({
       duplicateAction={() => duplicateLoan(loanId)}
       updatedAt={updatedAt ?? createdAt}
     >
-      <div className="grid grid-cols-7">
+      <div className="grid grid-cols-7 [&>*]:border-0 divide-x-[1px] border-x">
         <TableInput
           className="col-span-2"
           value={loan.name ?? ''}

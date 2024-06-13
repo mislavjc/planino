@@ -72,7 +72,7 @@ export const Row = ({
       duplicateAction={() => duplicateInventoryItem(inventoryItemId)}
       updatedAt={updatedAt ?? createdAt}
     >
-      <div className="grid grid-cols-5">
+      <div className="grid grid-cols-5 divide-x-[1px] border-x-[1px] [&>*]:border-0">
         <TableInput
           className="col-span-2"
           value={inventoryItem.name ?? ''}

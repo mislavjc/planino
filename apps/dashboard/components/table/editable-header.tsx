@@ -32,7 +32,7 @@ export const EditableHeader = ({
         setStateValue(e.target.value);
         debounceValueChange(e.target.value);
       }}
-      inputClassName="bg-muted/60 px-4 py-2 font-mono text-sm uppercase"
+      inputClassName="px-4 border-x border-t py-2 font-mono text-sm uppercase"
       placeholder={placeholder}
     />
   );

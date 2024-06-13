@@ -111,7 +111,7 @@ export const Row = ({
       clearAction={() => clearMember(memberId)}
       duplicateAction={() => duplicateMember(memberId)}
     >
-      <div className="grid grid-cols-7">
+      <div className="grid grid-cols-7 divide-x-[1px] border-x-[1px] [&>*]:border-0">
         <TableInput
           className="col-span-2"
           value={member.name ?? ''}

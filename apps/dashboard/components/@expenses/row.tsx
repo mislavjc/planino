@@ -145,7 +145,7 @@ export const Row = ({
       clearAction={() => clearExpense(expenseId)}
       duplicateAction={() => duplicateExpense(expenseId)}
     >
-      <div className="grid grid-cols-6">
+      <div className="grid grid-cols-6 divide-x-[1px] border-x-[1px] [&>*]:border-0">
         <TableInput
           className="col-span-2"
           value={expense.name ?? ''}

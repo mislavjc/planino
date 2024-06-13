@@ -7,12 +7,14 @@ export const AddRow = ({
   className,
   children,
   fullHeight,
+  border = true,
 }: {
   action: () => Promise<void>;
 
   className?: string;
   children?: string;
   fullHeight?: boolean;
+  border?: boolean;
 }) => {
   return (
     <form
@@ -26,6 +28,7 @@ export const AddRow = ({
       <SubmitButton
         className={cn({
           'h-full': fullHeight,
+          'border-0': !border,
         })}
       >
         {children || 'Dodaj red'}
