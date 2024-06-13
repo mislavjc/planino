@@ -35,8 +35,8 @@ const TeamsPage = async ({
               header={[
                 { title: 'Naziv', width: 2 },
                 { title: 'Rola' },
-                { title: 'Mjesec početka obračuna' },
-                { title: 'Mjesec kraja obračuna' },
+                { title: 'Početak obračuna' },
+                { title: 'Kraj obračuna' },
                 { title: 'Plaća', align: 'right' },
                 { title: 'Postotak rasta g/g', align: 'right' },
               ]}

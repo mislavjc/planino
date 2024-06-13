@@ -29,8 +29,8 @@ const OperationalExpensesPage = async ({
             <TeamInputTable
               header={[
                 { title: 'Naziv', width: 2 },
-                { title: 'Mjesec početka obračuna' },
-                { title: 'Mjesec kraja obračuna' },
+                { title: 'Početak obračuna' },
+                { title: 'Kraj obračuna' },
                 { title: 'Mjesečni iznos troška', align: 'right' },
                 { title: 'Postotak rasta g/g', align: 'right' },
               ]}
