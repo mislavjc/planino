@@ -1,6 +1,26 @@
 # Changelog
 
 
+## v0.6.1
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.6.0...v0.6.1)
+
+### 🚀 Enhancements
+
+- Add more spacing between loans ([eecf8d7](https://github.com/mislavjc/planino/commit/eecf8d7))
+- Change styles of team tables ([f260d4b](https://github.com/mislavjc/planino/commit/f260d4b))
+- Shortend naming for months ([2688c9d](https://github.com/mislavjc/planino/commit/2688c9d))
+- Widen overview table ([94eb149](https://github.com/mislavjc/planino/commit/94eb149))
+- Change styles of borders in tsbles ([85cdbc5](https://github.com/mislavjc/planino/commit/85cdbc5))
+
+### 🏡 Chore
+
+- **release:** V0.6.0 ([4b782f7](https://github.com/mislavjc/planino/commit/4b782f7))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.6.0
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.5.5...v0.6.0)
