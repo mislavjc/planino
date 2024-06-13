@@ -45,16 +45,15 @@ const BusinessPlanPage = async ({
             <span>Ocjeni plan</span>
           </Button>
         </DrawerTrigger>
-        <DrawerContent className="left-auto right-0 top-0 mt-0 h-screen max-w-2xl rounded-none">
+        <DrawerContent className="left-auto right-0 top-0 mt-0 h-screen w-full max-w-lg rounded-none">
           <ScrollArea className="h-screen">
-            <div className="mx-auto w-full p-5">
+            <div className="mx-auto w-full">
               <DrawerHeader>
                 <DrawerTitle>Ocjenjivanje poslovnog plana</DrawerTitle>
-                <DrawerDescription>
-                  Ocjenjivanje poslovnog plana pomoću AI
-                </DrawerDescription>
               </DrawerHeader>
-              <Rating businessPlan={businessPlan} />
+              <div className="p-4">
+                <Rating businessPlan={businessPlan} />
+              </div>
             </div>
           </ScrollArea>
         </DrawerContent>
