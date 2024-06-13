@@ -13,7 +13,7 @@ const ExpensesPage = async ({
   const expenses = await getExpenses(organization);
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <TypographyH3>Troškovi po godinama</TypographyH3>
       <div className="h-[60vh]">
         <BarChart
