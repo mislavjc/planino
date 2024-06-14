@@ -58,7 +58,7 @@ const BusinessPlanPage = async ({
           </ScrollArea>
         </DrawerContent>
       </Drawer>
-      <div className="mx-auto flex min-h-screen w-full max-w-screen-lg flex-col gap-8 border p-8">
+      <div className="mx-auto flex min-h-screen w-full max-w-screen-lg flex-col gap-8 border p-8 md:p-16">
         <EditorBlock businessPlan={businessPlan} organization={organization} />
       </div>
     </div>
