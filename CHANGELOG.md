@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v0.6.3
+
+[compare changes](https://github.com/mislavjc/planino/compare/v0.6.2...v0.6.3)
+
+### 🚀 Enhancements
+
+- Increase padding for business plan ([ee08afe](https://github.com/mislavjc/planino/commit/ee08afe))
+- Add breadcrumbs to the business plan ([c3d400a](https://github.com/mislavjc/planino/commit/c3d400a))
+
+### 🩹 Fixes
+
+- Nav redirect ([6179253](https://github.com/mislavjc/planino/commit/6179253))
+- Padding in price and quantity ([4c2e94c](https://github.com/mislavjc/planino/commit/4c2e94c))
+
+### 🏡 Chore
+
+- **release:** V0.6.2 ([76340b5](https://github.com/mislavjc/planino/commit/76340b5))
+
+### ❤️ Contributors
+
+- Mislav <mislavjc@gmail.com>
+
 ## v0.6.2
 
 [compare changes](https://github.com/mislavjc/planino/compare/v0.6.1...v0.6.2)
