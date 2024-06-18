@@ -15,7 +15,7 @@ import { Button } from 'components/ui/button';
 export const Auth = async () => {
   const session = await auth();
 
-  if (!session) {
+  if (!session || !session.user) {
     return (
       <div>
         <Link href="/registracija" className="ml-4 text-sm">
@@ -35,7 +35,8 @@ export const Auth = async () => {
       organizationUsers,
       eq(organizations.organizationId, organizationUsers.organizationId),
     )
-    .innerJoin(users, eq(users.id, organizationUsers.userId));
+    .innerJoin(users, eq(users.id, organizationUsers.userId))
+    .where(eq(users.id, session.user?.id as string));
 
   if (!result.length || !result[0].organization) {
     return (
